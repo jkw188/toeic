@@ -49,7 +49,7 @@ export const VocabularySection: React.FC<VocabularySectionProps> = ({ words }) =
                   {item.meaning}
                 </td>
                 <td className="px-6 py-4 text-slate-600 text-sm italic">
-                  "{item.example}"
+                  {item.example}
                 </td>
               </tr>
             ))}

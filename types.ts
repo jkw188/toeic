@@ -1,5 +1,5 @@
 export interface VocabularyWord {
-  // id: string;
+  id?: string;
   word: string;
   ipa: string; // e.g., /əˈdʒendə/
   type: string; // e.g., "n", "v", "adj"
@@ -20,6 +20,12 @@ export interface QuizQuestion {
   explanation: string;
 }
 
+export interface QuizGroup {
+  id: string;
+  passage: string; // Text with placeholders like [1], [2], etc.
+  questions: QuizQuestion[];
+}
+
 export interface Lecture {
   id: string;
   title: string;
@@ -29,10 +35,11 @@ export interface Lecture {
   vietnameseMeaningPassage: string; // Markdown string for translation
   keyTakeaways: string[]; // List of key points
   vocabulary: VocabularyWord[];
-  exercises: QuizQuestion[];
+  exercises: QuizQuestion[]; // Standalone questions (Part 5 style)
+  exerciseGroups?: QuizGroup[]; // Passage-based questions (Part 6 style)
 }
 
 export interface ChatMessage {
-  role: 'user' | 'model';
+  role: "user" | "model";
   text: string;
 }

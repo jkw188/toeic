@@ -1,10 +1,8 @@
-import { lesson1 } from './lesson1';
-import { lesson2 } from './lesson2';
-import { lesson3 } from './lesson3';
 import { Lecture } from '../types';
+import { lesson16 } from './lesson16';
+import { lesson17 } from './lesson17';
 
 export const LECTURES: Lecture[] = [
-  lesson1,
-  lesson2,
-  lesson3
+  lesson16,
+  lesson17
 ];
