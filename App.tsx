@@ -33,7 +33,7 @@ const App: React.FC = () => {
               <div className="bg-blue-600 p-2 rounded-lg">
                 <BookOpen className="w-6 h-6 text-white" />
               </div>
-              <span className="font-bold text-xl tracking-tight">TOEIC Master LMS</span>
+              <span className="font-bold text-xl tracking-tight">JIKANG TOEIC</span>
             </div>
             
             {/* Show tutor button only if inside a lecture */}
