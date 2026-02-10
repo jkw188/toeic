@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 18: Accommodation & Restaurant - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #BE185D; --secondary-bg: #FDF2F8; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #FDF2F8; color: #BE185D; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 18: Nơi lưu trú - Nhà hàng</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Check in", ipa: "", type: "phr", meaning: "Làm thủ tục vào", example: "Check in by 7 P.M." },
+            { word: "Check out", ipa: "", type: "phr (ant)", meaning: "Làm thủ tục ra", example: "" },
+            { word: "Compensate", ipa: "/ˈkɑːm.pən.seɪt/", type: "v", meaning: "Bồi thường, đền bù", example: "Compensated the guest for the error." },
+            { word: "Compensation", ipa: "/ˌkɑːm.pənˈseɪ.ʃən/", type: "n (der)", meaning: "Sự đền bù", example: "" },
+            { word: "Compensatory", ipa: "/kəmˈpen.sə.tɔːr.i/", type: "adj (der)", meaning: "Bù đắp", example: "" },
+            { word: "Complimentary", ipa: "/ˌkɑːm.pləˈmen.t̬ɚ.i/", type: "adj", meaning: "Miễn phí, biếu tặng", example: "A complimentary breakfast." },
+            { word: "Free", ipa: "/friː/", type: "adj (syn)", meaning: "Miễn phí", example: "" },
+            { word: "Complementary", ipa: "/ˌkɑːm.pləˈmen.t̬ɚ.i/", type: "adj (confusing)", meaning: "Bổ sung", example: "Color and style are complementary." },
+            { word: "Chef", ipa: "/ʃef/", type: "n", meaning: "Đầu bếp", example: "The restaurant's head chef." },
+            { word: "Container", ipa: "/kənˈteɪ.nɚ/", type: "n", meaning: "Đồ chứa (hộp, bình)", example: "Storing it in airtight containers." },
+            { word: "Contain", ipa: "/kənˈteɪn/", type: "v (der)", meaning: "Chứa đựng", example: "" },
+            { word: "Elegant", ipa: "/ˈel.ə.ɡənt/", type: "adj", meaning: "Thanh lịch, tao nhã", example: "Elegant decor." },
+            { word: "Elegance", ipa: "/ˈel.ə.ɡəns/", type: "n (der)", meaning: "Sự thanh lịch", example: "" },
+            { word: "Flavor", ipa: "/ˈfleɪ.vɚ/", type: "n", meaning: "Hương vị, mùi vị", example: "A variety of flavors." },
+            { word: "Savor", ipa: "/ˈseɪ.vɚ/", type: "n (syn)", meaning: "Hương vị", example: "" },
+            { word: "Accommodate", ipa: "/əˈkɑː.mə.deɪt/", type: "v", meaning: "Cung cấp chỗ ở / Đáp ứng", example: "Accommodate 350 guests." },
+            { word: "Accommodation", ipa: "/əˌkɑː.məˈdeɪ.ʃən/", type: "n (der)", meaning: "Chỗ ở", example: "" },
+            { word: "Lodge", ipa: "/lɑːdʒ/", type: "v (syn)", meaning: "Cho trọ", example: "" },
+            { word: "Available", ipa: "/əˈveɪ.lə.bəl/", type: "adj", meaning: "Có sẵn, rảnh rỗi", example: "Sauna is available to guests." },
+            { word: "Availability", ipa: "/əˌveɪ.ləˈbɪl.ə.t̬i/", type: "n (der)", meaning: "Sự có sẵn", example: "" },
+            { word: "Unavailable", ipa: "/ˌʌn.əˈveɪ.lə.bəl/", type: "adj (ant)", meaning: "Không có sẵn", example: "" },
+            { word: "Reception", ipa: "/rɪˈsep.ʃən/", type: "n", meaning: "Sự đón tiếp / Quầy lễ tân", example: "Held a welcome reception." },
+            { word: "Receptionist", ipa: "/rɪˈsep.ʃən.ɪst/", type: "n (der)", meaning: "Nhân viên lễ tân", example: "" },
+            { word: "Receive", ipa: "/rɪˈsiːv/", type: "v (der)", meaning: "Nhận", example: "" },
+            { word: "In advance", ipa: "", type: "phr", meaning: "Trước", example: "Make reservations in advance." },
+            { word: "Refreshments", ipa: "/rɪˈfreʃ.mənts/", type: "n", meaning: "Đồ ăn thức uống nhẹ", example: "Refreshments will be served." },
+            { word: "Refresh", ipa: "/rɪˈfreʃ/", type: "v (der)", meaning: "Làm mới / Tỉnh táo", example: "" },
+            { word: "Make", ipa: "/meɪk/", type: "v", meaning: "Làm, thực hiện", example: "Make a reservation." },
+            { word: "Cater", ipa: "/ˈkeɪ.t̬ɚ/", type: "v", meaning: "Phục vụ ăn uống", example: "Cater for the banquet." },
+            { word: "Catering", ipa: "/ˈkeɪ.t̬ɚ.ɪŋ/", type: "n (der)", meaning: "Dịch vụ ăn uống", example: "" },
+            { word: "Reservation", ipa: "/ˌrez.ɚˈveɪ.ʃən/", type: "n", meaning: "Sự đặt chỗ", example: "Confirm the reservation." },
+            { word: "Reserve", ipa: "/rɪˈzɝːv/", type: "v (der)", meaning: "Đặt trước", example: "" },
+            { word: "Booking", ipa: "/ˈbʊk.ɪŋ/", type: "n (syn)", meaning: "Sự đặt chỗ", example: "" },
+            { word: "Beverage", ipa: "/ˈbev.ɚ.ɪdʒ/", type: "n", meaning: "Đồ uống", example: "Alcoholic beverages." },
+            { word: "Drink", ipa: "/drɪŋk/", type: "n (syn)", meaning: "Đồ uống", example: "" },
+            { word: "Confirm", ipa: "/kənˈfɝːm/", type: "v", meaning: "Xác nhận", example: "Confirm the booking." },
+            { word: "Confirmation", ipa: "/ˌkɑːn.fɚˈmeɪ.ʃən/", type: "n (der)", meaning: "Sự xác nhận", example: "" },
+            { word: "Cancel", ipa: "/ˈkæn.səl/", type: "v", meaning: "Hủy bỏ", example: "Cancel the reservation." },
+            { word: "Cancellation", ipa: "/ˌkæn.səlˈeɪ.ʃən/", type: "n (der)", meaning: "Sự hủy bỏ", example: "" },
+            { word: "Rate", ipa: "/reɪt/", type: "n", meaning: "Mức giá / Tỷ lệ", example: "Discounted room rates." },
+            { word: "Conveniently", ipa: "/kənˈviː.ni.ənt.li/", type: "adv", meaning: "Một cách thuận tiện", example: "Conveniently located." },
+            { word: "Convenient", ipa: "/kənˈviː.ni.ənt/", type: "adj (der)", meaning: "Thuận tiện", example: "" },
+            { word: "Convenience", ipa: "/kənˈviːn.jəns/", type: "n (der)", meaning: "Sự thuận tiện", example: "" },
+            { word: "Decorate", ipa: "/ˈdek.ər.eɪt/", type: "v", meaning: "Trang trí", example: "Decorated with flowers." },
+            { word: "Decoration", ipa: "/ˌdek.ərˈeɪ.ʃən/", type: "n (der)", meaning: "Sự trang trí", example: "" },
+            { word: "Decorative", ipa: "/ˈdek.ər.ə.tɪv/", type: "adj (der)", meaning: "Để trang trí", example: "" },
+            { word: "Information", ipa: "/ˌɪn.fɚˈmeɪ.ʃən/", type: "n", meaning: "Thông tin", example: "Further information." },
+            { word: "Inform", ipa: "/ɪnˈfɔːrm/", type: "v (der)", meaning: "Thông báo", example: "" },
+            { word: "Retain", ipa: "/rɪˈteɪn/", type: "v", meaning: "Giữ lại", example: "Retain the key." },
+            { word: "Keep", ipa: "/kiːp/", type: "v (syn)", meaning: "Giữ", example: "" },
+            { word: "Atmosphere", ipa: "/ˈæt.mə.sfɪr/", type: "n", meaning: "Bầu không khí", example: "A cozy atmosphere." },
+            { word: "Cuisine", ipa: "/kwɪˈziːn/", type: "n", meaning: "Ẩm thực", example: "Italian cuisine." },
+            { word: "Sequence", ipa: "/ˈsiː.kwəns/", type: "n", meaning: "Chuỗi, trình tự", example: "In alphabetical sequence." },
+            { word: "Sequentially", ipa: "/sɪˈkwen.ʃəl.i/", type: "adv (der)", meaning: "Theo tuần tự", example: "" },
+            { word: "Extensive", ipa: "/ɪkˈsten.sɪv/", type: "adj", meaning: "Rộng rãi, bao quát", example: "Extensive menu." },
+            { word: "Extend", ipa: "/ɪkˈstend/", type: "v (der)", meaning: "Mở rộng", example: "" },
+            { word: "Extension", ipa: "/ɪkˈsten.ʃən/", type: "n (der)", meaning: "Sự mở rộng", example: "" },
+            { word: "Prior", ipa: "/ˈpraɪ.ɚ/", type: "adj", meaning: "Trước", example: "Prior notice." },
+            { word: "Priority", ipa: "/praɪˈɔːr.ə.t̬i/", type: "n (der)", meaning: "Sự ưu tiên", example: "" },
+            { word: "Book", ipa: "/bʊk/", type: "v", meaning: "Đặt chỗ", example: "Book a table." },
+            { word: "Booking", ipa: "/ˈbʊk.ɪŋ/", type: "n (der)", meaning: "Việc đặt chỗ", example: "" },
+            { word: "Amenity", ipa: "/əˈmen.ə.t̬i/", type: "n", meaning: "Tiện nghi", example: "Hotel amenities." },
+            { word: "Belongings", ipa: "/bɪˈlɑːŋ.ɪŋz/", type: "n", meaning: "Đồ dùng cá nhân", example: "Keep your belongings safe." },
+            { word: "Possessions", ipa: "/pəˈzeʃ.ənz/", type: "n (syn)", meaning: "Tài sản", example: "" },
+            { word: "Entirely", ipa: "/ɪnˈtaɪr.li/", type: "adv", meaning: "Hoàn toàn", example: "Entirely different." },
+            { word: "Entire", ipa: "/ɪnˈtaɪr/", type: "adj (der)", meaning: "Toàn bộ", example: "" },
+            { word: "Ease", ipa: "/iːz/", type: "v/n", meaning: "Làm dịu / Sự dễ dàng", example: "Ease the pain." },
+            { word: "Easy", ipa: "/ˈiː.zi/", type: "adj (der)", meaning: "Dễ dàng", example: "" },
+            { word: "Ingredient", ipa: "/ɪnˈɡriː.di.ənt/", type: "n", meaning: "Nguyên liệu (nấu ăn)", example: "Fresh ingredients." },
+            { word: "Sip", ipa: "/sɪp/", type: "v", meaning: "Uống từng ngụm", example: "Sip coffee." },
+            { word: "Stir", ipa: "/stɝː/", type: "v", meaning: "Khuấy, đảo", example: "Stir the soup." },
+            { word: "Choice", ipa: "/tʃɔɪs/", type: "n", meaning: "Sự lựa chọn", example: "A wide choice of dishes." },
+            { word: "Choose", ipa: "/tʃuːz/", type: "v (der)", meaning: "Chọn", example: "" },
+            { word: "Option", ipa: "/ˈɑːp.ʃən/", type: "n (syn)", meaning: "Lựa chọn", example: "" },
+            { word: "Complication", ipa: "/ˌkɑːm.pləˈkeɪ.ʃən/", type: "n", meaning: "Sự phức tạp", example: "Avoid complications." },
+            { word: "Complicate", ipa: "/ˈkɑːm.plə.keɪt/", type: "v (der)", meaning: "Làm phức tạp", example: "" },
+            { word: "Freshness", ipa: "/ˈfreʃ.nəs/", type: "n", meaning: "Sự tươi mới", example: "Maintain freshness." },
+            { word: "Fresh", ipa: "/freʃ/", type: "adj (der)", meaning: "Tươi", example: "" },
+            { word: "Occupancy", ipa: "/ˈɑː.kjə.pən.si/", type: "n", meaning: "Sự cư ngụ, tỷ lệ lấp đầy", example: "Double occupancy." },
+            { word: "Occupant", ipa: "/ˈɑː.kjə.pənt/", type: "n (der)", meaning: "Người cư ngụ", example: "" },
+            { word: "Occupy", ipa: "/ˈɑː.kjə.paɪ/", type: "v (der)", meaning: "Chiếm giữ", example: "" },
+
+            // --- BASIC / EXTRAS ---
+            { word: "Cafeteria", ipa: "/ˌkæf.əˈtɪr.i.ə/", type: "n", meaning: "Quán ăn tự phục vụ", example: "" },
+            { word: "Comfortable", ipa: "/ˈkʌm.fɚ.t̬ə.bəl/", type: "adj", meaning: "Thoải mái", example: "" },
+            { word: "Delicious", ipa: "/dɪˈlɪʃ.əs/", type: "adj", meaning: "Ngon", example: "" },
+            { word: "Dessert", ipa: "/dɪˈzɝːt/", type: "n", meaning: "Tráng miệng", example: "" },
+            { word: "Dish", ipa: "/dɪʃ/", type: "n", meaning: "Món ăn / Đĩa", example: "" },
+            { word: "Elevator", ipa: "/ˈel.ə.veɪ.t̬ɚ/", type: "n", meaning: "Thang máy", example: "" },
+            { word: "Fresh", ipa: "/freʃ/", type: "adj", meaning: "Tươi", example: "" },
+            { word: "Key", ipa: "/kiː/", type: "n", meaning: "Chìa khóa", example: "" },
+            { word: "Luggage", ipa: "/ˈlʌɡ.ɪdʒ/", type: "n", meaning: "Hành lý", example: "" },
+            { word: "Maid", ipa: "/meɪd/", type: "n", meaning: "Người dọn phòng", example: "" },
+            { word: "Napkin", ipa: "/ˈnæp.kɪn/", type: "n", meaning: "Khăn ăn", example: "" },
+            { word: "Order", ipa: "/ˈɔːr.dɚ/", type: "v", meaning: "Gọi món", example: "" },
+            { word: "Pick up", ipa: "", type: "phr", meaning: "Đón / Lấy", example: "" },
+            { word: "Pour", ipa: "/pɔːr/", type: "v", meaning: "Rót", example: "" },
+            { word: "Prepare", ipa: "/prɪˈper/", type: "v", meaning: "Chuẩn bị", example: "" },
+            { word: "Recommend", ipa: "/ˌrek.əˈmend/", type: "v", meaning: "Gợi ý", example: "" },
+            { word: "Salty", ipa: "/ˈsɑːl.t̬i/", type: "adj", meaning: "Mặn", example: "" },
+            { word: "Serve", ipa: "/sɝːv/", type: "v", meaning: "Phục vụ", example: "" },
+            { word: "Service", ipa: "/ˈsɝː.vɪs/", type: "n", meaning: "Dịch vụ", example: "" },
+            { word: "Spicy", ipa: "/ˈspaɪ.si/", type: "adj", meaning: "Cay", example: "" },
+            { word: "Stairs", ipa: "/sterz/", type: "n", meaning: "Cầu thang", example: "" },
+            { word: "Stay", ipa: "/steɪ/", type: "v/n", meaning: "Ở lại / Việc lưu trú", example: "" },
+            { word: "Taste", ipa: "/teɪst/", type: "n/v", meaning: "Vị / Nếm", example: "" },
+            { word: "Waiter", ipa: "/ˈweɪ.t̬ɚ/", type: "n", meaning: "Bồi bàn nam", example: "" },
+            { word: "Waitress", ipa: "/ˈweɪ.trəs/", type: "n", meaning: "Bồi bàn nữ", example: "" },
+            { word: "Welcome", ipa: "/ˈwel.kəm/", type: "v/adj", meaning: "Chào mừng", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "Alcoholic beverage", ipa: "", type: "phr", meaning: "Đồ uống có cồn", example: "" },
+            { word: "Appetizer", ipa: "/ˈæp.ə.taɪ.zɚ/", type: "n", meaning: "Món khai vị", example: "" },
+            { word: "Be booked up", ipa: "", type: "phr", meaning: "Hết chỗ", example: "" },
+            { word: "Be crowded with", ipa: "", type: "phr", meaning: "Đông đúc", example: "" },
+            { word: "Be dissatisfied with", ipa: "", type: "phr", meaning: "Không hài lòng", example: "" },
+            { word: "Be in the mood for", ipa: "", type: "phr", meaning: "Có hứng thú với", example: "" },
+            { word: "Be sold out", ipa: "", type: "phr", meaning: "Bán hết", example: "" },
+            { word: "Buffet", ipa: "/bəˈfeɪ/", type: "n", meaning: "Tiệc đứng", example: "" },
+            { word: "Catering service", ipa: "", type: "phr", meaning: "Dịch vụ ăn uống", example: "" },
+            { word: "Chop", ipa: "/tʃɑːp/", type: "v", meaning: "Chặt, thái", example: "" },
+            { word: "Confirm a reservation", ipa: "", type: "phr", meaning: "Xác nhận đặt chỗ", example: "" },
+            { word: "Course", ipa: "/kɔːrs/", type: "n", meaning: "Món ăn (trong bữa)", example: "" },
+            { word: "Dine", ipa: "/daɪn/", type: "v", meaning: "Ăn tối", example: "" },
+            { word: "Front desk", ipa: "", type: "phr", meaning: "Quầy lễ tân", example: "" },
+            { word: "Have a view of", ipa: "", type: "phr", meaning: "Có tầm nhìn ra", example: "" },
+            { word: "Housekeeping", ipa: "/ˈhaʊsˌkiː.pɪŋ/", type: "n", meaning: "Dịch vụ phòng", example: "" },
+            { word: "Lobby", ipa: "/ˈlɑː.bi/", type: "n", meaning: "Sảnh", example: "" },
+            { word: "Make a reservation", ipa: "", type: "phr", meaning: "Đặt chỗ", example: "" },
+            { word: "No vacancy", ipa: "", type: "phr", meaning: "Hết phòng", example: "" },
+            { word: "Pay the bill", ipa: "", type: "phr", meaning: "Thanh toán hóa đơn", example: "" },
+            { word: "Pour a drink", ipa: "", type: "phr", meaning: "Rót đồ uống", example: "" },
+            { word: "Recipe", ipa: "/ˈres.ə.pi/", type: "n", meaning: "Công thức nấu ăn", example: "" },
+            { word: "Refreshment", ipa: "/rɪˈfreʃ.mənt/", type: "n", meaning: "Đồ ăn nhẹ", example: "" },
+            { word: "Remodel", ipa: "/ˌriːˈmɑː.dəl/", type: "v", meaning: "Tu sửa", example: "" },
+            { word: "Room service", ipa: "", type: "phr", meaning: "Dịch vụ tại phòng", example: "" },
+            { word: "Run out of", ipa: "", type: "phr", meaning: "Hết", example: "" },
+            { word: "Seat", ipa: "/siːt/", type: "v", meaning: "Xếp chỗ ngồi", example: "" },
+            { word: "Serving", ipa: "/ˈsɝː.vɪŋ/", type: "n", meaning: "Khẩu phần", example: "" },
+            { word: "Specialty", ipa: "/ˈspeʃ.əl.ti/", type: "n", meaning: "Đặc sản", example: "" },
+            { word: "Spice", ipa: "/spaɪs/", type: "n", meaning: "Gia vị", example: "" },
+            { word: "Spot", ipa: "/spɑːt/", type: "n", meaning: "Địa điểm", example: "" },
+            { word: "Table for two", ipa: "", type: "phr", meaning: "Bàn cho hai người", example: "" },
+            { word: "Tip", ipa: "/tɪp/", type: "n/v", meaning: "Tiền bo / Bo", example: "" },
+            { word: "Tray", ipa: "/treɪ/", type: "n", meaning: "Cái khay", example: "" },
+            { word: "Upset", ipa: "/ʌpˈset/", type: "adj", meaning: "Khó chịu", example: "" },
+            { word: "Vacancy", ipa: "/ˈveɪ.kən.si/", type: "n", meaning: "Phòng trống", example: "" },
+            { word: "Vegetarian", ipa: "/ˌvedʒ.əˈter.i.ən/", type: "n/adj", meaning: "Người ăn chay", example: "" },
+            { word: "View", ipa: "/vjuː/", type: "n", meaning: "Tầm nhìn / Quang cảnh", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Ambience", ipa: "/ˈæm.bi.əns/", type: "n", meaning: "Không khí (của một nơi)", example: "" },
+            { word: "Brew", ipa: "/bruː/", type: "v", meaning: "Pha (trà, cà phê)", example: "" },
+            { word: "Concourse", ipa: "/ˈkɑːŋ.kɔːrs/", type: "n", meaning: "Sảnh lớn", example: "" },
+            { word: "Culinary", ipa: "/ˈkʌl.ə.ner.i/", type: "adj", meaning: "Thuộc về nấu nướng", example: "" },
+            { word: "Decaf", ipa: "/ˈdiː.kæf/", type: "n", meaning: "Cà phê đã lọc cafein", example: "" },
+            { word: "Delicacies", ipa: "/ˈdel.ə.kə.siz/", type: "n", meaning: "Món ngon", example: "" },
+            { word: "Double occupancy", ipa: "", type: "phr", meaning: "Phòng đôi (hai người)", example: "" },
+            { word: "Eatery", ipa: "/ˈiː.t̬ɚ.i/", type: "n", meaning: "Quán ăn", example: "" },
+            { word: "Entree", ipa: "/ˈɑːn.treɪ/", type: "n", meaning: "Món chính", example: "" },
+            { word: "Garnish", ipa: "/ˈɡɑːr.nɪʃ/", type: "v", meaning: "Trang trí (món ăn)", example: "" },
+            { word: "Lodging", ipa: "/ˈlɑː.dʒɪŋ/", type: "n", meaning: "Nơi ở tạm thời", example: "" },
+            { word: "Palate", ipa: "/ˈpæl.ət/", type: "n", meaning: "Khẩu vị", example: "" },
+            { word: "Patron", ipa: "/ˈpeɪ.trən/", type: "n", meaning: "Khách quen", example: "" },
+            { word: "Portion", ipa: "/ˈpɔːr.ʃən/", type: "n", meaning: "Khẩu phần", example: "" },
+            { word: "Preheat", ipa: "/ˌpriːˈhiːt/", type: "v", meaning: "Làm nóng trước", example: "" },
+            { word: "Proprietor", ipa: "/prəˈpraɪə.t̬ɚ/", type: "n", meaning: "Chủ sở hữu", example: "" },
+            { word: "Reimburse", ipa: "/ˌriː.ɪmˈbɝːs/", type: "v", meaning: "Hoàn lại tiền", example: "" },
+            { word: "Seasoning", ipa: "/ˈsiː.zən.ɪŋ/", type: "n", meaning: "Gia vị", example: "" },
+            { word: "Sift", ipa: "/sɪft/", type: "v", meaning: "Rây (bột)", example: "" },
+            { word: "Spoil", ipa: "/spɔɪl/", type: "v", meaning: "Làm hỏng / Thiu", example: "" },
+            { word: "Staple", ipa: "/ˈsteɪ.pəl/", type: "n", meaning: "Lương thực chính", example: "" },
+            { word: "Starve", ipa: "/stɑːrv/", type: "v", meaning: "Chết đói / Rất đói", example: "" },
+            { word: "Suite", ipa: "/swiːt/", type: "n", meaning: "Dãy phòng", example: "" },
+            { word: "Tender", ipa: "/ˈten.dɚ/", type: "adj", meaning: "Mềm (thịt)", example: "" },
+            { word: "Utensil", ipa: "/juːˈten.sɪl/", type: "n", meaning: "Dụng cụ nhà bếp", example: "" },
+            { word: "Venue", ipa: "/ˈven.juː/", type: "n", meaning: "Địa điểm gặp gỡ", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

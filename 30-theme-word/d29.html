@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 29: Environment - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #16A34A; --secondary-bg: #DCFCE7; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #DCFCE7; color: #16A34A; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 29: Môi trường</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Conserve", ipa: "/kənˈsɝːv/", type: "v", meaning: "Bảo tồn", example: "Conserve forests." },
+            { word: "Conservation", ipa: "/ˌkɑːn.sɚˈveɪ.ʃən/", type: "n (der)", meaning: "Sự bảo tồn", example: "" },
+            { word: "Conservative", ipa: "/kənˈsɝː.və.t̬ɪv/", type: "adj (der)", meaning: "Bảo thủ / Thận trọng", example: "" },
+            { word: "Preserve", ipa: "/prɪˈzɝːv/", type: "v (syn)", meaning: "Gìn giữ", example: "" },
+            { word: "Maintain", ipa: "/meɪnˈteɪn/", type: "v (syn)", meaning: "Duy trì", example: "" },
+            { word: "Chance", ipa: "/tʃæns/", type: "n", meaning: "Cơ hội / Khả năng", example: "A 30% chance of rain." },
+            { word: "Opportunity", ipa: "/ˌɑː.pɚˈtuː.nə.t̬i/", type: "n (confusing)", meaning: "Cơ hội", example: "" },
+            { word: "Forecast", ipa: "/ˈfɔːr.kæst/", type: "n/v", meaning: "Dự báo", example: "Weather forecasts." },
+            { word: "Prediction", ipa: "/prɪˈdɪk.ʃən/", type: "n (syn)", meaning: "Sự dự đoán", example: "" },
+            { word: "Waste", ipa: "/weɪst/", type: "n", meaning: "Rác thải", example: "Recyclable waste." },
+            { word: "Waste", ipa: "/weɪst/", type: "v", meaning: "Lãng phí", example: "" },
+            { word: "Wasteful", ipa: "/ˈweɪst.fəl/", type: "adj (der)", meaning: "Lãng phí", example: "" },
+            { word: "Garbage", ipa: "/ˈɡɑːr.bɪdʒ/", type: "n (syn)", meaning: "Rác", example: "" },
+            { word: "Trash", ipa: "/træʃ/", type: "n (syn)", meaning: "Rác", example: "" },
+            { word: "Dispose", ipa: "/dɪˈspoʊz/", type: "v", meaning: "Vứt bỏ, xử lý", example: "Dispose of waste." },
+            { word: "Disposable", ipa: "/dɪˈspoʊ.zə.bəl/", type: "adj (der)", meaning: "Dùng một lần", example: "" },
+            { word: "Disposal", ipa: "/dɪˈspoʊ.zəl/", type: "n (der)", meaning: "Sự vứt bỏ", example: "" },
+            { word: "Recycling", ipa: "/ˌriːˈsaɪ.klɪŋ/", type: "n", meaning: "Sự tái chế", example: "Recycling saves energy." },
+            { word: "Recycle", ipa: "/ˌriːˈsaɪ.kəl/", type: "v (der)", meaning: "Tái chế", example: "" },
+            { word: "Clear", ipa: "/klɪr/", type: "adj", meaning: "Trong trẻo / Rõ ràng", example: "A clear day." },
+            { word: "Clear", ipa: "/klɪr/", type: "adv", meaning: "Hẳn, hoàn toàn", example: "See clear across the lake." },
+            { word: "Clear", ipa: "/klɪr/", type: "v", meaning: "Dọn sạch", example: "" },
+            { word: "Clearly", ipa: "/ˈklɪr.li/", type: "adv (der)", meaning: "Rõ ràng", example: "" },
+            { word: "Obvious", ipa: "/ˈɑːb.vi.əs/", type: "adj (syn)", meaning: "Hiển nhiên", example: "" },
+            { word: "Damage", ipa: "/ˈdæm.ɪdʒ/", type: "n", meaning: "Thiệt hại", example: "Caused extensive damage." },
+            { word: "Damage", ipa: "/ˈdæm.ɪdʒ/", type: "v", meaning: "Gây hại", example: "Chemicals damaged machinery." },
+            { word: "Damaging", ipa: "/ˈdæm.ɪ.dʒɪŋ/", type: "adj (der)", meaning: "Có hại", example: "" },
+            { word: "Damaged", ipa: "/ˈdæm.ɪdʒd/", type: "adj (der)", meaning: "Bị hỏng", example: "" },
+            { word: "Harm", ipa: "/hɑːrm/", type: "n (syn)", meaning: "Tổn hại", example: "" },
+            { word: "Significant", ipa: "/sɪɡˈnɪf.ə.kənt/", type: "adj", meaning: "Đáng kể / Quan trọng", example: "Significant impact." },
+            { word: "Important", ipa: "/ɪmˈpɔːr.tənt/", type: "adj (syn)", meaning: "Quan trọng", example: "" },
+            { word: "Solution", ipa: "/səˈluː.ʃən/", type: "n", meaning: "Giải pháp", example: "Solution to energy problems." },
+            { word: "Solve", ipa: "/sɑːlv/", type: "v (der)", meaning: "Giải quyết", example: "" },
+            { word: "Occur", ipa: "/əˈkɝː/", type: "v", meaning: "Xảy ra", example: "Earthquakes occur frequently." },
+            { word: "Occurrence", ipa: "/əˈkɝː.əns/", type: "n (der)", meaning: "Sự việc xảy ra", example: "" },
+            { word: "Happen", ipa: "/ˈhæp.ən/", type: "v (syn)", meaning: "Xảy ra", example: "" },
+            { word: "Ideal", ipa: "/aɪˈdiː.əl/", type: "adj", meaning: "Lý tưởng", example: "Ideal for a camping trip." },
+            { word: "Ideal", ipa: "/aɪˈdiː.əl/", type: "n", meaning: "Lý tưởng", example: "" },
+            { word: "Perfect", ipa: "/ˈpɝː.fekt/", type: "adj (syn)", meaning: "Hoàn hảo", example: "" },
+            { word: "Preserve", ipa: "/prɪˈzɝːv/", type: "v", meaning: "Bảo tồn", example: "Preserve natural habitats." },
+            { word: "Preserved", ipa: "/prɪˈzɝːvd/", type: "adj (der)", meaning: "Được bảo tồn", example: "" },
+            { word: "Aid", ipa: "/eɪd/", type: "n/v", meaning: "Sự trợ giúp / Giúp đỡ", example: "Aid to repair damage." },
+            { word: "Excessive", ipa: "/ɪkˈses.ɪv/", type: "adj", meaning: "Quá mức", example: "Excessive garbage." },
+            { word: "Intensively", ipa: "/ɪnˈten.sɪv.li/", type: "adv", meaning: "Mạnh mẽ, sâu sắc", example: "Wind blew intensively." },
+            { word: "Vary", ipa: "/ˈver.i/", type: "v", meaning: "Thay đổi, khác nhau", example: "Varies greatly." },
+            { word: "Variation", ipa: "/ˌver.iˈeɪ.ʃən/", type: "n (der)", meaning: "Sự biến đổi", example: "" },
+            { word: "Varied", ipa: "/ˈver.id/", type: "adj (der)", meaning: "Đa dạng", example: "" },
+            { word: "Pleasing", ipa: "/ˈpliː.zɪŋ/", type: "adj", meaning: "Dễ chịu, làm vui lòng", example: "Pleasing to see." },
+            { word: "Pleased", ipa: "/pliːzd/", type: "adj (confusing)", meaning: "Hài lòng", example: "" },
+            { word: "Mark", ipa: "/mɑːrk/", type: "n", meaning: "Điểm số / Dấu vết", example: "Received an excellent mark." },
+            { word: "Mark", ipa: "/mɑːrk/", type: "v", meaning: "Đánh dấu / Kỷ niệm", example: "Marked Arbor Day." },
+            { word: "Rating", ipa: "/ˈreɪ.t̬ɪŋ/", type: "n (syn)", meaning: "Đánh giá", example: "" },
+            { word: "Celebrate", ipa: "/ˈsel.ə.breɪt/", type: "v (syn)", meaning: "Kỷ niệm", example: "" },
+            { word: "Inaccessible", ipa: "/ˌɪn.əkˈses.ə.bəl/", type: "adj", meaning: "Không thể tiếp cận", example: "Inaccessible by car." },
+            { word: "Disturb", ipa: "/dɪˈstɝːb/", type: "v", meaning: "Làm phiền", example: "Disturbed by noise." },
+            { word: "Pollutant", ipa: "/pəˈluː.tənt/", type: "n", meaning: "Chất gây ô nhiễm", example: "Harmful pollutants." },
+            { word: "Pollute", ipa: "/pəˈluːt/", type: "v (der)", meaning: "Làm ô nhiễm", example: "" },
+            { word: "Pollution", ipa: "/pəˈluː.ʃən/", type: "n (der)", meaning: "Sự ô nhiễm", example: "" },
+            { word: "Emission", ipa: "/iˈmɪʃ.ən/", type: "n", meaning: "Sự phát thải, khí thải", example: "Limit emissions." },
+            { word: "Emit", ipa: "/iˈmɪt/", type: "v (der)", meaning: "Thải ra", example: "" },
+            { word: "Dense", ipa: "/dens/", type: "adj", meaning: "Dày đặc", example: "Forest is dense." },
+            { word: "Environmental", ipa: "/ɪnˌvaɪ.rənˈmen.t̬əl/", type: "adj", meaning: "Thuộc môi trường", example: "Environmental issue." },
+            { word: "Environment", ipa: "/ɪnˈvaɪ.rən.mənt/", type: "n (der)", meaning: "Môi trường", example: "" },
+            { word: "Environmentalist", ipa: "/ɪnˌvaɪ.rənˈmen.t̬əl.ɪst/", type: "n (der)", meaning: "Nhà môi trường học", example: "" },
+            { word: "Consistent", ipa: "/kənˈsɪs.tənt/", type: "adj", meaning: "Nhất quán, thích hợp", example: "Consistent with regulations." },
+            { word: "Consistently", ipa: "/kənˈsɪs.tənt.li/", type: "adv (der)", meaning: "Luôn luôn", example: "" },
+            { word: "Leak", ipa: "/liːk/", type: "n", meaning: "Sự rò rỉ", example: "A leak in a pipeline." },
+            { word: "Leak", ipa: "/liːk/", type: "v", meaning: "Rò rỉ", example: "Leaked chemicals." },
+            { word: "Organization", ipa: "/ˌɔːr.ɡən.əˈzeɪ.ʃən/", type: "n", meaning: "Tổ chức", example: "Organizations grouped together." },
+            { word: "Organize", ipa: "/ˈɔːr.ɡən.aɪz/", type: "v (der)", meaning: "Tổ chức", example: "" },
+            { word: "Association", ipa: "/əˌsoʊ.siˈeɪ.ʃən/", type: "n (syn)", meaning: "Hiệp hội", example: "" },
+            { word: "Continually", ipa: "/kənˈtɪn.ju.ə.li/", type: "adv", meaning: "Liên tục", example: "Continually polluted." },
+            { word: "Continue", ipa: "/kənˈtɪn.juː/", type: "v (der)", meaning: "Tiếp tục", example: "" },
+            { word: "Continuous", ipa: "/kənˈtɪn.ju.əs/", type: "adj (der)", meaning: "Liên tiếp", example: "" },
+            { word: "Contaminate", ipa: "/kənˈtæm.ə.neɪt/", type: "v", meaning: "Làm ô nhiễm", example: "Contaminated with gasoline." },
+            { word: "Contamination", ipa: "/kənˌtæm.əˈneɪ.ʃən/", type: "n (der)", meaning: "Sự ô nhiễm", example: "" },
+            { word: "Disaster", ipa: "/dɪˈzæs.tɚ/", type: "n", meaning: "Thảm họa", example: "Natural disaster." },
+            { word: "Discharge", ipa: "/dɪsˈtʃɑːrdʒ/", type: "v/n", meaning: "Thải ra / Sự xả thải", example: "Discharge chemicals." },
+            { word: "Resource", ipa: "/ˈriː.zɔːrs/", type: "n", meaning: "Tài nguyên", example: "Natural resources." },
+            { word: "Resourceful", ipa: "/rɪˈzɔːr.sfəl/", type: "adj (der)", meaning: "Tháo vát", example: "" },
+            { word: "Prominent", ipa: "/ˈprɑː.mə.nənt/", type: "adj", meaning: "Nổi bật", example: "A prominent expert." },
+            { word: "Prominence", ipa: "/ˈprɑː.mə.nəns/", type: "n (der)", meaning: "Sự nổi bật", example: "" },
+            { word: "Renowned", ipa: "/rɪˈnaʊnd/", type: "adj (syn)", meaning: "Nổi tiếng", example: "" },
+            { word: "Deplete", ipa: "/dɪˈpliːt/", type: "v", meaning: "Làm cạn kiệt", example: "Resources have been depleted." },
+            { word: "Depletion", ipa: "/dɪˈpliː.ʃən/", type: "n (der)", meaning: "Sự cạn kiệt", example: "" },
+            { word: "Exhaust", ipa: "/ɪɡˈzɑːst/", type: "v (syn)", meaning: "Dùng hết", example: "" },
+            { word: "Purify", ipa: "/ˈpjʊr.ə.faɪ/", type: "v", meaning: "Làm sạch, lọc", example: "Purifies the water." },
+            { word: "Purification", ipa: "/ˌpjʊr.ə.fəˈkeɪ.ʃən/", type: "n (der)", meaning: "Sự làm sạch", example: "" },
+            { word: "Endangered", ipa: "/ɪnˈdeɪn.dʒɚd/", type: "adj", meaning: "Bị đe dọa, có nguy cơ tuyệt chủng", example: "Endangered species." },
+            { word: "Threatened", ipa: "/ˈθret.ənd/", type: "adj (syn)", meaning: "Bị đe dọa", example: "" },
+            { word: "Extinction", ipa: "/ɪkˈstɪŋk.ʃən/", type: "n", meaning: "Sự tuyệt chủng", example: "In danger of extinction." },
+            { word: "Extinct", ipa: "/ɪkˈstɪŋkt/", type: "adj (der)", meaning: "Tuyệt chủng", example: "" },
+            { word: "Drought", ipa: "/draʊt/", type: "n", meaning: "Hạn hán", example: "Persistent drought." },
+            { word: "Inflict", ipa: "/ɪnˈflɪkt/", type: "v", meaning: "Gây ra (sự đau đớn, thiệt hại)", example: "Inflicted damage." },
+            { word: "Infliction", ipa: "/ɪnˈflɪk.ʃən/", type: "n (der)", meaning: "Sự gây ra", example: "" },
+            { word: "Migration", ipa: "/maɪˈɡreɪ.ʃən/", type: "n", meaning: "Sự di cư", example: "Migration of contaminants." },
+            { word: "Migrate", ipa: "/ˈmaɪ.ɡreɪt/", type: "v (der)", meaning: "Di cư", example: "" },
+            { word: "Immigration", ipa: "/ˌɪm.əˈɡreɪ.ʃən/", type: "n (confusing)", meaning: "Sự nhập cư", example: "" },
+            { word: "Ecology", ipa: "/iˈkɑː.lə.dʒi/", type: "n", meaning: "Sinh thái học", example: "Alters the ecology." },
+            { word: "Habitat", ipa: "/ˈhæb.ə.tæt/", type: "n", meaning: "Môi trường sống", example: "Natural habitat." },
+            { word: "Habitation", ipa: "/ˌhæb.əˈteɪ.ʃən/", type: "n (der)", meaning: "Sự cư trú", example: "" },
+            { word: "Inhabitant", ipa: "/ɪnˈhæb.ɪ.tənt/", type: "n (der)", meaning: "Cư dân", example: "" },
+
+            // --- BASIC & EXTRAS ---
+            { word: "Cave", ipa: "/keɪv/", type: "n", meaning: "Hang động", example: "" },
+            { word: "Celsius", ipa: "/ˈsel.si.əs/", type: "n", meaning: "Độ C", example: "" },
+            { word: "Chilly", ipa: "/ˈtʃɪl.i/", type: "adj", meaning: "Lạnh lẽo", example: "" },
+            { word: "Clean up", ipa: "", type: "phr", meaning: "Dọn dẹp", example: "" },
+            { word: "Cleaning supply", ipa: "", type: "phr", meaning: "Dụng cụ vệ sinh", example: "" },
+            { word: "Desert", ipa: "/ˈdez.ɚt/", type: "n", meaning: "Sa mạc", example: "" },
+            { word: "Dirt", ipa: "/dɝːt/", type: "n", meaning: "Đất, bụi bẩn", example: "" },
+            { word: "Empty trash can", ipa: "", type: "phr", meaning: "Đổ rác", example: "" },
+            { word: "Factory", ipa: "/ˈfæk.tɚ.i/", type: "n", meaning: "Nhà máy", example: "" },
+            { word: "Harvest", ipa: "/ˈhɑːr.vəst/", type: "n/v", meaning: "Vụ thu hoạch / Thu hoạch", example: "" },
+            { word: "Humid", ipa: "/ˈhjuː.mɪd/", type: "adj", meaning: "Ẩm ướt", example: "" },
+            { word: "Landscape", ipa: "/ˈlænd.skeɪp/", type: "n", meaning: "Phong cảnh", example: "" },
+            { word: "Point", ipa: "/pɔɪnt/", type: "n/v", meaning: "Điểm / Chỉ", example: "" },
+            { word: "Seed", ipa: "/siːd/", type: "n/v", meaning: "Hạt giống / Gieo hạt", example: "" },
+            { word: "Shade", ipa: "/ʃeɪd/", type: "n", meaning: "Bóng râm", example: "" },
+            { word: "Sunny", ipa: "/ˈsʌn.i/", type: "adj", meaning: "Có nắng", example: "" },
+            { word: "Sunset", ipa: "/ˈsʌn.set/", type: "n", meaning: "Hoàng hôn", example: "" },
+            { word: "Wet", ipa: "/wet/", type: "adj", meaning: "Ướt", example: "" },
+            { word: "Windy", ipa: "/ˈwɪn.di/", type: "adj", meaning: "Có gió", example: "" },
+            { word: "Wood", ipa: "/wʊd/", type: "n", meaning: "Gỗ / Rừng", example: "" },
+            { word: "Dust", ipa: "/dʌst/", type: "n", meaning: "Bụi", example: "" },
+            { word: "Flood", ipa: "/flʌd/", type: "n", meaning: "Lũ lụt", example: "" },
+            { word: "General", ipa: "/ˈdʒen.ər.əl/", type: "adj", meaning: "Chung", example: "" },
+            { word: "Shower", ipa: "/ˈʃaʊ.ɚ/", type: "n", meaning: "Mưa rào", example: "" },
+            { word: "Source", ipa: "/sɔːrs/", type: "n", meaning: "Nguồn", example: "" },
+            { word: "Southern", ipa: "/ˈsʌð.ɚn/", type: "adj", meaning: "Phía nam", example: "" },
+            { word: "Temperature", ipa: "/ˈtem.pɚ.ə.tʃɚ/", type: "n", meaning: "Nhiệt độ", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "Along the shore", ipa: "", type: "phr", meaning: "Dọc bờ biển", example: "" },
+            { word: "Bay", ipa: "/beɪ/", type: "n", meaning: "Vịnh", example: "" },
+            { word: "Body of water", ipa: "", type: "phr", meaning: "Vùng nước", example: "" },
+            { word: "Bush", ipa: "/bʊʃ/", type: "n", meaning: "Bụi cây", example: "" },
+            { word: "Cliff", ipa: "/klɪf/", type: "n", meaning: "Vách đá", example: "" },
+            { word: "Countryside", ipa: "/ˈkʌn.tri.saɪd/", type: "n", meaning: "Miền quê", example: "" },
+            { word: "Eco-friendly", ipa: "/ˌiː.koʊˈfrend.li/", type: "adj", meaning: "Thân thiện môi trường", example: "" },
+            { word: "Footpath", ipa: "/ˈfʊt.pæθ/", type: "n", meaning: "Đường mòn đi bộ", example: "" },
+            { word: "Fountain", ipa: "/ˈfaʊn.tən/", type: "n", meaning: "Đài phun nước", example: "" },
+            { word: "Freezing", ipa: "/ˈfriː.zɪŋ/", type: "adj", meaning: "Đóng băng / Rất lạnh", example: "" },
+            { word: "Gardening tool", ipa: "", type: "phr", meaning: "Dụng cụ làm vườn", example: "" },
+            { word: "Grasp", ipa: "/ɡræsp/", type: "v", meaning: "Nắm lấy", example: "" },
+            { word: "Hail", ipa: "/heɪl/", type: "n", meaning: "Mưa đá", example: "" },
+            { word: "Lakefront", ipa: "/ˈleɪk.frʌnt/", type: "n", meaning: "Bờ hồ", example: "" },
+            { word: "Landscaping", ipa: "/ˈlænd.skeɪ.pɪŋ/", type: "n", meaning: "Tạo cảnh quan", example: "" },
+            { word: "Lighthouse", ipa: "/ˈlaɪt.haʊs/", type: "n", meaning: "Ngọn hải đăng", example: "" },
+            { word: "Nightfall", ipa: "/ˈnaɪt.fɑːl/", type: "n", meaning: "Hoàng hôn", example: "" },
+            { word: "Off the shore", ipa: "", type: "phr", meaning: "Xa bờ", example: "" },
+            { word: "Overlook water", ipa: "", type: "phr", meaning: "Nhìn ra nước", example: "" },
+            { word: "Pull weeds", ipa: "", type: "phr", meaning: "Nhổ cỏ", example: "" },
+            { word: "Rain forest", ipa: "/ˈreɪn ˌfɔːr.ɪst/", type: "n", meaning: "Rừng mưa nhiệt đới", example: "" },
+            { word: "Rain or shine", ipa: "", type: "phr", meaning: "Dù mưa hay nắng", example: "" },
+            { word: "Rain shower", ipa: "", type: "phr", meaning: "Mưa rào", example: "" },
+            { word: "Rainstorm", ipa: "/ˈreɪn.stɔːrm/", type: "n", meaning: "Mưa bão", example: "" },
+            { word: "Ranger", ipa: "/ˈreɪn.dʒɚ/", type: "n", meaning: "Kiểm lâm", example: "" },
+            { word: "Riverbank", ipa: "/ˈrɪv.ɚ.bæŋk/", type: "n", meaning: "Bờ sông", example: "" },
+            { word: "Riverside", ipa: "/ˈrɪv.ɚ.saɪd/", type: "n", meaning: "Bên sông", example: "" },
+            { word: "Scenery", ipa: "/ˈsiː.nɚ.i/", type: "n", meaning: "Phong cảnh", example: "" },
+            { word: "Scenic", ipa: "/ˈsiː.nɪk/", type: "adj", meaning: "Có cảnh đẹp", example: "" },
+            { word: "Slope", ipa: "/sloʊp/", type: "n/v", meaning: "Dốc / Nghiêng", example: "" },
+            { word: "Stream", ipa: "/striːm/", type: "n", meaning: "Suối", example: "" },
+            { word: "Suburb", ipa: "/ˈsʌb.ɝːb/", type: "n", meaning: "Ngoại ô", example: "" },
+            { word: "Sweep leaves", ipa: "", type: "phr", meaning: "Quét lá", example: "" },
+            { word: "Thunderstorm", ipa: "/ˈθʌn.dɚ.stɔːrm/", type: "n", meaning: "Bão có sấm sét", example: "" },
+            { word: "Trail", ipa: "/treɪl/", type: "n", meaning: "Đường mòn", example: "" },
+            { word: "Trap", ipa: "/træp/", type: "n", meaning: "Cái bẫy", example: "" },
+            { word: "Tree trunk", ipa: "", type: "phr", meaning: "Thân cây", example: "" },
+            { word: "Twilight", ipa: "/ˈtwaɪ.laɪt/", type: "n", meaning: "Chập choạng tối", example: "" },
+            { word: "Weather forecast", ipa: "", type: "phr", meaning: "Dự báo thời tiết", example: "" },
+            { word: "Weather report", ipa: "", type: "phr", meaning: "Bản tin thời tiết", example: "" },
+            { word: "Windstorm", ipa: "/ˈwɪnd.stɔːrm/", type: "n", meaning: "Bão gió", example: "" },
+            { word: "Affirmative", ipa: "/əˈfɝː.mə.t̬ɪv/", type: "adj", meaning: "Khẳng định", example: "" },
+            { word: "Dislike", ipa: "/dɪˈslaɪk/", type: "v", meaning: "Không thích", example: "" },
+            { word: "Fertile", ipa: "/ˈfɝː.t̬əl/", type: "adj", meaning: "Màu mỡ", example: "" },
+            { word: "In particular", ipa: "", type: "phr", meaning: "Đặc biệt là", example: "" },
+            { word: "Quietly", ipa: "/ˈkwaɪ.ət.li/", type: "adv", meaning: "Yên lặng", example: "" },
+            { word: "Revolve", ipa: "/rɪˈvɑːlv/", type: "v", meaning: "Xoay quanh", example: "" },
+            { word: "Setting", ipa: "/ˈset.ɪŋ/", type: "n", meaning: "Khung cảnh / Bối cảnh", example: "" },
+            { word: "Sheer", ipa: "/ʃɪr/", type: "adj", meaning: "Dốc đứng / Hoàn toàn", example: "" },
+            { word: "Solid", ipa: "/ˈsɑː.lɪd/", type: "adj", meaning: "Rắn / Chắc chắn", example: "" },
+            { word: "Tangible", ipa: "/ˈtæn.dʒə.bəl/", type: "adj", meaning: "Hữu hình", example: "" },
+            { word: "Thoughtfully", ipa: "/ˈθɑːt.fəl.i/", type: "adv", meaning: "Chu đáo / Trầm ngâm", example: "" },
+            { word: "Atmospheric", ipa: "/ˌæt.məsˈfer.ɪk/", type: "adj", meaning: "Thuộc khí quyển", example: "" },
+            { word: "Environmental regulations", ipa: "", type: "phr", meaning: "Quy định môi trường", example: "" },
+            { word: "Ground", ipa: "/ɡraʊnd/", type: "n", meaning: "Mặt đất", example: "" },
+            { word: "Inclement", ipa: "/ɪnˈklem.ənt/", type: "adj", meaning: "Khắc nghiệt (thời tiết)", example: "" },
+            { word: "Mining", ipa: "/ˈmaɪ.nɪŋ/", type: "n", meaning: "Khai thác mỏ", example: "" },
+            { word: "Natural habitat", ipa: "", type: "phr", meaning: "Môi trường sống tự nhiên", example: "" },
+            { word: "Noise pollution", ipa: "", type: "phr", meaning: "Ô nhiễm tiếng ồn", example: "" },
+            { word: "Nourishment", ipa: "/ˈnɝː.ɪʃ.mənt/", type: "n", meaning: "Sự nuôi dưỡng", example: "" },
+            { word: "Nurture", ipa: "/ˈnɝː.tʃɚ/", type: "v", meaning: "Nuôi dưỡng", example: "" },
+            { word: "Overflow", ipa: "/ˌoʊ.vɚˈfloʊ/", type: "v", meaning: "Tràn ra", example: "" },
+            { word: "React to", ipa: "", type: "phr", meaning: "Phản ứng với", example: "" },
+            { word: "Recyclable", ipa: "/ˌriːˈsaɪ.klə.bəl/", type: "adj", meaning: "Có thể tái chế", example: "" },
+            { word: "Under construction", ipa: "", type: "phr", meaning: "Đang xây dựng", example: "" },
+            { word: "Vague", ipa: "/veɪɡ/", type: "adj", meaning: "Mơ hồ", example: "" },
+            { word: "Water level", ipa: "", type: "phr", meaning: "Mực nước", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Botanical", ipa: "/bəˈtæn.ɪ.kəl/", type: "adj", meaning: "Thuộc thực vật", example: "" },
+            { word: "Irrigation system", ipa: "", type: "phr", meaning: "Hệ thống tưới tiêu", example: "" },
+            { word: "Mow the lawn", ipa: "", type: "phr", meaning: "Cắt cỏ", example: "" },
+            { word: "Overpass", ipa: "/ˈoʊ.vɚ.pæs/", type: "n", meaning: "Cầu vượt", example: "" },
+            { word: "Potted", ipa: "/ˈpɑː.t̬ɪd/", type: "adj", meaning: "Trồng trong chậu", example: "" },
+            { word: "Pull up", ipa: "", type: "phr", meaning: "Dừng xe / Nhổ lên", example: "" },
+            { word: "Shrub", ipa: "/ʃrʌb/", type: "n", meaning: "Cây bụi", example: "" },
+            { word: "Vacant site", ipa: "", type: "phr", meaning: "Khu đất trống", example: "" },
+            { word: "Outwardly", ipa: "/ˈaʊt.wɚd.li/", type: "adv", meaning: "Bề ngoài", example: "" },
+            { word: "Precipitation", ipa: "/priːˌsɪp.əˈteɪ.ʃən/", type: "n", meaning: "Lượng mưa", example: "" },
+            { word: "Promptness", ipa: "/ˈprɑːmpt.nəs/", type: "n", meaning: "Sự nhanh chóng", example: "" },
+            { word: "Revert", ipa: "/rɪˈvɝːt/", type: "v", meaning: "Trở lại", example: "" },
+            { word: "Sustainable", ipa: "/səˈsteɪ.nə.bəl/", type: "adj", meaning: "Bền vững", example: "" },
+            { word: "Tranquility", ipa: "/træŋˈkwɪl.ə.t̬i/", type: "n", meaning: "Sự yên bình", example: "" },
+            { word: "Trimming", ipa: "/ˈtrɪm.ɪŋ/", type: "n", meaning: "Sự cắt tỉa", example: "" },
+            { word: "Depletion", ipa: "/dɪˈpliː.ʃən/", type: "n", meaning: "Sự cạn kiệt", example: "" },
+            { word: "Disposal", ipa: "/dɪˈspoʊ.zəl/", type: "n", meaning: "Sự vứt bỏ", example: "" },
+            { word: "Downpour", ipa: "/ˈdaʊn.pɔːr/", type: "n", meaning: "Mưa như trút", example: "" },
+            { word: "Drench", ipa: "/drentʃ/", type: "v", meaning: "Làm ướt sũng", example: "" },
+            { word: "Fade", ipa: "/feɪd/", type: "v", meaning: "Phai màu", example: "" },
+            { word: "Fuel emission", ipa: "", type: "phr", meaning: "Khí thải nhiên liệu", example: "" },
+            { word: "Fumes", ipa: "/fjuːmz/", type: "n", meaning: "Khói, khí thải", example: "" },
+            { word: "Grazing", ipa: "/ˈɡreɪ.zɪŋ/", type: "n", meaning: "Sự chăn thả", example: "" },
+            { word: "Logging", ipa: "/ˈlɑː.ɡɪŋ/", type: "n", meaning: "Khai thác gỗ", example: "" },
+            { word: "Outskirts", ipa: "/ˈaʊt.skɝːts/", type: "n", meaning: "Vùng ngoại ô", example: "" },
+            { word: "Residue", ipa: "/ˈrez.ə.duː/", type: "n", meaning: "Cặn, dư lượng", example: "" },
+            { word: "Rugged", ipa: "/ˈrʌɡ.ɪd/", type: "adj", meaning: "Gồ ghề", example: "" },
+            { word: "Sewage", ipa: "/ˈsuː.ɪdʒ/", type: "n", meaning: "Nước thải", example: "" },
+            { word: "Splendor", ipa: "/ˈsplen.dɚ/", type: "n", meaning: "Sự lộng lẫy", example: "" },
+            { word: "Terrestrial", ipa: "/təˈres.tri.əl/", type: "adj", meaning: "Trên cạn", example: "" },
+            { word: "Timber", ipa: "/ˈtɪm.bɚ/", type: "n", meaning: "Gỗ", example: "" },
+            { word: "Toxication", ipa: "", type: "n", meaning: "Sự nhiễm độc", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

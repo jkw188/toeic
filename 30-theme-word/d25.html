@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 25: Traffic - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #B91C1C; --secondary-bg: #FEE2E2; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #FEE2E2; color: #B91C1C; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 25: Giao thông</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Congestion", ipa: "/kənˈdʒes.tʃən/", type: "n", meaning: "Sự tắc nghẽn", example: "Traffic congestion on the highway." },
+            { word: "Congest", ipa: "/kənˈdʒest/", type: "v (der)", meaning: "Làm tắc nghẽn", example: "" },
+            { word: "Traffic jam", ipa: "", type: "phr (syn)", meaning: "Tắc đường", example: "" },
+            { word: "Alleviate", ipa: "/əˈliː.vi.eɪt/", type: "v", meaning: "Làm dịu, giảm bớt", example: "Alleviated traffic congestion." },
+            { word: "Alleviation", ipa: "/əˌliː.viˈeɪ.ʃən/", type: "n (der)", meaning: "Sự giảm bớt", example: "" },
+            { word: "Ease", ipa: "/iːz/", type: "v (syn)", meaning: "Làm dịu", example: "" },
+            { word: "Exacerbate", ipa: "/ɪɡˈzæs.ɚ.beɪt/", type: "v (ant)", meaning: "Làm trầm trọng", example: "" },
+            { word: "Divert", ipa: "/dɪˈvɝːt/", type: "v", meaning: "Làm chệch hướng", example: "Traffic was diverted." },
+            { word: "Diversion", ipa: "/dɪˈvɝː.ʃən/", type: "n (der)", meaning: "Sự chuyển hướng", example: "" },
+            { word: "Detour", ipa: "/ˈdiː.tʊr/", type: "n", meaning: "Đường vòng", example: "Take a detour." },
+            { word: "Detour", ipa: "/ˈdiː.tʊr/", type: "v", meaning: "Đi đường vòng", example: "" },
+            { word: "Fuel", ipa: "/ˈfjuː.əl/", type: "n", meaning: "Nhiên liệu", example: "Ran out of fuel." },
+            { word: "Malfunction", ipa: "/ˌmælˈfʌŋk.ʃən/", type: "n", meaning: "Sự trục trặc", example: "A brake malfunction." },
+            { word: "Malfunction", ipa: "/ˌmælˈfʌŋk.ʃən/", type: "v", meaning: "Trục trặc", example: "" },
+            { word: "Permit", ipa: "/pɚˈmɪt/", type: "v", meaning: "Cho phép", example: "Permits only shoppers." },
+            { word: "Permit", ipa: "/ˈpɝː.mɪt/", type: "n", meaning: "Giấy phép", example: "Parking permit." },
+            { word: "Permission", ipa: "/pɚˈmɪʃ.ən/", type: "n (der)", meaning: "Sự cho phép", example: "" },
+            { word: "Permissive", ipa: "/pɚˈmɪs.ɪv/", type: "adj (der)", meaning: "Tùy ý / Dễ dãi", example: "" },
+            { word: "Allow", ipa: "/əˈlaʊ/", type: "v (syn)", meaning: "Cho phép", example: "" },
+            { word: "Forbid", ipa: "/fɚˈbɪd/", type: "v (ant)", meaning: "Cấm", example: "" },
+            { word: "Transportation", ipa: "/ˌtræn.spɚˈteɪ.ʃən/", type: "n", meaning: "Giao thông vận tải", example: "Public transportation." },
+            { word: "Transport", ipa: "/trænˈspɔːrt/", type: "v (der)", meaning: "Vận chuyển", example: "" },
+            { word: "Opportunity", ipa: "/ˌɑː.pɚˈtuː.nə.t̬i/", type: "n", meaning: "Cơ hội", example: "Opportunity to explore." },
+            { word: "Clearly", ipa: "/ˈklɪr.li/", type: "adv", meaning: "Rõ ràng", example: "Clearly showed the flow." },
+            { word: "Clear", ipa: "/klɪr/", type: "adj (der)", meaning: "Rõ ràng", example: "" },
+            { word: "Evidently", ipa: "/ˈev.ə.dənt.li/", type: "adv (syn)", meaning: "Hiển nhiên", example: "" },
+            { word: "Ongoing", ipa: "/ˈɑːnˌɡoʊ.ɪŋ/", type: "adj", meaning: "Đang diễn ra", example: "Ongoing roadwork." },
+            { word: "Detailed", ipa: "/ˈdiː.teɪld/", type: "adj", meaning: "Chi tiết", example: "Detailed local maps." },
+            { word: "Detail", ipa: "/ˈdiː.teɪl/", type: "n (der)", meaning: "Chi tiết", example: "" },
+            { word: "Alternative", ipa: "/ɑːlˈtɝː.nə.t̬ɪv/", type: "n", meaning: "Sự lựa chọn thay thế", example: "Alternative to driving." },
+            { word: "Alternative", ipa: "/ɑːlˈtɝː.nə.t̬ɪv/", type: "adj", meaning: "Thay thế", example: "Alternative air carrier." },
+            { word: "Alternatively", ipa: "/ɑːlˈtɝː.nə.t̬ɪv.li/", type: "adv (der)", meaning: "Như một lựa chọn khác", example: "" },
+            { word: "Obtain", ipa: "/əbˈteɪn/", type: "v", meaning: "Đạt được, lấy được", example: "Licenses can be obtained." },
+            { word: "Obtainable", ipa: "/əbˈteɪ.nə.bəl/", type: "adj (der)", meaning: "Có thể đạt được", example: "" },
+            { word: "Secure", ipa: "/səˈkjʊr/", type: "v (syn)", meaning: "Chiếm được / Bảo đảm", example: "" },
+            { word: "Designated", ipa: "/ˈdez.ɪɡ.neɪ.t̬ɪd/", type: "adj", meaning: "Được chỉ định", example: "Designated spots." },
+            { word: "Designate", ipa: "/ˈdez.ɪɡ.neɪt/", type: "v (der)", meaning: "Chỉ định", example: "" },
+            { word: "Designation", ipa: "/ˌdez.ɪɡˈneɪ.ʃən/", type: "n (der)", meaning: "Sự chỉ định", example: "" },
+            { word: "Appointed", ipa: "/əˈpɔɪn.t̬ɪd/", type: "adj (syn)", meaning: "Được bổ nhiệm", example: "" },
+            { word: "Intersection", ipa: "/ˌɪn.t̬ɚˈsek.ʃən/", type: "n", meaning: "Ngã tư, giao lộ", example: "Intersection of Fifth Avenue." },
+            { word: "Equip", ipa: "/ɪˈkwɪp/", type: "v", meaning: "Trang bị", example: "Equipped with emergency kits." },
+            { word: "Equipment", ipa: "/ɪˈkwɪp.mənt/", type: "n (der)", meaning: "Trang thiết bị", example: "" },
+            { word: "Commute", ipa: "/kəˈmjuːt/", type: "v", meaning: "Đi làm (đường xa)", example: "Commute into the city." },
+            { word: "Commuter", ipa: "/kəˈmjuː.t̬ɚ/", type: "n (der)", meaning: "Người đi làm", example: "" },
+            { word: "Downtown", ipa: "/ˌdaʊnˈtaʊn/", type: "adv", meaning: "Ở trung tâm thành phố", example: "Find free parking downtown." },
+            { word: "Automotive", ipa: "/ˌɑː.t̬əˈmoʊ.t̬ɪv/", type: "adj", meaning: "Thuộc ô tô", example: "Automotive repair service." },
+            { word: "Closure", ipa: "/ˈkloʊ.ʒɚ/", type: "n", meaning: "Sự đóng cửa", example: "Road closures." },
+            { word: "Vehicle", ipa: "/ˈviː.ə.kəl/", type: "n", meaning: "Xe cộ", example: "All vehicles must be registered." },
+            { word: "Platform", ipa: "/ˈplæt.fɔːrm/", type: "n", meaning: "Sân ga", example: "Departing from platform two." },
+            { word: "Official", ipa: "/əˈfɪʃ.əl/", type: "n", meaning: "Quan chức", example: "Transportation officials." },
+            { word: "Official", ipa: "/əˈfɪʃ.əl/", type: "adj", meaning: "Chính thức", example: "Official report." },
+            { word: "Officially", ipa: "/əˈfɪʃ.əl.i/", type: "adv (der)", meaning: "Chính thức", example: "" },
+            { word: "Formal", ipa: "/ˈfɔːr.məl/", type: "adj (syn)", meaning: "Trang trọng", example: "" },
+            { word: "Transit", ipa: "/ˈtræn.sɪt/", type: "n", meaning: "Sự vận chuyển / Giao thông", example: "Public transit." },
+            { word: "Fare", ipa: "/fer/", type: "n", meaning: "Giá vé", example: "Bus fares." },
+            { word: "Fee", ipa: "/fiː/", type: "n (confusing)", meaning: "Lệ phí", example: "" },
+            { word: "Toll", ipa: "/toʊl/", type: "n (confusing)", meaning: "Phí cầu đường", example: "" },
+            { word: "Expense", ipa: "/ɪkˈspens/", type: "n", meaning: "Chi phí", example: "Worth the expense." },
+            { word: "Expensive", ipa: "/ɪkˈspen.sɪv/", type: "adj (der)", meaning: "Đắt", example: "" },
+            { word: "Charge", ipa: "/tʃɑːrdʒ/", type: "n (syn)", meaning: "Phí", example: "" },
+            { word: "Cost", ipa: "/kɑːst/", type: "n (syn)", meaning: "Giá", example: "" },
+            { word: "Trust", ipa: "/trʌst/", type: "n", meaning: "Lòng tin", example: "Earn the trust." },
+            { word: "Trust", ipa: "/trʌst/", type: "v", meaning: "Tin tưởng", example: "Drivers trust that..." },
+            { word: "Trustworthy", ipa: "/ˈtrʌstˌwɝː.ði/", type: "adj (der)", meaning: "Đáng tin cậy", example: "" },
+            { word: "Head", ipa: "/hed/", type: "v", meaning: "Hướng về", example: "Headed west." },
+            { word: "Drive", ipa: "/draɪv/", type: "v", meaning: "Lái xe", example: "Drive in the carpool lane." },
+            { word: "Fine", ipa: "/faɪn/", type: "n", meaning: "Tiền phạt", example: "Subject to a substantial fine." },
+            { word: "Penalty", ipa: "/ˈpen.əl.ti/", type: "n (syn)", meaning: "Hình phạt", example: "" },
+            { word: "Tariff", ipa: "/ˈter.ɪf/", type: "n (confusing)", meaning: "Thuế quan", example: "" },
+            { word: "Pass", ipa: "/pæs/", type: "v", meaning: "Đi qua, vượt qua", example: "Pass other cars." },
+            { word: "Passable", ipa: "/ˈpæs.ə.bəl/", type: "adj (der)", meaning: "Có thể đi qua", example: "" },
+            { word: "Securely", ipa: "/səˈkjʊr.li/", type: "adv", meaning: "Chắc chắn, an toàn", example: "Fasten seatbelts securely." },
+            { word: "Secure", ipa: "/səˈkjʊr/", type: "adj (der)", meaning: "An toàn", example: "" },
+            { word: "Prominently", ipa: "/ˈprɑː.mə.nənt.li/", type: "adv", meaning: "Dễ thấy, nổi bật", example: "Prominently displayed." },
+            { word: "Prominent", ipa: "/ˈprɑː.mə.nənt/", type: "adj (der)", meaning: "Nổi bật", example: "" },
+            { word: "Reserved", ipa: "/rɪˈzɝːvd/", type: "adj", meaning: "Dành riêng, đặt trước", example: "Reserved parking." },
+            { word: "Reserve", ipa: "/rɪˈzɝːv/", type: "v (der)", meaning: "Đặt trước", example: "" },
+            { word: "Reservation", ipa: "/ˌrez.ɚˈveɪ.ʃən/", type: "n (der)", meaning: "Sự đặt chỗ", example: "" },
+            { word: "Preserved", ipa: "/prɪˈzɝːvd/", type: "adj (confusing)", meaning: "Được bảo tồn", example: "" },
+            { word: "Average", ipa: "/ˈæv.ɚ.ɪdʒ/", type: "n", meaning: "Mức trung bình", example: "Last year's average." },
+            { word: "Collision", ipa: "/kəˈlɪʒ.ən/", type: "n", meaning: "Sự va chạm", example: "Four-car collision." },
+            { word: "Tow", ipa: "/toʊ/", type: "v", meaning: "Kéo (xe)", example: "Vehicles will be towed." },
+            { word: "Reverse", ipa: "/rɪˈvɝːs/", type: "adj/n", meaning: "Ngược lại / Số lùi", example: "Put into reverse gear." },
+            { word: "Obstruct", ipa: "/əbˈstrʌkt/", type: "v", meaning: "Cản trở, che khuất", example: "Obstruct the driver's view." },
+            { word: "Obstruction", ipa: "/əbˈstrʌk.ʃən/", type: "n (der)", meaning: "Sự cản trở", example: "" },
+            { word: "Block", ipa: "/blɑːk/", type: "v (syn)", meaning: "Chặn", example: "" },
+
+            // --- BASIC & EXTRAS ---
+            { word: "Bus stop", ipa: "", type: "phr", meaning: "Trạm xe buýt", example: "" },
+            { word: "Busy street", ipa: "", type: "phr", meaning: "Đường phố đông đúc", example: "" },
+            { word: "Cab", ipa: "/kæb/", type: "n", meaning: "Taxi", example: "" },
+            { word: "Car rental", ipa: "", type: "phr", meaning: "Thuê xe", example: "" },
+            { word: "Crosswalk", ipa: "/ˈkrɑːs.wɑːk/", type: "n", meaning: "Vạch qua đường", example: "" },
+            { word: "Free parking", ipa: "", type: "phr", meaning: "Đỗ xe miễn phí", example: "" },
+            { word: "Gas station", ipa: "", type: "phr", meaning: "Trạm xăng", example: "" },
+            { word: "Get off", ipa: "", type: "phr", meaning: "Xuống xe", example: "" },
+            { word: "Hang", ipa: "/hæŋ/", type: "v", meaning: "Treo", example: "" },
+            { word: "Heavy traffic", ipa: "", type: "phr", meaning: "Giao thông đông đúc", example: "" },
+            { word: "Highway", ipa: "/ˈhaɪ.weɪ/", type: "n", meaning: "Đường cao tốc", example: "" },
+            { word: "On foot", ipa: "", type: "phr", meaning: "Đi bộ", example: "" },
+            { word: "Park", ipa: "/pɑːrk/", type: "v", meaning: "Đỗ xe", example: "" },
+            { word: "Subway station", ipa: "", type: "phr", meaning: "Ga tàu điện ngầm", example: "" },
+            { word: "Tour bus", ipa: "", type: "phr", meaning: "Xe buýt du lịch", example: "" },
+            { word: "Traffic light", ipa: "", type: "phr", meaning: "Đèn giao thông", example: "" },
+            { word: "Wall", ipa: "/wɑːl/", type: "n", meaning: "Bức tường", example: "" },
+            { word: "Wash the car", ipa: "", type: "phr", meaning: "Rửa xe", example: "" },
+            { word: "Wheel", ipa: "/wiːl/", type: "n", meaning: "Bánh xe", example: "" },
+            { word: "Access to", ipa: "", type: "phr", meaning: "Tiếp cận", example: "" },
+            { word: "Cite", ipa: "/saɪt/", type: "v", meaning: "Trích dẫn / Phạt", example: "" },
+            { word: "Hood", ipa: "/hʊd/", type: "n", meaning: "Nắp ca-pô", example: "" },
+            { word: "Inside", ipa: "/ɪnˈsaɪd/", type: "prep", meaning: "Bên trong", example: "" },
+            { word: "Route", ipa: "/ruːt/", type: "n", meaning: "Tuyến đường", example: "" },
+            { word: "Sharp", ipa: "/ʃɑːrp/", type: "adj", meaning: "Sắc / Gấp (khúc cua)", example: "" },
+            { word: "Solve", ipa: "/sɑːlv/", type: "v", meaning: "Giải quyết", example: "" },
+            { word: "Stand", ipa: "/stænd/", type: "v", meaning: "Đứng", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "Across the street", ipa: "", type: "phr", meaning: "Bên kia đường", example: "" },
+            { word: "Around the corner", ipa: "", type: "phr", meaning: "Ngay gần đây", example: "" },
+            { word: "Be closed to traffic", ipa: "", type: "phr", meaning: "Cấm xe cộ", example: "" },
+            { word: "Be held up", ipa: "", type: "phr", meaning: "Bị kẹt (xe)", example: "" },
+            { word: "Be lined with", ipa: "", type: "phr", meaning: "Xếp hàng dọc theo", example: "" },
+            { word: "Broadcast", ipa: "/ˈbrɑːd.kæst/", type: "v/n", meaning: "Phát sóng", example: "" },
+            { word: "Bypass", ipa: "/ˈbaɪ.pæs/", type: "n", meaning: "Đường vòng", example: "" },
+            { word: "Carpool", ipa: "/ˈkɑːr.puːl/", type: "v", meaning: "Đi chung xe", example: "" },
+            { word: "Come to a standstill", ipa: "", type: "phr", meaning: "Ngưng trệ", example: "" },
+            { word: "Commuter", ipa: "/kəˈmjuː.t̬ɚ/", type: "n", meaning: "Người đi làm xa", example: "" },
+            { word: "Cross the street", ipa: "", type: "phr", meaning: "Sang đường", example: "" },
+            { word: "Direct traffic", ipa: "", type: "phr", meaning: "Điều khiển giao thông", example: "" },
+            { word: "Driver's license", ipa: "", type: "phr", meaning: "Bằng lái xe", example: "" },
+            { word: "Driveway", ipa: "/ˈdraɪv.weɪ/", type: "n", meaning: "Đường lái xe vào nhà", example: "" },
+            { word: "Driving direction", ipa: "", type: "phr", meaning: "Hướng dẫn lái xe", example: "" },
+            { word: "Footrest", ipa: "/ˈfʊt.rest/", type: "n", meaning: "Chỗ để chân", example: "" },
+            { word: "Get a ride", ipa: "", type: "phr", meaning: "Đi nhờ xe", example: "" },
+            { word: "Get lost", ipa: "", type: "phr", meaning: "Bị lạc", example: "" },
+            { word: "Get to", ipa: "", type: "phr", meaning: "Đến", example: "" },
+            { word: "Give a ride", ipa: "", type: "phr", meaning: "Cho đi nhờ", example: "" },
+            { word: "Have a flat tire", ipa: "", type: "phr", meaning: "Bị xịt lốp", example: "" },
+            { word: "Headlight", ipa: "/ˈhed.laɪt/", type: "n", meaning: "Đèn pha", example: "" },
+            { word: "Land at the dock", ipa: "", type: "phr", meaning: "Cập bến", example: "" },
+            { word: "Lane", ipa: "/leɪn/", type: "n", meaning: "Làn đường", example: "" },
+            { word: "Lean over railing", ipa: "", type: "phr", meaning: "Tựa vào lan can", example: "" },
+            { word: "License plate", ipa: "", type: "phr", meaning: "Biển số xe", example: "" },
+            { word: "Lock keys in car", ipa: "", type: "phr", meaning: "Để quên chìa khóa trong xe", example: "" },
+            { word: "Make a stop", ipa: "", type: "phr", meaning: "Dừng lại", example: "" },
+            { word: "Make a transfer", ipa: "", type: "phr", meaning: "Chuyển xe/tàu", example: "" },
+            { word: "March", ipa: "/mɑːrtʃ/", type: "v", meaning: "Diễu hành", example: "" },
+            { word: "Mileage", ipa: "/ˈmaɪ.lɪdʒ/", type: "n", meaning: "Tổng số dặm", example: "" },
+            { word: "Navigation", ipa: "/ˌnæv.əˈɡeɪ.ʃən/", type: "n", meaning: "Sự điều hướng", example: "" },
+            { word: "One-way ticket", ipa: "", type: "phr", meaning: "Vé một chiều", example: "" },
+            { word: "Parking garage", ipa: "", type: "phr", meaning: "Nhà để xe", example: "" },
+            { word: "Pathway", ipa: "/ˈpæθ.weɪ/", type: "n", meaning: "Đường mòn", example: "" },
+            { word: "Push through", ipa: "", type: "phr", meaning: "Chen qua", example: "" },
+            { word: "Ride away", ipa: "", type: "phr", meaning: "Lái xe đi", example: "" },
+            { word: "Road sign", ipa: "", type: "phr", meaning: "Biển báo giao thông", example: "" },
+            { word: "Roadwork", ipa: "/ˈroʊd.wɝːk/", type: "n", meaning: "Làm đường", example: "" },
+            { word: "Shortcut", ipa: "/ˈʃɔːrt.kʌt/", type: "n", meaning: "Đường tắt", example: "" },
+            { word: "Stop at a light", ipa: "", type: "phr", meaning: "Dừng đèn đỏ", example: "" },
+            { word: "Stop for fuel", ipa: "", type: "phr", meaning: "Dừng đổ xăng", example: "" },
+            { word: "Storage compartment", ipa: "", type: "phr", meaning: "Ngăn chứa đồ", example: "" },
+            { word: "Street sign", ipa: "", type: "phr", meaning: "Biển tên đường", example: "" },
+            { word: "Toll price", ipa: "", type: "phr", meaning: "Phí cầu đường", example: "" },
+            { word: "Traffic jam", ipa: "", type: "phr", meaning: "Tắc đường", example: "" },
+            { word: "Walk through", ipa: "", type: "phr", meaning: "Đi xuyên qua", example: "" },
+            { word: "Walking distance", ipa: "", type: "phr", meaning: "Khoảng cách đi bộ", example: "" },
+            { word: "Walkway", ipa: "/ˈwɑːk.weɪ/", type: "n", meaning: "Lối đi bộ", example: "" },
+            { word: "Windshield", ipa: "/ˈwɪnd.ʃiːld/", type: "n", meaning: "Kính chắn gió", example: "" },
+            { word: "Creation", ipa: "/kriˈeɪ.ʃən/", type: "n", meaning: "Sự tạo ra", example: "" },
+            { word: "Motivate", ipa: "/ˈmoʊ.t̬ə.veɪt/", type: "v", meaning: "Thúc đẩy", example: "" },
+            { word: "Normal", ipa: "/ˈnɔːr.məl/", type: "adj", meaning: "Bình thường", example: "" },
+            { word: "Still", ipa: "/stɪl/", type: "adj", meaning: "Tĩnh lặng", example: "" },
+            { word: "Traffic signal", ipa: "", type: "phr", meaning: "Tín hiệu giao thông", example: "" },
+            { word: "Valuable", ipa: "/ˈvæl.ju.ə.bəl/", type: "adj", meaning: "Quý giá", example: "" },
+            { word: "Volunteer", ipa: "/ˌvɑː.lənˈtɪr/", type: "n", meaning: "Tình nguyện viên", example: "" },
+            { word: "At full speed", ipa: "", type: "phr", meaning: "Tốc độ tối đa", example: "" },
+            { word: "Clear A from B", ipa: "", type: "phr", meaning: "Dọn sạch", example: "" },
+            { word: "Collide", ipa: "/kəˈlaɪd/", type: "v", meaning: "Va chạm", example: "" },
+            { word: "Congested", ipa: "/kənˈdʒes.tɪd/", type: "adj", meaning: "Đông nghịt", example: "" },
+            { word: "Encounter", ipa: "/ɪnˈkaʊn.t̬ɚ/", type: "v", meaning: "Gặp phải", example: "" },
+            { word: "Move forward", ipa: "", type: "phr", meaning: "Tiến lên", example: "" },
+            { word: "Principal", ipa: "/ˈprɪn.sə.pəl/", type: "adj", meaning: "Chính / Chủ yếu", example: "" },
+            { word: "Public transportation", ipa: "", type: "phr", meaning: "Giao thông công cộng", example: "" },
+            { word: "Standing room", ipa: "", type: "phr", meaning: "Chỗ đứng", example: "" },
+            { word: "Steering wheel", ipa: "", type: "phr", meaning: "Vô lăng", example: "" },
+            { word: "Traffic congestion", ipa: "", type: "phr", meaning: "Ùn tắc giao thông", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Be towed away", ipa: "", type: "phr", meaning: "Bị cẩu đi", example: "" },
+            { word: "Bicycle rack", ipa: "", type: "phr", meaning: "Giá để xe đạp", example: "" },
+            { word: "Carriage", ipa: "/ˈker.ɪdʒ/", type: "n", meaning: "Toa xe / Cỗ xe", example: "" },
+            { word: "Fuel-efficient", ipa: "", type: "adj", meaning: "Tiết kiệm nhiên liệu", example: "" },
+            { word: "Navigate", ipa: "/ˈnæv.ə.ɡeɪt/", type: "v", meaning: "Điều hướng", example: "" },
+            { word: "Overnight express", ipa: "", type: "phr", meaning: "Chuyển phát nhanh qua đêm", example: "" },
+            { word: "Pass by", ipa: "", type: "phr", meaning: "Đi ngang qua", example: "" },
+            { word: "Passerby", ipa: "/ˌpæs.ɚˈbaɪ/", type: "n", meaning: "Người qua đường", example: "" },
+            { word: "Pave", ipa: "/peɪv/", type: "v", meaning: "Lát đường", example: "" },
+            { word: "Pedestrian", ipa: "/pəˈdes.tri.ən/", type: "n", meaning: "Người đi bộ", example: "" },
+            { word: "Pull into", ipa: "", type: "phr", meaning: "Đỗ vào", example: "" },
+            { word: "Sidewalk", ipa: "/ˈsaɪd.wɑːk/", type: "n", meaning: "Vỉa hè", example: "" },
+            { word: "Specialist", ipa: "/ˈspeʃ.əl.ɪst/", type: "n", meaning: "Chuyên gia", example: "" },
+            { word: "Spoke", ipa: "/spoʊk/", type: "n", meaning: "Nan hoa", example: "" },
+            { word: "Streetcar", ipa: "/ˈstriːt.kɑːr/", type: "n", meaning: "Xe điện", example: "" },
+            { word: "Towing service", ipa: "", type: "phr", meaning: "Dịch vụ cẩu xe", example: "" },
+            { word: "Wagon", ipa: "/ˈwæɡ.ən/", type: "n", meaning: "Toa xe / Xe ba gác", example: "" },
+            { word: "Bear", ipa: "/ber/", type: "v", meaning: "Mang / Chịu đựng", example: "" },
+            { word: "Emphatic", ipa: "/emˈfæt̬.ɪk/", type: "adj", meaning: "Mạnh mẽ / Dứt khoát", example: "" },
+            { word: "Hastily", ipa: "/ˈheɪ.stə.li/", type: "adv", meaning: "Vội vàng", example: "" },
+            { word: "Inconveniently", ipa: "/ˌɪn.kənˈviːn.jənt.li/", type: "adv", meaning: "Bất tiện", example: "" },
+            { word: "Necessitate", ipa: "/nəˈses.ə.teɪt/", type: "v", meaning: "Đòi hỏi", example: "" },
+            { word: "Opposition", ipa: "/ˌɑː.pəˈzɪʃ.ən/", type: "n", meaning: "Sự đối lập", example: "" },
+            { word: "Ridership", ipa: "/ˈraɪ.dɚ.ʃɪp/", type: "n", meaning: "Lượng hành khách", example: "" },
+            { word: "Surround", ipa: "/səˈraʊnd/", type: "v", meaning: "Bao quanh", example: "" },
+            { word: "Compact car", ipa: "", type: "phr", meaning: "Xe cỡ nhỏ", example: "" },
+            { word: "Conform to", ipa: "", type: "phr", meaning: "Tuân thủ", example: "" },
+            { word: "Drawbridge", ipa: "/ˈdrɑː.brɪdʒ/", type: "n", meaning: "Cầu rút", example: "" },
+            { word: "Give off", ipa: "", type: "phr", meaning: "Tỏa ra", example: "" },
+            { word: "Gratuity", ipa: "/ɡrəˈtuː.ə.t̬i/", type: "n", meaning: "Tiền boa", example: "" },
+            { word: "Ramp", ipa: "/ræmp/", type: "n", meaning: "Dốc", example: "" },
+            { word: "Refurbish", ipa: "/ˌriːˈfɝː.bɪʃ/", type: "v", meaning: "Tân trang", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

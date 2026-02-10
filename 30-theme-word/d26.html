@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 26: Banking - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0891B2; --secondary-bg: #CFFAFE; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #CFFAFE; color: #0891B2; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 26: Ngân hàng</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Delinquent", ipa: "/dɪˈlɪŋ.kwənt/", type: "adj", meaning: "Trễ hạn, trả chậm", example: "The delinquent account has been suspended." },
+            { word: "Delinquency", ipa: "/dɪˈlɪŋ.kwən.si/", type: "n (der)", meaning: "Sự trả chậm", example: "" },
+            { word: "Overdue", ipa: "/ˌoʊ.vɚˈduː/", type: "adj (syn)", meaning: "Quá hạn", example: "The bill is overdue." },
+            { word: "Regrettably", ipa: "/rɪˈɡret̬.ə.bli/", type: "adv", meaning: "Đáng tiếc thay", example: "Regrettably unable to approve." },
+            { word: "Regrettable", ipa: "/rɪˈɡret̬.ə.bəl/", type: "adj (der)", meaning: "Đáng tiếc", example: "" },
+            { word: "Regretfully", ipa: "/rɪˈɡret.fəl.i/", type: "adv (der)", meaning: "Một cách hối tiếc", example: "" },
+            { word: "Balance", ipa: "/ˈbæl.əns/", type: "n", meaning: "Số dư", example: "Check account balance." },
+            { word: "Remainder", ipa: "/rɪˈmeɪn.dɚ/", type: "n (syn)", meaning: "Phần còn lại", example: "" },
+            { word: "Deposit", ipa: "/dɪˈpɑː.zɪt/", type: "v", meaning: "Gửi tiền", example: "Deposited his paycheck." },
+            { word: "Deposit", ipa: "/dɪˈpɑː.zɪt/", type: "n", meaning: "Tiền gửi", example: "" },
+            { word: "Withdraw", ipa: "/wɪðˈdrɑː/", type: "v (ant)", meaning: "Rút tiền", example: "" },
+            { word: "Investigation", ipa: "/ɪnˌves.təˈɡeɪ.ʃən/", type: "n", meaning: "Sự điều tra", example: "Investigation into Harp Financial." },
+            { word: "Investigate", ipa: "/ɪnˈves.tə.ɡeɪt/", type: "v (der)", meaning: "Điều tra", example: "" },
+            { word: "Investigative", ipa: "/ɪnˈves.tə.ɡeɪ.t̬ɪv/", type: "adj (der)", meaning: "Thuộc điều tra", example: "" },
+            { word: "Account", ipa: "/əˈkaʊnt/", type: "n", meaning: "Tài khoản / Bản báo cáo", example: "Put in the account." },
+            { word: "Account", ipa: "/əˈkaʊnt/", type: "v", meaning: "Giải thích / Chiếm tỷ lệ", example: "Account for the error." },
+            { word: "Accounting", ipa: "/əˈkaʊn.tɪŋ/", type: "n (der)", meaning: "Kế toán", example: "" },
+            { word: "Accountant", ipa: "/əˈkaʊn.t̬ənt/", type: "n (der)", meaning: "Kế toán viên", example: "" },
+            { word: "Description", ipa: "/dɪˈskrɪp.ʃən/", type: "n (syn)", meaning: "Sự miêu tả", example: "" },
+            { word: "Statement", ipa: "/ˈsteɪt.mənt/", type: "n", meaning: "Sao kê, báo cáo", example: "Bank statements." },
+            { word: "State", ipa: "/steɪt/", type: "v (der)", meaning: "Phát biểu", example: "" },
+            { word: "Amount", ipa: "/əˈmaʊnt/", type: "n", meaning: "Số lượng, khoản tiền", example: "Amount of money needed." },
+            { word: "Amount", ipa: "/əˈmaʊnt/", type: "v", meaning: "Lên tới", example: "" },
+            { word: "Withdrawal", ipa: "/wɪðˈdrɑː.əl/", type: "n", meaning: "Sự rút tiền", example: "Withdrawals can be made anytime." },
+            { word: "Withdraw", ipa: "/wɪðˈdrɑː/", type: "v (der)", meaning: "Rút tiền", example: "" },
+            { word: "Previously", ipa: "/ˈpriː.vi.əs.li/", type: "adv", meaning: "Trước đây", example: "Previously opened account." },
+            { word: "Previous", ipa: "/ˈpriː.vi.əs/", type: "adj (der)", meaning: "Trước đó", example: "" },
+            { word: "Due", ipa: "/duː/", type: "adj", meaning: "Đến hạn / Do, bởi vì", example: "Payment is due." },
+            { word: "Receive", ipa: "/rɪˈsiːv/", type: "v", meaning: "Nhận", example: "Received a statement." },
+            { word: "Receipt", ipa: "/rɪˈsiːt/", type: "n (der)", meaning: "Biên lai", example: "" },
+            { word: "Reception", ipa: "/rɪˈsep.ʃən/", type: "n (der)", meaning: "Sự tiếp nhận", example: "" },
+            { word: "Expect", ipa: "/ɪkˈspekt/", type: "v", meaning: "Mong đợi, dự kiến", example: "Expected to increase." },
+            { word: "Expectation", ipa: "/ˌek.spekˈteɪ.ʃən/", type: "n (der)", meaning: "Sự mong đợi", example: "" },
+            { word: "Expected", ipa: "/ɪkˈspek.tɪd/", type: "adj (der)", meaning: "Được dự kiến", example: "" },
+            { word: "Anticipate", ipa: "/ænˈtɪs.ə.peɪt/", type: "v (syn)", meaning: "Dự đoán", example: "" },
+            { word: "Certificate", ipa: "/sɚˈtɪf.ə.kət/", type: "n", meaning: "Giấy chứng nhận", example: "Certificate of employment." },
+            { word: "Certification", ipa: "/ˌsɝː.t̬ə.fəˈkeɪ.ʃən/", type: "n (der)", meaning: "Sự chứng nhận", example: "" },
+            { word: "Certify", ipa: "/ˈsɝː.t̬ə.faɪ/", type: "v (der)", meaning: "Chứng nhận", example: "" },
+            { word: "Document", ipa: "/ˈdɑː.kjə.mənt/", type: "n", meaning: "Tài liệu", example: "Submit tax documents." },
+            { word: "Document", ipa: "/ˈdɑː.kjə.ment/", type: "v", meaning: "Ghi lại", example: "Document all costs." },
+            { word: "Documentation", ipa: "/ˌdɑː.kjə.menˈteɪ.ʃən/", type: "n (der)", meaning: "Tài liệu chứng minh", example: "" },
+            { word: "Spending", ipa: "/ˈspen.dɪŋ/", type: "n", meaning: "Chi tiêu", example: "Daily spending needs." },
+            { word: "Spend", ipa: "/spend/", type: "v (der)", meaning: "Tiêu xài", example: "" },
+            { word: "Successfully", ipa: "/səkˈses.fəl.i/", type: "adv", meaning: "Thành công", example: "Successfully transferred funds." },
+            { word: "Succeed", ipa: "/səkˈsiːd/", type: "v (der)", meaning: "Thành công", example: "" },
+            { word: "Success", ipa: "/səkˈses/", type: "n (der)", meaning: "Sự thành công", example: "" },
+            { word: "Bill", ipa: "/bɪl/", type: "v", meaning: "Gửi hóa đơn", example: "Residents will be billed." },
+            { word: "Bill", ipa: "/bɪl/", type: "n", meaning: "Hóa đơn", example: "Appear on the bill." },
+            { word: "Charge", ipa: "/tʃɑːrdʒ/", type: "v (syn)", meaning: "Tính phí", example: "" },
+            { word: "Pleasure", ipa: "/ˈpleʒ.ɚ/", type: "n", meaning: "Niềm vui, vinh hạnh", example: "A pleasure to bank with." },
+            { word: "Please", ipa: "/pliːz/", type: "v (der)", meaning: "Làm vui lòng", example: "" },
+            { word: "Pleased", ipa: "/pliːzd/", type: "adj (der)", meaning: "Hài lòng", example: "" },
+            { word: "Study", ipa: "/ˈstʌd.i/", type: "n", meaning: "Nghiên cứu", example: "This study investigates." },
+            { word: "Research", ipa: "/rɪˈsɝːtʃ/", type: "n (syn)", meaning: "Nghiên cứu", example: "" },
+            { word: "Summary", ipa: "/ˈsʌm.ɚ.i/", type: "n", meaning: "Bản tóm tắt", example: "Gives a summary." },
+            { word: "Summarize", ipa: "/ˈsʌm.ə.raɪz/", type: "v (der)", meaning: "Tóm tắt", example: "" },
+            { word: "Temporary", ipa: "/ˈtem.pə.rer.i/", type: "adj", meaning: "Tạm thời", example: "A temporary password." },
+            { word: "Temporarily", ipa: "/ˌtem.pəˈrer.əl.i/", type: "adv (der)", meaning: "Tạm thời", example: "" },
+            { word: "Lower", ipa: "/ˈloʊ.ɚ/", type: "v", meaning: "Giảm, hạ thấp", example: "Lowers costs." },
+            { word: "Low", ipa: "/loʊ/", type: "adj (der)", meaning: "Thấp", example: "" },
+            { word: "Transaction", ipa: "/trænˈzæk.ʃən/", type: "n", meaning: "Giao dịch", example: "The first five transactions." },
+            { word: "Transact", ipa: "/trænˈzækt/", type: "v (der)", meaning: "Giao dịch", example: "" },
+            { word: "Double", ipa: "/ˈdʌb.əl/", type: "v", meaning: "Gấp đôi", example: "Doubled their money." },
+            { word: "Identification", ipa: "/aɪˌden.t̬ə.fəˈkeɪ.ʃən/", type: "n", meaning: "Giấy tờ tùy thân", example: "Two forms of identification." },
+            { word: "Identify", ipa: "/aɪˈden.t̬ə.faɪ/", type: "v (der)", meaning: "Nhận diện", example: "" },
+            { word: "Identity", ipa: "/aɪˈden.t̬ə.t̬i/", type: "n (confusing)", meaning: "Danh tính", example: "" },
+            { word: "Dissatisfaction", ipa: "/ˌdɪsˌsæt̬.ɪsˈfæk.ʃən/", type: "n", meaning: "Sự không hài lòng", example: "Registered their dissatisfaction." },
+            { word: "Dissatisfy", ipa: "/ˌdɪsˈsæt̬.əs.faɪ/", type: "v (der)", meaning: "Làm không hài lòng", example: "" },
+            { word: "Satisfaction", ipa: "/ˌsæt̬.ɪsˈfæk.ʃən/", type: "n (ant)", meaning: "Sự hài lòng", example: "" },
+            { word: "In common", ipa: "", type: "phr", meaning: "Điểm chung", example: "Have much in common." },
+            { word: "Commonly", ipa: "/ˈkɑː.mən.li/", type: "adv (der)", meaning: "Thông thường", example: "" },
+            { word: "Interest", ipa: "/ˈɪn.trəst/", type: "n", meaning: "Sự quan tâm / Lãi suất", example: "Shown great interest." },
+            { word: "Interested", ipa: "/ˈɪn.trə.stɪd/", type: "adj (der)", meaning: "Quan tâm", example: "" },
+            { word: "Reject", ipa: "/rɪˈdʒekt/", type: "v", meaning: "Từ chối", example: "Rejected for a mortgage." },
+            { word: "Rejection", ipa: "/rɪˈdʒek.ʃən/", type: "n (der)", meaning: "Sự từ chối", example: "" },
+            { word: "Relation", ipa: "/rɪˈleɪ.ʃən/", type: "n", meaning: "Mối quan hệ", example: "Relations became strained." },
+            { word: "Related", ipa: "/rɪˈleɪ.t̬ɪd/", type: "adj (der)", meaning: "Có liên quan", example: "" },
+            { word: "Tentatively", ipa: "/ˈten.tə.t̬ɪv.li/", type: "adv", meaning: "Ngập ngừng, dự kiến", example: "Tentatively agreed." },
+            { word: "Tentative", ipa: "/ˈten.tə.t̬ɪv/", type: "adj (der)", meaning: "Dự kiến", example: "" },
+            { word: "Alternatively", ipa: "/ɑːlˈtɝː.nə.t̬ɪv.li/", type: "adv", meaning: "Hoặc là, thay vào đó", example: "Alternatively, it can be placed." },
+            { word: "Alternative", ipa: "/ɑːlˈtɝː.nə.t̬ɪv/", type: "adj (der)", meaning: "Thay thế", example: "" },
+            { word: "Attentive", ipa: "/əˈten.tɪv/", type: "adj", meaning: "Chăm chú", example: "Martin was very attentive." },
+            { word: "Attend", ipa: "/əˈtend/", type: "v (der)", meaning: "Chú ý / Tham dự", example: "" },
+            { word: "Attention", ipa: "/əˈten.ʃən/", type: "n (der)", meaning: "Sự chú ý", example: "" },
+            { word: "Convert", ipa: "/kənˈvɝːt/", type: "v", meaning: "Chuyển đổi", example: "Converted into mutual funds." },
+            { word: "Conversion", ipa: "/kənˈvɝː.ʒən/", type: "n (der)", meaning: "Sự chuyển đổi", example: "" },
+            { word: "Heavily", ipa: "/ˈhev.ə.li/", type: "adv", meaning: "Nặng nề, nhiều", example: "Heavily relies on capital." },
+            { word: "Heavy", ipa: "/ˈhev.i/", type: "adj (der)", meaning: "Nặng", example: "" },
+            { word: "Loan", ipa: "/loʊn/", type: "n", meaning: "Khoản vay", example: "Took out a loan." },
+            { word: "Unexpected", ipa: "/ˌʌn.ɪkˈspek.tɪd/", type: "adj", meaning: "Bất ngờ", example: "Unexpected side effect." },
+            { word: "Unexpectedly", ipa: "/ˌʌn.ɪkˈspek.tɪd.li/", type: "adv (der)", meaning: "Bất ngờ", example: "" },
+            { word: "Cash", ipa: "/kæʃ/", type: "v", meaning: "Đổi thành tiền mặt", example: "Cash the check." },
+            { word: "Cash", ipa: "/kæʃ/", type: "n", meaning: "Tiền mặt", example: "" },
+            { word: "Mortgage", ipa: "/ˈmɔːr.ɡɪdʒ/", type: "n", meaning: "Thế chấp", example: "Mortgage rates." },
+            { word: "Payable", ipa: "/ˈpeɪ.ə.bəl/", type: "adj", meaning: "Phải trả", example: "Make checks payable to..." },
+            { word: "Pay", ipa: "/peɪ/", type: "v (der)", meaning: "Trả", example: "" },
+            { word: "Personal", ipa: "/ˈpɝː.sən.əl/", type: "adj", meaning: "Cá nhân", example: "Personal check." },
+            { word: "Person", ipa: "/ˈpɝː.sən/", type: "n (der)", meaning: "Người", example: "" },
+            { word: "Personally", ipa: "/ˈpɝː.sən.əl.i/", type: "adv (der)", meaning: "Đích thân", example: "" },
+            
+            // --- BASIC & EXTRAS ---
+            { word: "At the earliest", ipa: "", type: "phr", meaning: "Sớm nhất là", example: "" },
+            { word: "At the same time", ipa: "", type: "phr", meaning: "Cùng lúc", example: "" },
+            { word: "At this point", ipa: "", type: "phr", meaning: "Tại thời điểm này", example: "" },
+            { word: "Automatic payment", ipa: "", type: "phr", meaning: "Thanh toán tự động", example: "" },
+            { word: "Banker", ipa: "/ˈbæŋ.kɚ/", type: "n", meaning: "Chủ ngân hàng", example: "" },
+            { word: "Banking", ipa: "/ˈbæŋ.kɪŋ/", type: "n", meaning: "Hoạt động ngân hàng", example: "" },
+            { word: "Be used to", ipa: "", type: "phr", meaning: "Quen với", example: "" },
+            { word: "By the end of", ipa: "", type: "phr", meaning: "Trước cuối...", example: "" },
+            { word: "Clerk", ipa: "/klɝːk/", type: "n", meaning: "Thư ký / Nhân viên", example: "" },
+            { word: "Cozy", ipa: "/ˈkoʊ.zi/", type: "adj", meaning: "Ấm cúng", example: "" },
+            { word: "Credit card number", ipa: "", type: "phr", meaning: "Số thẻ tín dụng", example: "" },
+            { word: "Float", ipa: "/floʊt/", type: "v", meaning: "Trôi nổi / Thả nổi", example: "" },
+            { word: "Gesture", ipa: "/ˈdʒes.tʃɚ/", type: "n", meaning: "Cử chỉ", example: "" },
+            { word: "Hand", ipa: "/hænd/", type: "n/v", meaning: "Bàn tay / Trao", example: "" },
+            { word: "Next to", ipa: "", type: "phr", meaning: "Bên cạnh", example: "" },
+            { word: "Password", ipa: "/ˈpæs.wɝːd/", type: "n", meaning: "Mật khẩu", example: "" },
+            { word: "Coin", ipa: "/kɔɪn/", type: "n", meaning: "Tiền xu", example: "" },
+            { word: "Evening news", ipa: "", type: "phr", meaning: "Tin tức buổi tối", example: "" },
+            { word: "Generously", ipa: "/ˈdʒen.ər.əs.li/", type: "adv", meaning: "Hào phóng", example: "" },
+            { word: "In addition", ipa: "", type: "phr", meaning: "Ngoài ra", example: "" },
+            { word: "In short", ipa: "", type: "phr", meaning: "Tóm lại", example: "" },
+            { word: "Thankful", ipa: "/ˈθæŋk.fəl/", type: "adj", meaning: "Biết ơn", example: "" },
+            { word: "Unnecessary", ipa: "/ʌnˈnes.ə.ser.i/", type: "adj", meaning: "Không cần thiết", example: "" },
+            { word: "Useful", ipa: "/ˈjuːs.fəl/", type: "adj", meaning: "Hữu ích", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "Alternate", ipa: "/ˈɑːl.tɚ.nət/", type: "adj", meaning: "Xen kẽ", example: "" },
+            { word: "Awfully", ipa: "/ˈɑː.fəl.i/", type: "adv", meaning: "Vô cùng / Tồi tệ", example: "" },
+            { word: "Bank loan", ipa: "", type: "phr", meaning: "Khoản vay ngân hàng", example: "" },
+            { word: "Bank teller", ipa: "", type: "phr", meaning: "Giao dịch viên", example: "" },
+            { word: "Be amazed at", ipa: "", type: "phr", meaning: "Ngạc nhiên về", example: "" },
+            { word: "Be caught in", ipa: "", type: "phr", meaning: "Bị kẹt trong", example: "" },
+            { word: "Be spread out", ipa: "", type: "phr", meaning: "Được trải ra", example: "" },
+            { word: "Every other day", ipa: "", type: "phr", meaning: "Cách ngày", example: "" },
+            { word: "Flawed", ipa: "/flɑːd/", type: "adj", meaning: "Có lỗi", example: "" },
+            { word: "Foreign currency", ipa: "", type: "phr", meaning: "Ngoại tệ", example: "" },
+            { word: "Gaze into", ipa: "", type: "phr", meaning: "Nhìn chằm chằm", example: "" },
+            { word: "Get a loan", ipa: "", type: "phr", meaning: "Vay tiền", example: "" },
+            { word: "Give out", ipa: "", type: "phr", meaning: "Phân phát", example: "" },
+            { word: "Glance at", ipa: "", type: "phr", meaning: "Liếc nhìn", example: "" },
+            { word: "Go wrong", ipa: "", type: "phr", meaning: "Gặp trục trặc", example: "" },
+            { word: "Hang out", ipa: "", type: "phr", meaning: "Đi chơi / Treo ra ngoài", example: "" },
+            { word: "Have sb around", ipa: "", type: "phr", meaning: "Đón tiếp ai", example: "" },
+            { word: "If possible", ipa: "", type: "phr", meaning: "Nếu có thể", example: "" },
+            { word: "If you insist", ipa: "", type: "phr", meaning: "Nếu bạn khăng khăng", example: "" },
+            { word: "I'll bet", ipa: "", type: "phr", meaning: "Tôi cá là", example: "" },
+            { word: "Locally", ipa: "/ˈloʊ.kəl.i/", type: "adv", meaning: "Tại địa phương", example: "" },
+            { word: "Pay off", ipa: "", type: "phr", meaning: "Trả hết nợ / Đền đáp", example: "" },
+            { word: "Perhaps", ipa: "/pɚˈhæps/", type: "adv", meaning: "Có lẽ", example: "" },
+            { word: "Put in", ipa: "", type: "phr", meaning: "Gửi vào / Đầu tư", example: "" },
+            { word: "Savings", ipa: "/ˈseɪ.vɪŋz/", type: "n", meaning: "Tiền tiết kiệm", example: "" },
+            { word: "Short-term deposit", ipa: "", type: "phr", meaning: "Tiền gửi ngắn hạn", example: "" },
+            { word: "The following day", ipa: "", type: "phr", meaning: "Ngày hôm sau", example: "" },
+            { word: "Across from", ipa: "", type: "phr", meaning: "Đối diện", example: "" },
+            { word: "Alarming", ipa: "/əˈlɑːr.mɪŋ/", type: "adj", meaning: "Đáng báo động", example: "" },
+            { word: "Anymore", ipa: "/ˌen.iˈmɔːr/", type: "adv", meaning: "Nữa", example: "" },
+            { word: "At a time", ipa: "", type: "phr", meaning: "Cùng lúc", example: "" },
+            { word: "Courteously", ipa: "/ˈkɝː.t̬i.əs.li/", type: "adv", meaning: "Lịch sự", example: "" },
+            { word: "Indeed", ipa: "/ɪnˈdiːd/", type: "adv", meaning: "Thực sự", example: "" },
+            { word: "Otherwise", ipa: "/ˈʌð.ɚ.waɪz/", type: "adv", meaning: "Nếu không thì", example: "" },
+            { word: "Owing to", ipa: "", type: "phr", meaning: "Do, bởi vì", example: "" },
+            { word: "Partial", ipa: "/ˈpɑːr.ʃəl/", type: "adj", meaning: "Một phần / Thiên vị", example: "" },
+            { word: "Pay out", ipa: "", type: "phr", meaning: "Chi trả", example: "" },
+            { word: "Receptive", ipa: "/rɪˈsep.tɪv/", type: "adj", meaning: "Dễ tiếp thu", example: "" },
+            { word: "Simplify", ipa: "/ˈsɪm.plə.faɪ/", type: "v", meaning: "Đơn giản hóa", example: "" },
+            { word: "Someday", ipa: "/ˈsʌm.deɪ/", type: "adv", meaning: "Một ngày nào đó", example: "" },
+            { word: "Turn down", ipa: "", type: "phr", meaning: "Từ chối", example: "" },
+            { word: "Twofold", ipa: "/ˈtuː.foʊld/", type: "adv", meaning: "Gấp đôi", example: "" },
+            { word: "Account payable", ipa: "", type: "phr", meaning: "Khoản phải trả", example: "" },
+            { word: "Bank account", ipa: "", type: "phr", meaning: "Tài khoản ngân hàng", example: "" },
+            { word: "Highly regarded", ipa: "", type: "phr", meaning: "Được đánh giá cao", example: "" },
+            { word: "Billing information", ipa: "", type: "phr", meaning: "Thông tin thanh toán", example: "" },
+            { word: "Credit", ipa: "/ˈkred.ɪt/", type: "n", meaning: "Tín dụng", example: "" },
+            { word: "Creditor", ipa: "/ˈkred.ɪ.t̬ɚ/", type: "n", meaning: "Chủ nợ", example: "" },
+            { word: "Currency", ipa: "/ˈkɝː.ən.si/", type: "n", meaning: "Tiền tệ", example: "" },
+            { word: "Debit card", ipa: "", type: "phr", meaning: "Thẻ ghi nợ", example: "" },
+            { word: "Debt", ipa: "/det/", type: "n", meaning: "Nợ", example: "" },
+            { word: "Expiration date", ipa: "", type: "phr", meaning: "Ngày hết hạn", example: "" },
+            { word: "Financial history", ipa: "", type: "phr", meaning: "Lịch sử tài chính", example: "" },
+            { word: "For the sake of", ipa: "", type: "phr", meaning: "Vì lợi ích của", example: "" },
+            { word: "Forge", ipa: "/fɔːrdʒ/", type: "v", meaning: "Giả mạo", example: "" },
+            { word: "Forgery", ipa: "/ˈfɔːr.dʒɚ.i/", type: "n", meaning: "Sự giả mạo", example: "" },
+            { word: "Forthcoming", ipa: "/ˌfɔːrθˈkʌm.ɪŋ/", type: "adj", meaning: "Sắp tới", example: "" },
+            { word: "Midtown", ipa: "/ˈmɪd.taʊn/", type: "n", meaning: "Khu trung tâm", example: "" },
+            { word: "Owe", ipa: "/oʊ/", type: "v", meaning: "Nợ", example: "" },
+            { word: "PIN", ipa: "/pɪn/", type: "n", meaning: "Mã số cá nhân", example: "" },
+            { word: "Pop up", ipa: "", type: "phr", meaning: "Xuất hiện bất ngờ", example: "" },
+            { word: "Public holiday", ipa: "", type: "phr", meaning: "Ngày lễ", example: "" },
+            { word: "Reluctant", ipa: "/rɪˈlʌk.tənt/", type: "adj", meaning: "Miễn cưỡng", example: "" },
+            { word: "Requisition", ipa: "/ˌrek.wəˈzɪʃ.ən/", type: "n", meaning: "Yêu cầu", example: "" },
+            { word: "Scrutinize", ipa: "/ˈskruː.t̬ən.aɪz/", type: "v", meaning: "Xem xét kỹ lưỡng", example: "" },
+            { word: "Sustain", ipa: "/səˈsteɪn/", type: "v", meaning: "Duy trì / Chống đỡ", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Be held up", ipa: "", type: "phr", meaning: "Bị trì hoãn", example: "" },
+            { word: "Crash", ipa: "/kræʃ/", type: "n", meaning: "Sự sụp đổ (thị trường)", example: "" },
+            { word: "Make a withdrawal", ipa: "", type: "phr", meaning: "Rút tiền", example: "" },
+            { word: "On loan", ipa: "", type: "phr", meaning: "Đang cho vay", example: "" },
+            { word: "Overdrawn", ipa: "/ˌoʊ.vɚˈdrɑːn/", type: "adj", meaning: "Rút quá số dư", example: "" },
+            { word: "Take out a loan", ipa: "", type: "phr", meaning: "Vay tiền", example: "" },
+            { word: "Take out insurance", ipa: "", type: "phr", meaning: "Mua bảo hiểm", example: "" },
+            { word: "Accrue", ipa: "/əˈkruː/", type: "v", meaning: "Dồn lại, tích lũy", example: "" },
+            { word: "Credible", ipa: "/ˈkred.ə.bəl/", type: "adj", meaning: "Đáng tin", example: "" },
+            { word: "Curb", ipa: "/kɝːb/", type: "v/n", meaning: "Kiềm chế", example: "" },
+            { word: "Redemption", ipa: "/rɪˈdemp.ʃən/", type: "n", meaning: "Sự chuộc lại / Trả nợ", example: "" },
+            { word: "Remit", ipa: "/rɪˈmɪt/", type: "v", meaning: "Chuyển tiền", example: "" },
+            { word: "Secured", ipa: "/səˈkjʊrd/", type: "adj", meaning: "Được đảm bảo", example: "" },
+            { word: "Belatedly", ipa: "/bɪˈleɪ.t̬ɪd.li/", type: "adv", meaning: "Muộn màng", example: "" },
+            { word: "Bounce", ipa: "/baʊns/", type: "v", meaning: "Bị trả về (séc)", example: "" },
+            { word: "Cluster", ipa: "/ˈklʌs.tɚ/", type: "n", meaning: "Cụm, nhóm", example: "" },
+            { word: "Collateral", ipa: "/kəˈlæt̬.ɚ.əl/", type: "n", meaning: "Tài sản thế chấp", example: "" },
+            { word: "Confiscate", ipa: "/ˈkɑːn.fə.skeɪt/", type: "v", meaning: "Tịch thu", example: "" },
+            { word: "Contender", ipa: "/kənˈten.dɚ/", type: "n", meaning: "Đối thủ", example: "" },
+            { word: "Counterfeit", ipa: "/ˈkaʊn.t̬ɚ.fɪt/", type: "n/adj", meaning: "Tiền giả / Giả", example: "" },
+            { word: "Credit money", ipa: "", type: "phr", meaning: "Chuyển tiền vào", example: "" },
+            { word: "Deposit slip", ipa: "", type: "phr", meaning: "Phiếu gửi tiền", example: "" },
+            { word: "Deterrent", ipa: "/dɪˈter.ənt/", type: "n", meaning: "Sự ngăn chặn", example: "" },
+            { word: "Direct deposit", ipa: "", type: "phr", meaning: "Gửi tiền trực tiếp", example: "" },
+            { word: "Draw a check", ipa: "", type: "phr", meaning: "Viết séc", example: "" },
+            { word: "Fortnight", ipa: "/ˈfɔːrt.naɪt/", type: "n", meaning: "Hai tuần", example: "" },
+            { word: "On standby", ipa: "", type: "phr", meaning: "Ở chế độ chờ", example: "" },
+            { word: "Spurious", ipa: "/ˈspjʊr.i.əs/", type: "adj", meaning: "Giả mạo", example: "" },
+            { word: "Trust company", ipa: "", type: "phr", meaning: "Công ty tín thác", example: "" },
+            { word: "Trustee", ipa: "/trʌsˈtiː/", type: "n", meaning: "Người được ủy thác", example: "" },
+            { word: "Wire money", ipa: "", type: "phr", meaning: "Chuyển tiền điện", example: "" },
+            { word: "Wire transfer", ipa: "", type: "phr", meaning: "Điện chuyển tiền", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

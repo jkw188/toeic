@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 07: Marketing (1) - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0284C7; --secondary-bg: #E0F2FE; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #E0F2FE; color: #0369A1; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 07: Marketing (1)</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Survey", ipa: "/ˈsɝː.veɪ/", type: "n/v", meaning: "Cuộc khảo sát / Khảo sát", example: "Customer surveys help to improve quality." },
+            { word: "Analysis", ipa: "/əˈnæl.ə.sɪs/", type: "n", meaning: "Sự phân tích", example: "The latest market analysis." },
+            { word: "Analyze", ipa: "/ˈæn.əl.aɪz/", type: "v (der)", meaning: "Phân tích", example: "" },
+            { word: "Analyst", ipa: "/ˈæn.ə.lɪst/", type: "n (der)", meaning: "Nhà phân tích", example: "" },
+            { word: "Respondent", ipa: "/rɪˈspɑːn.dənt/", type: "n", meaning: "Người trả lời", example: "Almost all survey respondents." },
+            { word: "Respond", ipa: "/rɪˈspɑːnd/", type: "v (der)", meaning: "Phản hồi", example: "" },
+            { word: "Monopoly", ipa: "/məˈnɑː.pəl.i/", type: "n", meaning: "Sự độc quyền", example: "Has a virtual monopoly on the manufacture." },
+            { word: "Monopolize", ipa: "/məˈnɑː.pəl.aɪz/", type: "v (der)", meaning: "Giữ độc quyền", example: "" },
+            { word: "Competition", ipa: "/ˌkɑːm.pəˈtɪʃ.ən/", type: "n", meaning: "Sự cạnh tranh", example: "Competition in the game market." },
+            { word: "Compete", ipa: "/kəmˈpiːt/", type: "v (der)", meaning: "Cạnh tranh", example: "" },
+            { word: "Competitive", ipa: "/kəmˈpet.t̬ɪ.tɪv/", type: "adj (der)", meaning: "Cạnh tranh", example: "" },
+            { word: "Competitor", ipa: "/kəmˈpet.t̬ɚ/", type: "n (der)", meaning: "Đối thủ", example: "" },
+            { word: "Consistently", ipa: "/kənˈsɪs.tənt.li/", type: "adv", meaning: "Luôn luôn, nhất quán", example: "Consistently provided the highest grade." },
+            { word: "Consistent", ipa: "/kənˈsɪs.tənt/", type: "adj (der)", meaning: "Kiên định", example: "" },
+            { word: "Demand", ipa: "/dɪˈmænd/", type: "n/v", meaning: "Nhu cầu / Yêu cầu", example: "Meet the increased demand." },
+            { word: "Demanding", ipa: "/dɪˈmæn.dɪŋ/", type: "adj (der)", meaning: "Khắt khe", example: "" },
+            { word: "Supply", ipa: "/səˈplaɪ/", type: "n (ant)", meaning: "Cung cấp", example: "" },
+            { word: "Do one's utmost", ipa: "", type: "phr", meaning: "Cố gắng hết sức", example: "Does its utmost to ensure quality." },
+            { word: "Do one's best", ipa: "", type: "phr (syn)", meaning: "Làm tốt nhất", example: "" },
+            { word: "Expand", ipa: "/ɪkˈspænd/", type: "v", meaning: "Mở rộng", example: "Expanded its marketing division." },
+            { word: "Expansion", ipa: "/ɪkˈspæn.ʃən/", type: "n (der)", meaning: "Sự mở rộng", example: "" },
+            { word: "Expansive", ipa: "/ɪkˈspæn.sɪv/", type: "adj (der)", meaning: "Rộng rãi", example: "" },
+            { word: "Advanced", ipa: "/ədˈvænst/", type: "adj", meaning: "Tiên tiến, cao cấp", example: "Modern cell phones are very advanced." },
+            { word: "Advance", ipa: "/ədˈvæns/", type: "v (der)", meaning: "Thúc đẩy", example: "" },
+            { word: "Advancement", ipa: "/ədˈvæns.mənt/", type: "n (der)", meaning: "Sự tiến bộ", example: "" },
+            { word: "Postpone", ipa: "/poʊstˈpoʊn/", type: "v", meaning: "Trì hoãn", example: "Postponed the conference." },
+            { word: "Additional", ipa: "/əˈdɪʃ.ən.əl/", type: "adj", meaning: "Thêm vào, bổ sung", example: "Purchase additional stocks." },
+            { word: "Addition", ipa: "/əˈdɪʃ.ən/", type: "n (der)", meaning: "Phép cộng/Thêm vào", example: "" },
+            { word: "Additive", ipa: "/ˈæd.ə.t̬ɪv/", type: "n (der)", meaning: "Chất phụ gia", example: "" },
+            { word: "Appreciate", ipa: "/əˈpriː.ʃi.eɪt/", type: "v", meaning: "Đánh giá cao, cảm kích", example: "Appreciates your continued business." },
+            { word: "Appreciation", ipa: "/əˌpriː.ʃiˈeɪ.ʃən/", type: "n (der)", meaning: "Sự cảm kích", example: "" },
+            { word: "Appreciative", ipa: "/əˈpriː.ʃə.tɪv/", type: "adj (der)", meaning: "Biết thưởng thức", example: "" },
+            { word: "Demonstration", ipa: "/ˌdem.ənˈstreɪ.ʃən/", type: "n", meaning: "Sự chứng minh, minh họa", example: "Provide a demonstration." },
+            { word: "Demonstrate", ipa: "/ˈdem.ən.streɪt/", type: "v (der)", meaning: "Chứng minh", example: "" },
+            { word: "Buy", ipa: "/baɪ/", type: "v", meaning: "Mua", example: "Buys all of the office equipment." },
+            { word: "Examine", ipa: "/ɪɡˈzæm.ɪn/", type: "v", meaning: "Kiểm tra, xem xét", example: "Examine food consumption trends." },
+            { word: "Examination", ipa: "/ɪɡˌzæm.əˈneɪ.ʃən/", type: "n (der)", meaning: "Kỳ thi / Sự kiểm tra", example: "" },
+            { word: "Investigate", ipa: "/ɪnˈves.tə.ɡeɪt/", type: "v (syn)", meaning: "Điều tra", example: "" },
+            { word: "Check out", ipa: "", type: "phr (syn)", meaning: "Kiểm tra", example: "" },
+            { word: "Effective", ipa: "/əˈfek.tɪv/", type: "adj", meaning: "Hiệu quả, có hiệu lực", example: "An effective advertising campaign." },
+            { word: "Effectively", ipa: "/əˈfek.tɪv.li/", type: "adv (der)", meaning: "Một cách hiệu quả", example: "" },
+            { word: "Efficient", ipa: "/ɪˈfɪʃ.ənt/", type: "adj (syn)", meaning: "Có năng suất", example: "" },
+            { word: "Valid", ipa: "/ˈvæl.ɪd/", type: "adj (syn)", meaning: "Có giá trị", example: "" },
+            { word: "Like", ipa: "/laɪk/", type: "v", meaning: "Thích", example: "Consumers like products." },
+            { word: "Likeness", ipa: "/ˈlaɪk.nəs/", type: "n (der)", meaning: "Sự giống nhau", example: "" },
+            { word: "Especially", ipa: "/ɪˈspeʃ.əl.i/", type: "adv", meaning: "Đặc biệt", example: "Especially difficult year." },
+            { word: "Closely", ipa: "/ˈkloʊs.li/", type: "adv", meaning: "Chặt chẽ, kỹ lưỡng", example: "Monitor trends closely." },
+            { word: "Close", ipa: "/kloʊs/", type: "adj/v (der)", meaning: "Gần / Đóng", example: "" },
+            { word: "Reserve", ipa: "/rɪˈzɝːv/", type: "v", meaning: "Đặt trước, để dành", example: "Reserve hotel rooms." },
+            { word: "Reservation", ipa: "/ˌrez.ɚˈveɪ.ʃən/", type: "n (der)", meaning: "Sự đặt trước", example: "" },
+            { word: "Reserved", ipa: "/rɪˈzɝːvd/", type: "adj (der)", meaning: "Dè dặt", example: "" },
+            { word: "Cooperate", ipa: "/koʊˈɑː.pə.reɪt/", type: "v", meaning: "Hợp tác", example: "Cooperated on developing the campaign." },
+            { word: "Cooperation", ipa: "/koʊˌɑː.pəˈreɪ.ʃən/", type: "n (der)", meaning: "Sự hợp tác", example: "" },
+            { word: "Cooperative", ipa: "/koʊˈɑː.pɚ.ə.tɪv/", type: "adj (der)", meaning: "Hợp tác", example: "" },
+            { word: "Very", ipa: "/ˈver.i/", type: "adv", meaning: "Rất", example: "Very effective." },
+            { word: "Consecutive", ipa: "/kənˈsek.jə.tɪv/", type: "adj", meaning: "Liên tiếp", example: "For the third consecutive year." },
+            { word: "Consecutively", ipa: "/kənˈsek.jə.tɪv.li/", type: "adv (der)", meaning: "Liên tiếp", example: "" },
+            { word: "Successive", ipa: "/səkˈses.ɪv/", type: "adj (syn)", meaning: "Liên tục", example: "" },
+            { word: "Expectation", ipa: "/ˌek.spekˈteɪ.ʃən/", type: "n", meaning: "Sự kỳ vọng", example: "The expectation is that costs will be cut." },
+            { word: "Expect", ipa: "/ɪkˈspekt/", type: "v (der)", meaning: "Mong đợi", example: "" },
+            { word: "Anticipation", ipa: "/ænˌtɪs.əˈpeɪ.ʃən/", type: "n (syn)", meaning: "Sự mong đợi", example: "" },
+            { word: "Publicize", ipa: "/ˈpʌb.lə.saɪz/", type: "v", meaning: "Công khai, quảng cáo", example: "New regulations are publicized." },
+            { word: "Raise", ipa: "/reɪz/", type: "v", meaning: "Tăng, nêu lên", example: "Raise awareness." },
+            { word: "Voice", ipa: "/vɔɪs/", type: "v (syn)", meaning: "Bày tỏ", example: "" },
+            { word: "Extremely", ipa: "/ɪkˈstriːm.li/", type: "adv", meaning: "Cực kỳ", example: "Extremely competitive market." },
+            { word: "Extreme", ipa: "/ɪkˈstriːm/", type: "adj (der)", meaning: "Vô cùng", example: "" },
+            { word: "Affect", ipa: "/əˈfekt/", type: "v", meaning: "Ảnh hưởng", example: "Can affect the market." },
+            { word: "Influence", ipa: "/ˈɪn.flu.əns/", type: "v (syn)", meaning: "Ảnh hưởng", example: "" },
+            { word: "Target", ipa: "/ˈtɑːr.ɡɪt/", type: "n/v", meaning: "Mục tiêu / Nhắm tới", example: "Right on target." },
+            { word: "Campaign", ipa: "/kæmˈpeɪn/", type: "n", meaning: "Chiến dịch", example: "Election campaign." },
+            { word: "Probable", ipa: "/ˈprɑː.bə.bəl/", type: "adj", meaning: "Có thể, chắc hẳn", example: "Probable causes." },
+            { word: "Probably", ipa: "/ˈprɑː.bə.bli/", type: "adv (der)", meaning: "Có lẽ", example: "" },
+            { word: "Focus", ipa: "/ˈfoʊ.kəs/", type: "v", meaning: "Tập trung", example: "Focus resources on expanding." },
+            { word: "Seasonal", ipa: "/ˈsiː.zən.əl/", type: "adj", meaning: "Theo mùa", example: "Seasonal variations." },
+            { word: "Seasoned", ipa: "/ˈsiː.zənd/", type: "adj (der)", meaning: "Dày dạn kinh nghiệm", example: "" },
+            { word: "Seasonally", ipa: "/ˈsiː.zən.əl.i/", type: "adv (der)", meaning: "Theo mùa", example: "" },
+            { word: "Impact", ipa: "/ˈɪm.pækt/", type: "n", meaning: "Tác động, ảnh hưởng", example: "Major impact on the market." },
+            { word: "Comparison", ipa: "/kəmˈper.ɪ.sən/", type: "n", meaning: "Sự so sánh", example: "In comparison with television." },
+            { word: "Compare", ipa: "/kəmˈper/", type: "v (der)", meaning: "So sánh", example: "" },
+            { word: "Comparable", ipa: "/ˈkɑːm.pɚ.ə.bəl/", type: "adj (der)", meaning: "Tương đương", example: "" },
+            { word: "Gap", ipa: "/ɡæp/", type: "n", meaning: "Khoảng trống, kẽ hở", example: "Huge gap between exports and imports." },
+            { word: "Mounting", ipa: "/ˈmaʊn.tɪŋ/", type: "adj", meaning: "Tăng dần", example: "Mounting pressure." },
+            { word: "Mount", ipa: "/maʊnt/", type: "v (der)", meaning: "Tăng lên", example: "" },
+            { word: "Reflective", ipa: "/rɪˈflek.tɪv/", type: "adj", meaning: "Phản chiếu, phản ánh", example: "Reflective of the current state." },
+            { word: "Reflect", ipa: "/rɪˈflekt/", type: "v (der)", meaning: "Phản ánh", example: "" },
+            { word: "Reflection", ipa: "/rɪˈflek.ʃən/", type: "n (der)", meaning: "Sự phản chiếu", example: "" },
+
+            // --- BASIC & EXTRAS ---
+            { word: "After all", ipa: "", type: "phr", meaning: "Rốt cuộc", example: "" },
+            { word: "Answer the phone", ipa: "", type: "phr", meaning: "Nghe điện thoại", example: "" },
+            { word: "As it is", ipa: "", type: "phr", meaning: "Vốn như thế", example: "" },
+            { word: "Be based on", ipa: "", type: "phr", meaning: "Dựa trên", example: "" },
+            { word: "Be familiar with", ipa: "", type: "phr", meaning: "Quen thuộc với", example: "" },
+            { word: "Concrete", ipa: "/ˈkɑːn.kriːt/", type: "adj", meaning: "Cụ thể", example: "" },
+            { word: "Conflict with", ipa: "", type: "phr", meaning: "Mâu thuẫn với", example: "" },
+            { word: "On display", ipa: "", type: "phr", meaning: "Trưng bày", example: "" },
+            { word: "Shadow", ipa: "/ˈʃæd.oʊ/", type: "n", meaning: "Bóng tối", example: "" },
+            { word: "Around the world", ipa: "", type: "phr", meaning: "Khắp thế giới", example: "" },
+            { word: "Array", ipa: "/əˈreɪ/", type: "n", meaning: "Sự dàn trận / Mảng", example: "" },
+            { word: "Attempt", ipa: "/əˈtempt/", type: "v/n", meaning: "Cố gắng", example: "" },
+            { word: "Audiovisual", ipa: "/ˌɑː.di.oʊˈvɪʒ.u.əl/", type: "adj", meaning: "Nghe nhìn", example: "" },
+            { word: "Avoid", ipa: "/əˈvɔɪd/", type: "v", meaning: "Tránh", example: "" },
+            { word: "Based", ipa: "/beɪst/", type: "adj", meaning: "Dựa trên / Có trụ sở", example: "" },
+            { word: "Cinema", ipa: "/ˈsɪn.ə.mə/", type: "n", meaning: "Rạp chiếu phim", example: "" },
+            { word: "Competitive", ipa: "/kəmˈpet.t̬ɪ.tɪv/", type: "adj", meaning: "Có tính cạnh tranh", example: "" },
+            { word: "Conclude", ipa: "/kənˈkluːd/", type: "v", meaning: "Kết luận", example: "" },
+            { word: "Energy drink", ipa: "", type: "phr", meaning: "Nước tăng lực", example: "" },
+            { word: "Find out", ipa: "", type: "phr", meaning: "Tìm ra", example: "" },
+            { word: "Informal", ipa: "/ɪnˈfɔːr.məl/", type: "adj", meaning: "Không trang trọng", example: "" },
+            { word: "Marketplace", ipa: "/ˈmɑːr.kɪt.pleɪs/", type: "n", meaning: "Thương trường", example: "" },
+            { word: "Practice", ipa: "/ˈpræk.tɪs/", type: "n", meaning: "Thực hành / Luyện tập", example: "" },
+            { word: "PR department", ipa: "", type: "phr", meaning: "Bộ phận quan hệ công chúng", example: "" },
+            { word: "Sales", ipa: "/seɪlz/", type: "n", meaning: "Doanh số", example: "" },
+            { word: "Strict", ipa: "/strɪkt/", type: "adj", meaning: "Nghiêm khắc", example: "" },
+            { word: "Tool", ipa: "/tuːl/", type: "n", meaning: "Công cụ", example: "" },
+            { word: "Typical", ipa: "/ˈtɪp.ɪ.kəl/", type: "adj", meaning: "Điển hình", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "Equipment", ipa: "/ɪˈkwɪp.mənt/", type: "n", meaning: "Thiết bị", example: "" },
+            { word: "All the way", ipa: "", type: "phr", meaning: "Hoàn toàn / Suốt", example: "" },
+            { word: "Appealing", ipa: "/əˈpiː.lɪŋ/", type: "adj", meaning: "Lôi cuốn", example: "" },
+            { word: "At once", ipa: "", type: "phr", meaning: "Ngay lập tức", example: "" },
+            { word: "Definite", ipa: "/ˈdef.ən.ət/", type: "adj", meaning: "Rõ ràng", example: "" },
+            { word: "Distinguish", ipa: "/dɪˈstɪŋ.ɡwɪʃ/", type: "v", meaning: "Phân biệt", example: "" },
+            { word: "Extraordinary", ipa: "/ɪkˈstrɔːr.dən.er.i/", type: "adj", meaning: "Phi thường", example: "" },
+            { word: "Good for", ipa: "", type: "phr", meaning: "Tốt cho", example: "" },
+            { word: "In bloom", ipa: "", type: "phr", meaning: "Nở hoa", example: "" },
+            { word: "In reference to", ipa: "", type: "phr", meaning: "Liên quan đến", example: "" },
+            { word: "Market stall", ipa: "", type: "phr", meaning: "Quầy hàng", example: "" },
+            { word: "Mechanism", ipa: "/ˈmek.ə.nɪ.zəm/", type: "n", meaning: "Cơ chế", example: "" },
+            { word: "Metropolitan area", ipa: "", type: "phr", meaning: "Khu vực đô thị", example: "" },
+            { word: "National holiday", ipa: "", type: "phr", meaning: "Quốc lễ", example: "" },
+            { word: "On schedule", ipa: "", type: "phr", meaning: "Đúng tiến độ", example: "" },
+            { word: "Over the Internet", ipa: "", type: "phr", meaning: "Qua mạng", example: "" },
+            { word: "Preview", ipa: "/ˈpriː.vjuː/", type: "n", meaning: "Sự xem trước", example: "" },
+            { word: "Public display", ipa: "", type: "phr", meaning: "Trưng bày công cộng", example: "" },
+            { word: "Run a campaign", ipa: "", type: "phr", meaning: "Chạy chiến dịch", example: "" },
+            { word: "Serve a customer", ipa: "", type: "phr", meaning: "Phục vụ khách hàng", example: "" },
+            { word: "Spouse", ipa: "/spaʊs/", type: "n", meaning: "Vợ/Chồng", example: "" },
+            { word: "Upside down", ipa: "", type: "phr", meaning: "Lộn ngược", example: "" },
+            { word: "Vending machine", ipa: "/ˈven.dɪŋ məˌʃiːn/", type: "n", meaning: "Máy bán hàng tự động", example: "" },
+            { word: "Visible", ipa: "/ˈvɪz.ə.bəl/", type: "adj", meaning: "Hữu hình, có thể thấy", example: "" },
+            { word: "As opposed to", ipa: "", type: "phr", meaning: "Trái ngược với", example: "" },
+            { word: "Boldly", ipa: "/ˈboʊld.li/", type: "adv", meaning: "Táo bạo", example: "" },
+            { word: "Call on", ipa: "", type: "phr", meaning: "Ghé thăm / Kêu gọi", example: "" },
+            { word: "Excluding", ipa: "/ɪkˈskluː.dɪŋ/", type: "prep", meaning: "Ngoại trừ", example: "" },
+            { word: "Expectancy", ipa: "/ɪkˈspek.tən.si/", type: "n", meaning: "Triển vọng / Tuổi thọ", example: "" },
+            { word: "Forgetfully", ipa: "/fɚˈɡet.fəl.i/", type: "adv", meaning: "Sao nhãng", example: "" },
+            { word: "Noteworthy", ipa: "/ˈnoʊtˌwɝː.ði/", type: "adj", meaning: "Đáng chú ý", example: "" },
+            { word: "Perception", ipa: "/pəˈsep.ʃən/", type: "n", meaning: "Sự nhận thức", example: "" },
+            { word: "Potentially", ipa: "/poʊˈten.ʃəl.i/", type: "adv", meaning: "Tiềm năng", example: "" },
+            { word: "Randomly", ipa: "/ˈræn.dəm.li/", type: "adv", meaning: "Ngẫu nhiên", example: "" },
+            { word: "Suitable", ipa: "/ˈsuː.t̬ə.bəl/", type: "adj", meaning: "Phù hợp", example: "" },
+            { word: "Complete line", ipa: "", type: "phr", meaning: "Dòng sản phẩm đầy đủ", example: "" },
+            { word: "Accept the offer", ipa: "", type: "phr", meaning: "Chấp nhận lời đề nghị", example: "" },
+            { word: "Astonishingly", ipa: "/əˈstɑː.nɪ.ʃɪŋ.li/", type: "adv", meaning: "Đáng kinh ngạc", example: "" },
+            { word: "Be noted for", ipa: "", type: "phr", meaning: "Nổi tiếng vì", example: "" },
+            { word: "Claim", ipa: "/kleɪm/", type: "n", meaning: "Yêu sách / Lời khẳng định", example: "" },
+            { word: "Classified ad", ipa: "", type: "phr", meaning: "Rao vặt", example: "" },
+            { word: "Compilation", ipa: "/ˌkɑːm.pəˈleɪ.ʃən/", type: "n", meaning: "Sự biên soạn", example: "" },
+            { word: "Comprehensible", ipa: "/ˌkɑːm.prəˈhen.sə.bəl/", type: "adj", meaning: "Dễ hiểu", example: "" },
+            { word: "Criticize", ipa: "/ˈkrɪt̬.ɪ.saɪz/", type: "v", meaning: "Phê bình", example: "" },
+            { word: "Dumping", ipa: "/ˈdʌm.pɪŋ/", type: "n", meaning: "Bán phá giá", example: "" },
+            { word: "First priority", ipa: "", type: "phr", meaning: "Ưu tiên hàng đầu", example: "" },
+            { word: "Fixed price", ipa: "", type: "phr", meaning: "Giá cố định", example: "" },
+            { word: "Have control over", ipa: "", type: "phr", meaning: "Kiểm soát được", example: "" },
+            { word: "Have little chance", ipa: "", type: "phr", meaning: "Ít cơ hội", example: "" },
+            { word: "In favor of", ipa: "", type: "phr", meaning: "Ủng hộ", example: "" },
+            { word: "Keep informed", ipa: "", type: "phr", meaning: "Giữ liên lạc / Thông báo", example: "" },
+            { word: "Make assessment", ipa: "", type: "phr", meaning: "Đánh giá", example: "" },
+            { word: "Mediate", ipa: "/ˈmiː.di.eɪt/", type: "v", meaning: "Hòa giải", example: "" },
+            { word: "Minimize risk", ipa: "", type: "phr", meaning: "Giảm thiểu rủi ro", example: "" },
+            { word: "Modestly", ipa: "/ˈmɑː.dɪst.li/", type: "adv", meaning: "Khiêm tốn", example: "" },
+            { word: "Persistent", ipa: "/pɚˈsɪs.tənt/", type: "adj", meaning: "Kiên trì", example: "" },
+            { word: "Publicity", ipa: "/pʌbˈlɪs.ə.t̬i/", type: "n", meaning: "Sự công khai", example: "" },
+            { word: "Release date", ipa: "", type: "phr", meaning: "Ngày phát hành", example: "" },
+            { word: "Stay competitive", ipa: "", type: "phr", meaning: "Giữ vững cạnh tranh", example: "" },
+            { word: "Striking difference", ipa: "", type: "phr", meaning: "Sự khác biệt nổi bật", example: "" },
+            { word: "Take a long time", ipa: "", type: "phr", meaning: "Mất nhiều thời gian", example: "" },
+            { word: "Take action", ipa: "", type: "phr", meaning: "Hành động", example: "" },
+            { word: "Trademark", ipa: "/ˈtreɪd.mɑːrk/", type: "n", meaning: "Thương hiệu", example: "" },
+            { word: "Turn to", ipa: "", type: "phr", meaning: "Chuyển sang", example: "" },
+            { word: "Unacceptable", ipa: "/ˌʌn.əkˈsep.tə.bəl/", type: "adj", meaning: "Không thể chấp nhận", example: "" },
+            { word: "Verify", ipa: "/ˈver.ə.faɪ/", type: "v", meaning: "Xác minh", example: "" },
+            { word: "With exception of", ipa: "", type: "phr", meaning: "Ngoại trừ", example: "" },
+            { word: "Without notice", ipa: "", type: "phr", meaning: "Không báo trước", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "All-out", ipa: "/ˌɑːlˈaʊt/", type: "adj", meaning: "Dốc toàn lực", example: "" },
+            { word: "All walks of life", ipa: "", type: "phr", meaning: "Mọi tầng lớp xã hội", example: "" },
+            { word: "At a stretch", ipa: "", type: "phr", meaning: "Liên tục", example: "" },
+            { word: "Back up", ipa: "", type: "phr", meaning: "Ủng hộ / Sao lưu", example: "" },
+            { word: "Focus group", ipa: "", type: "phr", meaning: "Nhóm tập trung", example: "" },
+            { word: "Misleading", ipa: "/ˌmɪsˈliː.dɪŋ/", type: "adj", meaning: "Gây hiểu lầm", example: "" },
+            { word: "Capture", ipa: "/ˈkæp.tʃɚ/", type: "v", meaning: "Chiếm được", example: "" },
+            { word: "Consolidate", ipa: "/kənˈsɑː.lə.deɪt/", type: "v", meaning: "Củng cố / Hợp nhất", example: "" },
+            { word: "Contend", ipa: "/kənˈtend/", type: "v", meaning: "Đấu tranh / Cho rằng", example: "" },
+            { word: "Gauge", ipa: "/ɡeɪdʒ/", type: "v", meaning: "Đo lường", example: "" },
+            { word: "Momentum", ipa: "/moʊˈmen.t̬əm/", type: "n", meaning: "Đà, sức đẩy", example: "" },
+            { word: "Recognizable", ipa: "/ˈrek.əɡ.naɪ.zə.bəl/", type: "adj", meaning: "Có thể nhận ra", example: "" },
+            { word: "Segment", ipa: "/ˈseɡ.mənt/", type: "n", meaning: "Phân khúc", example: "" },
+            { word: "Telling", ipa: "/ˈtel.ɪŋ/", type: "adj", meaning: "Hiệu quả, ấn tượng", example: "" },
+            { word: "Confiscation", ipa: "/ˌkɑːn.fəˈskeɪ.ʃən/", type: "n", meaning: "Sự tịch thu", example: "" },
+            { word: "Constitute", ipa: "/ˈkɑːn.stə.tuːt/", type: "v", meaning: "Cấu thành", example: "" },
+            { word: "Drive up", ipa: "", type: "phr", meaning: "Làm tăng lên", example: "" },
+            { word: "Endorsement", ipa: "/ɪnˈdɔːrs.mənt/", type: "n", meaning: "Sự xác nhận / Tán thành", example: "" },
+            { word: "Feasibility study", ipa: "", type: "phr", meaning: "Nghiên cứu khả thi", example: "" },
+            { word: "Intervention", ipa: "/ˌɪn.t̬ɚˈven.ʃən/", type: "n", meaning: "Sự can thiệp", example: "" },
+            { word: "Irretrievable", ipa: "/ˌɪr.əˈtriː.və.bəl/", type: "adj", meaning: "Không thể cứu vãn", example: "" },
+            { word: "Jeopardize", ipa: "/ˈdʒep.ɚ.daɪz/", type: "v", meaning: "Gây nguy hiểm", example: "" },
+            { word: "Legible", ipa: "/ˈledʒ.ə.bəl/", type: "adj", meaning: "Dễ đọc", example: "" },
+            { word: "Lose ground", ipa: "", type: "phr", meaning: "Mất vị thế", example: "" },
+            { word: "Public profile", ipa: "", type: "phr", meaning: "Hình ảnh công chúng", example: "" },
+            { word: "Reputable", ipa: "/ˈrep.jə.t̬ə.bəl/", type: "adj", meaning: "Có uy tín", example: "" },
+            { word: "Set forth", ipa: "", type: "phr", meaning: "Công bố / Đề ra", example: "" },
+            { word: "Set out", ipa: "", type: "phr", meaning: "Bắt đầu / Sắp đặt", example: "" },
+            { word: "Setback", ipa: "/ˈset.bæk/", type: "n", meaning: "Sự thụt lùi", example: "" },
+            { word: "Take a stand", ipa: "", type: "phr", meaning: "Phản đối / Lập trường", example: "" },
+            { word: "Underlying", ipa: "/ˌʌn.dɚˈlaɪ.ɪŋ/", type: "adj", meaning: "Cơ bản / Nằm dưới", example: "" },
+            { word: "Vanish", ipa: "/ˈvæn.ɪʃ/", type: "v", meaning: "Biến mất", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>'; return; }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+                tr.innerHTML = `<td class="col-stt">${index + 1}</td><td class="col-word">${item.word}</td><td class="col-ipa">${item.ipa}</td><td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td><td class="col-mean">${item.meaning}</td><td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => item.word.toLowerCase().includes(keyword) || item.meaning.toLowerCase().includes(keyword));
+            renderTable(filteredData);
+        });
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

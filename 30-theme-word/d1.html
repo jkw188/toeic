@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 01: Recruitment - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --secondary-bg: #EEF2FF;
+            --border: #E5E7EB;
+            --text-dark: #111827;
+            --text-gray: #4B5563;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .nav-bar {
+            margin-bottom: 2rem;
+        }
+
+        .btn-back {
+            text-decoration: none;
+            color: var(--text-gray);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+
+        header h1 {
+            color: var(--primary);
+            margin-top: 0.5rem;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            outline: none;
+        }
+        .search-box:focus { border-color: var(--primary); }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background-color: #F3F4F6;
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--text-gray);
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        /* Column Widths */
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+
+        .pos-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background-color: #FEF3C7;
+            color: #92400E;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .pos-tag.main { background-color: #EEF2FF; color: #4F46E5; } /* Màu xanh cho từ chính */
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }  /* Màu xanh lá cho Syn */
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }  /* Màu vàng cho Der */
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }  /* Màu xám cho Phrase */
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="nav-bar">
+            <a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a>
+        </div>
+
+        <header>
+            <h1>Day 01: Tuyển dụng (Recruitment)</h1>
+            <p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p>
+        </header>
+
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-stt">STT</th>
+                        <th class="col-word">Từ vựng</th>
+                        <th class="col-ipa">Phiên âm</th>
+                        <th class="col-type">Từ loại</th>
+                        <th class="col-mean">Nghĩa</th>
+                        <th class="col-ex">Ví dụ</th>
+                    </tr>
+                </thead>
+                <tbody id="vocabBody">
+                    <!-- Javascript will render rows here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu đã được làm phẳng (Flattened) và bổ sung đầy đủ cụm từ
+        const vocabularyList = [
+            // --- MAIN WORDS (1-40) & DERIVATIVES/SYNONYMS ---
+            { word: "Résumé", ipa: "/ˈrez.juː.meɪ/", type: "n", meaning: "Sơ yếu lý lịch", example: "Fax your résumé and cover letter." },
+            
+            { word: "Opening", ipa: "/ˈoʊ.pən.ɪŋ/", type: "n", meaning: "Vị trí trống, lễ khai trương", example: "Job openings at the restaurant." },
+            { word: "Vacancy", ipa: "/ˈveɪ.kən.si/", type: "n (syn)", meaning: "Khoảng trống, vị trí trống", example: "We have a vacancy." },
+            
+            { word: "Applicant", ipa: "/ˈæp.lə.kənt/", type: "n", meaning: "Ứng viên", example: "Applicants are required to submit a résumé." },
+            { word: "Apply", ipa: "/əˈplaɪ/", type: "v (der)", meaning: "Ứng tuyển, áp dụng", example: "" },
+            { word: "Application", ipa: "/ˌæp.ləˈkeɪ.ʃən/", type: "n (der)", meaning: "Đơn ứng tuyển", example: "" },
+            { word: "Appliance", ipa: "/əˈplaɪ.əns/", type: "n", meaning: "Thiết bị, dụng cụ (dễ nhầm)", example: "Kitchen appliances." },
+            
+            { word: "Requirement", ipa: "/rɪˈkwaɪr.mənt/", type: "n", meaning: "Yêu cầu, điều kiện", example: "A requirement of this job." },
+            { word: "Require", ipa: "/rɪˈkwaɪr/", type: "v (der)", meaning: "Yêu cầu", example: "" },
+            { word: "Prerequisite", ipa: "/ˌpriːˈrek.wə.zɪt/", type: "n (syn)", meaning: "Điều kiện tiên quyết", example: "" },
+            
+            { word: "Meet", ipa: "/miːt/", type: "v", meaning: "Đáp ứng (nhu cầu/yêu cầu)", example: "Meet all the requirements." },
+            { word: "Satisfy", ipa: "/ˈsæt.ɪs.faɪ/", type: "v (syn)", meaning: "Thỏa mãn", example: "" },
+            { word: "Fulfill", ipa: "/fʊlˈfɪl/", type: "v (syn)", meaning: "Hoàn thành", example: "" },
+            
+            { word: "Qualified", ipa: "/ˈkwɑː.lɪ.faɪd/", type: "adj", meaning: "Đủ khả năng, đủ điều kiện", example: "Qualified for the position." },
+            { word: "Qualify", ipa: "/ˈkwɑː.lɪ.faɪ/", type: "v (der)", meaning: "Đủ điều kiện", example: "" },
+            { word: "Qualification", ipa: "/ˌkwɑː.lɪ.fɪˈkeɪ.ʃən/", type: "n (der)", meaning: "Bằng cấp, năng lực", example: "" },
+            { word: "Certified", ipa: "/ˈsɜːr.tə.faɪd/", type: "adj (syn)", meaning: "Được chứng nhận", example: "" },
+            
+            { word: "Candidate", ipa: "/ˈkæn.dɪ.deɪt/", type: "n", meaning: "Thí sinh, ứng viên", example: "Five candidates selected." },
+            
+            { word: "Confidence", ipa: "/ˈkɑːn.fɪ.dəns/", type: "n", meaning: "Sự tự tin, lòng tin", example: "Confidence in her ability." },
+            { word: "Confident", ipa: "/ˈkɑːn.fɪ.dənt/", type: "adj (der)", meaning: "Tự tin", example: "" },
+            
+            { word: "Highly", ipa: "/ˈhaɪ.li/", type: "adv", meaning: "Rất, hết sức", example: "Highly qualified." },
+            
+            { word: "Professional", ipa: "/prəˈfeʃ.ən.əl/", type: "adj/n", meaning: "Chuyên nghiệp / Chuyên gia", example: "A professional photographer." },
+            { word: "Profession", ipa: "/prəˈfeʃ.ən/", type: "n (der)", meaning: "Nghề nghiệp", example: "" },
+            
+            { word: "Interview", ipa: "/ˈɪn.t̬ɚ.vjuː/", type: "n/v", meaning: "Phỏng vấn", example: "Interviews held in room 3." },
+            
+            { word: "Hire", ipa: "/haɪr/", type: "v", meaning: "Thuê, tuyển dụng", example: "Hire new employees." },
+            
+            { word: "Training", ipa: "/ˈtreɪ.nɪŋ/", type: "n", meaning: "Sự đào tạo", example: "On-the-job training." },
+            
+            { word: "Reference", ipa: "/ˈref.ɚ.əns/", type: "n", meaning: "Sự giới thiệu, tham khảo", example: "Reference letter." },
+            { word: "Refer", ipa: "/rɪˈfɝː/", type: "v (der)", meaning: "Tham khảo, xem", example: "" },
+            
+            { word: "Position", ipa: "/pəˈzɪʃ.ən/", type: "n", meaning: "Vị trí, chức vụ", example: "The advertised position." },
+            
+            { word: "Achievement", ipa: "/əˈtʃiːv.mənt/", type: "n", meaning: "Thành tựu", example: "List your achievements." },
+            { word: "Achiever", ipa: "/əˈtʃiː.vɚ/", type: "n (der)", meaning: "Người đạt thành tích", example: "" },
+            
+            { word: "Impressed", ipa: "/ɪmˈprest/", type: "adj", meaning: "Bị ấn tượng", example: "The CEO was impressed." },
+            { word: "Impressive", ipa: "/ɪmˈpres.ɪv/", type: "adj (der)", meaning: "Gây ấn tượng", example: "" },
+            
+            { word: "Excellent", ipa: "/ˈek.səl.ənt/", type: "adj", meaning: "Xuất sắc", example: "Excellent skills." },
+            
+            { word: "Eligible", ipa: "/ˈel.ɪ.dʒə.bəl/", type: "adj", meaning: "Đủ tư cách, thích hợp", example: "Eligible for paid holidays." },
+            { word: "Ineligible", ipa: "/ɪnˈel.ɪ.dʒə.bəl/", type: "adj (ant)", meaning: "Không đủ tư cách", example: "" },
+            
+            { word: "Identify", ipa: "/ɑɪˈden.t̬ə.faɪ/", type: "v", meaning: "Nhận diện", example: "Easy to identify." },
+            { word: "Identification", ipa: "/ɑɪˌden.t̬ə.fəˈkeɪ.ʃən/", type: "n (der)", meaning: "Giấy tờ tùy thân", example: "" },
+            
+            { word: "Associate", ipa: "/əˈsoʊ.ʃi.eɪt/", type: "v", meaning: "Liên kết", example: "Associated with a competitor." },
+            { word: "Association", ipa: "/əˌsoʊ.siˈeɪ.ʃən/", type: "n (der)", meaning: "Hiệp hội, sự liên kết", example: "" },
+            
+            { word: "Condition", ipa: "/kənˈdɪʃ.ən/", type: "n", meaning: "Điều kiện", example: "Conditions of employment." },
+            
+            { word: "Employment", ipa: "/ɪmˈplɔɪ.mənt/", type: "n", meaning: "Việc làm", example: "Employment opportunities." },
+            { word: "Employ", ipa: "/ɪmˈplɔɪ/", type: "v (der)", meaning: "Thuê", example: "" },
+            { word: "Employee", ipa: "/ɪmˈplɔɪ.iː/", type: "n (der)", meaning: "Nhân viên", example: "" },
+            { word: "Employer", ipa: "/ɪmˈplɔɪ.ɚ/", type: "n (der)", meaning: "Nhà tuyển dụng", example: "" },
+            { word: "Unemployment", ipa: "/ˌʌn.ɪmˈplɔɪ.mənt/", type: "n (ant)", meaning: "Thất nghiệp", example: "" },
+            
+            { word: "Lack", ipa: "/læk/", type: "v/n", meaning: "Thiếu / Sự thiếu hụt", example: "Lack of funds." },
+            
+            { word: "Managerial", ipa: "/ˌmæn.əˈdʒɪr.i.əl/", type: "adj", meaning: "Thuộc quản lý", example: "Managerial position." },
+            { word: "Manage", ipa: "/ˈmæn.ədʒ/", type: "v (der)", meaning: "Quản lý", example: "" },
+            { word: "Supervisory", ipa: "/ˌsuː.pɚˈvaɪ.zɚ.i/", type: "adj (syn)", meaning: "Giám sát", example: "" },
+            
+            { word: "Diligent", ipa: "/ˈdɪl.ə.dʒənt/", type: "adj", meaning: "Siêng năng", example: "Diligent workers." },
+            { word: "Diligence", ipa: "/ˈdɪl.ə.dʒəns/", type: "n (der)", meaning: "Sự cần cù", example: "" },
+            
+            { word: "Familiar", ipa: "/fəˈmɪl.i.jɚ/", type: "adj", meaning: "Quen thuộc", example: "Become familiar with it." },
+            { word: "Unfamiliar", ipa: "/ʌn.fəˈmɪl.i.jɚ/", type: "adj (ant)", meaning: "Xa lạ", example: "" },
+            
+            { word: "Proficiency", ipa: "/prəˈfɪʃ.ən.si/", type: "n", meaning: "Sự thông thạo", example: "Proficiency in a language." },
+            { word: "Proficient", ipa: "/prəˈfɪʃ.ənt/", type: "adj (der)", meaning: "Thành thạo", example: "" },
+            
+            { word: "Prospective", ipa: "/prəˈspek.tɪv/", type: "adj", meaning: "Có triển vọng", example: "Prospective employees." },
+            { word: "Prospect", ipa: "/ˈprɑː.spekt/", type: "n (der)", meaning: "Triển vọng", example: "" },
+            
+            { word: "Appeal", ipa: "/əˈpiːl/", type: "v", meaning: "Thu hút, hấp dẫn", example: "Appealed to the staff." },
+            { word: "Attract", ipa: "/əˈtrækt/", type: "v (syn)", meaning: "Thu hút", example: "" },
+            
+            { word: "Specialize", ipa: "/ˈspeʃ.ə.laɪz/", type: "v", meaning: "Chuyên về", example: "Specialize in design." },
+            
+            { word: "Apprehensive", ipa: "/ˌæp.rəˈhen.sɪv/", type: "adj", meaning: "Lo lắng, e sợ", example: "Feel apprehensive." },
+            { word: "Concerned", ipa: "/kənˈsɝːnd/", type: "adj (syn)", meaning: "Lo ngại", example: "" },
+            
+            { word: "Consultant", ipa: "/kənˈsʌl.tənt/", type: "n", meaning: "Cố vấn", example: "Design consultant." },
+            { word: "Consult", ipa: "/kənˈsʌlt/", type: "v (der)", meaning: "Hỏi ý kiến", example: "" },
+            
+            { word: "Entitle", ipa: "/ɪnˈtaɪ.t̬əl/", type: "v", meaning: "Cho quyền", example: "Entitled to benefits." },
+            
+            { word: "Degree", ipa: "/dɪˈɡriː/", type: "n", meaning: "Bằng cấp, độ", example: "Bachelor's degree." },
+            
+            { word: "Payroll", ipa: "/ˈpeɪ.roʊl/", type: "n", meaning: "Bảng lương", example: "Added to the payroll." },
+            
+            { word: "Recruit", ipa: "/rɪˈkruːt/", type: "v/n", meaning: "Tuyển dụng", example: "Recruits graduates." },
+            { word: "Recruitment", ipa: "/rɪˈkruːt.mənt/", type: "n (der)", meaning: "Sự tuyển dụng", example: "" },
+            
+            { word: "Certification", ipa: "/ˌsɝː.t̬ə.fəˈkeɪ.ʃən/", type: "n", meaning: "Giấy chứng nhận", example: "Accounting certification." },
+            { word: "Certify", ipa: "/ˈsɝː.t̬ə.faɪ/", type: "v (der)", meaning: "Chứng nhận", example: "" },
+            { word: "Certificate", ipa: "/sɚˈtɪf.ɪ.kət/", type: "n (der)", meaning: "Chứng chỉ", example: "" },
+            
+            { word: "Occupation", ipa: "/ˌɑː.kjəˈpeɪ.ʃən/", type: "n", meaning: "Nghề nghiệp", example: "Challenging occupation." },
+            { word: "Occupy", ipa: "/ˈɑː.kjə.paɪ/", type: "v (der)", meaning: "Chiếm giữ", example: "" },
+            { word: "Occupant", ipa: "/ˈɑː.kjə.pənt/", type: "n (der)", meaning: "Người cư trú/sử dụng", example: "" },
+            
+            { word: "Wage", ipa: "/weɪdʒ/", type: "n", meaning: "Tiền công (giờ/tuần)", example: "Earn higher wages." },
+            { word: "Salary", ipa: "/ˈsæl.ɚ.i/", type: "n (syn)", meaning: "Tiền lương (tháng/năm)", example: "" },
+            { word: "Compensation", ipa: "/ˌkɑːm.penˈseɪ.ʃən/", type: "n (syn)", meaning: "Thù lao, bồi thường", example: "" },
+
+            // --- BASIC & PHRASES (Bổ sung đầy đủ) ---
+            { word: "Application form", ipa: "", type: "phr", meaning: "Mẫu đơn xin việc", example: "" },
+            { word: "Career", ipa: "/kəˈrɪr/", type: "n", meaning: "Sự nghiệp", example: "" },
+            { word: "Completion", ipa: "/kəmˈpliː.ʃən/", type: "n", meaning: "Sự hoàn thành", example: "" },
+            { word: "Fair", ipa: "/fer/", type: "adj", meaning: "Công bằng", example: "" },
+            { word: "Graduation", ipa: "/ˌɡrædʒ.uˈeɪ.ʃən/", type: "n", meaning: "Sự tốt nghiệp", example: "" },
+            { word: "In fact", ipa: "", type: "phr", meaning: "Trong thực tế", example: "" },
+            { word: "Job fair", ipa: "", type: "phr", meaning: "Hội chợ việc làm", example: "" },
+            { word: "Job offer", ipa: "", type: "phr", meaning: "Lời mời làm việc", example: "" },
+            { word: "List", ipa: "/lɪst/", type: "n", meaning: "Danh sách", example: "" },
+            { word: "Newcomer", ipa: "/ˈnuːˌkʌm.ɚ/", type: "n", meaning: "Người mới", example: "" },
+            { word: "Part-time", ipa: "", type: "adj", meaning: "Bán thời gian", example: "" },
+            { word: "Previous job", ipa: "", type: "phr", meaning: "Công việc trước đây", example: "" },
+            { word: "Secretary", ipa: "/ˈsek.rə.ter.i/", type: "n", meaning: "Thư ký", example: "" },
+            { word: "Send in", ipa: "", type: "phr", meaning: "Nộp, giao", example: "" },
+            { word: "Tidy", ipa: "/ˈtaɪ.di/", type: "adj", meaning: "Gọn gàng", example: "" },
+            { word: "Trainee", ipa: "/ˌtreɪˈniː/", type: "n", meaning: "Thực tập sinh", example: "" },
+            { word: "Apply for", ipa: "", type: "phr", meaning: "Ứng tuyển vào", example: "" },
+            { word: "Aptitude", ipa: "/ˈæp.tə.tuːd/", type: "n", meaning: "Năng khiếu", example: "" },
+            { word: "Be admitted to", ipa: "", type: "phr", meaning: "Được nhận vào", example: "" },
+            { word: "Be advised to do", ipa: "", type: "phr", meaning: "Được khuyên làm gì", example: "" },
+            { word: "Criteria", ipa: "/kraɪˈtɪr.i.ə/", type: "n", meaning: "Tiêu chuẩn (số nhiều)", example: "" },
+            { word: "Decade", ipa: "/dekˈeɪd/", type: "n", meaning: "Thập kỷ", example: "" },
+            { word: "Insufficient", ipa: "/ˌɪn.səˈfɪʃ.ənt/", type: "adj", meaning: "Không đủ", example: "" },
+            { word: "Minimum", ipa: "/ˈmɪn.ə.məm/", type: "adj", meaning: "Tối thiểu", example: "" },
+            { word: "Party", ipa: "/ˈpɑːr.t̬i/", type: "n", meaning: "Bữa tiệc, nhóm", example: "" },
+            { word: "Plentiful", ipa: "/ˈplen.t̬ɪ.fəl/", type: "adj", meaning: "Dồi dào", example: "" },
+            
+            // --- 800 LEVEL ---
+            { word: "Achieve one's goal", ipa: "", type: "phr", meaning: "Đạt mục tiêu", example: "" },
+            { word: "Apprentice", ipa: "/əˈpren.t̬ɪs/", type: "n", meaning: "Người học việc", example: "" },
+            { word: "Dress formally", ipa: "", type: "phr", meaning: "Ăn mặc trang trọng", example: "" },
+            { word: "Dressed in suit", ipa: "", type: "phr", meaning: "Mặc vest", example: "" },
+            { word: "Figure out", ipa: "", type: "phr", meaning: "Tìm ra, phát hiện ra", example: "" },
+            { word: "Full time work", ipa: "", type: "phr", meaning: "Công việc toàn thời gian", example: "" },
+            { word: "Job opportunity", ipa: "", type: "phr", meaning: "Cơ hội việc làm", example: "" },
+            { word: "Job search", ipa: "", type: "phr", meaning: "Tìm kiếm việc làm", example: "" },
+            { word: "Job seeker", ipa: "", type: "phr", meaning: "Người tìm việc", example: "" },
+            { word: "Lay out", ipa: "", type: "phr", meaning: "Đặt ra, bày ra", example: "" },
+            { word: "Letter of recommendation", ipa: "", type: "phr", meaning: "Thư giới thiệu", example: "" },
+            { word: "Pay raise", ipa: "", type: "phr", meaning: "Sự tăng lương", example: "" },
+            { word: "Practical experience", ipa: "", type: "phr", meaning: "Kinh nghiệm thực tế", example: "" },
+            { word: "Proof of employment", ipa: "", type: "phr", meaning: "Bằng chứng công việc", example: "" },
+            { word: "Reapply", ipa: "/ˌriː.əˈplaɪ/", type: "v", meaning: "Ứng tuyển lại", example: "" },
+            { word: "Recommendation letter", ipa: "", type: "phr", meaning: "Thư tiến cử", example: "" },
+            { word: "Reference letter", ipa: "", type: "phr", meaning: "Thư giới thiệu", example: "" },
+            { word: "Send off to", ipa: "", type: "phr", meaning: "Gửi tới", example: "" },
+            { word: "Set up an interview", ipa: "", type: "phr", meaning: "Sắp xếp phỏng vấn", example: "" },
+            { word: "Take an examination", ipa: "", type: "phr", meaning: "Làm bài kiểm tra", example: "" },
+            { word: "Training center", ipa: "", type: "phr", meaning: "Trung tâm đào tạo", example: "" },
+            { word: "Waiting room", ipa: "", type: "phr", meaning: "Phòng chờ", example: "" },
+            { word: "Well-educated", ipa: "", type: "adj", meaning: "Có học thức", example: "" },
+            { word: "Workstation", ipa: "/ˈwɝːkˌsteɪ.ʃən/", type: "n", meaning: "Chỗ ngồi làm việc", example: "" },
+            { word: "Zealous", ipa: "/ˈzel.əs/", type: "adj", meaning: "Hăng hái", example: "" },
+            { word: "Cover letter", ipa: "", type: "phr", meaning: "Thư xin việc", example: "" },
+            { word: "Devoted", ipa: "/dɪˈvoʊ.t̬ɪd/", type: "adj", meaning: "Tận tâm", example: "" },
+            { word: "Energetic", ipa: "/ˌen.ɚˈdʒet̬.ɪk/", type: "adj", meaning: "Năng động", example: "" },
+            { word: "Enthusiastic", ipa: "/ɪnˌθuː.ziˈæs.tɪk/", type: "adj", meaning: "Nhiệt tình", example: "" },
+            { word: "Excel", ipa: "/ɪkˈsel/", type: "v", meaning: "Xuất sắc", example: "" },
+            { word: "Exclude", ipa: "/ɪkˈskluːd/", type: "v", meaning: "Loại trừ", example: "" },
+            { word: "Fluently", ipa: "/ˈfluː.ənt.li/", type: "adv", meaning: "Trôi chảy", example: "" },
+            { word: "Get through", ipa: "", type: "phr", meaning: "Vượt qua, đỗ", example: "" },
+
+            // --- PART 7 ---
+            { word: "Match", ipa: "/mætʃ/", type: "v", meaning: "Hợp với, xứng với", example: "" },
+            { word: "Necessity", ipa: "/nəˈses.ə.t̬i/", type: "n", meaning: "Sự cần thiết", example: "" },
+            { word: "Qualification", ipa: "/ˌkwɑː.lɪ.fɪˈkeɪ.ʃən/", type: "n", meaning: "Năng lực, bằng cấp", example: "" },
+            { word: "Relevant", ipa: "/ˈrel.ə.vənt/", type: "adj", meaning: "Liên quan", example: "" },
+            { word: "Sign up for", ipa: "", type: "phr", meaning: "Đăng ký", example: "" },
+            { word: "Talented", ipa: "/ˈtæl.ən.t̬ɪd/", type: "adj", meaning: "Có tài", example: "" },
+            { word: "Visiting", ipa: "/ˈvɪz.ɪ.tɪŋ/", type: "n/adj", meaning: "Sự thăm viếng", example: "" },
+            { word: "Workforce", ipa: "/ˈwɝːk.fɔːrs/", type: "n", meaning: "Lực lượng lao động", example: "" },
+            { word: "Address the audience", ipa: "", type: "phr", meaning: "Giao lưu khán giả", example: "" },
+            { word: "Be influenced by appearance", ipa: "", type: "phr", meaning: "Bị chi phối bởi vẻ ngoài", example: "" },
+            { word: "Bilingual", ipa: "/baɪˈlɪŋ.ɡwəl/", type: "adj", meaning: "Song ngữ", example: "" },
+            { word: "Curriculum vitae", ipa: "", type: "phr", meaning: "Sơ yếu lý lịch", example: "" },
+            { word: "Diploma", ipa: "/dɪˈploʊ.mə/", type: "n", meaning: "Bằng tốt nghiệp", example: "" },
+            { word: "Endurance", ipa: "/ɪnˈdʊr.əns/", type: "n", meaning: "Sự chịu đựng", example: "" },
+            { word: "External", ipa: "/ɪkˈstɝː.nəl/", type: "adj", meaning: "Bên ngoài", example: "" },
+            { word: "Fluency", ipa: "/ˈfluː.ən.si/", type: "n", meaning: "Sự trôi chảy", example: "" },
+            { word: "Fluent in", ipa: "", type: "phr", meaning: "Thành thạo về", example: "" },
+            { word: "Human resources", ipa: "", type: "phr", meaning: "Nhân sự", example: "" },
+            { word: "Improperly", ipa: "/ɪmˈprɑː.pɚ.li/", type: "adv", meaning: "Không đúng cách", example: "" },
+            { word: "In a positive manner", ipa: "", type: "phr", meaning: "Theo cách tích cực", example: "" },
+            { word: "In the field of", ipa: "", type: "phr", meaning: "Trong lĩnh vực", example: "" },
+            { word: "Inexperience", ipa: "/ˌɪn.ɪkˈspɪr.i.əns/", type: "n", meaning: "Thiếu kinh nghiệm", example: "" },
+            { word: "Lack confidence", ipa: "", type: "phr", meaning: "Thiếu tự tin", example: "" },
+            { word: "Make A a regular habit", ipa: "", type: "phr", meaning: "Biến A thành thói quen", example: "" },
+            { word: "Make a commitment to", ipa: "", type: "phr", meaning: "Cam kết với", example: "" },
+            { word: "Make a point of", ipa: "", type: "phr", meaning: "Tận tâm với", example: "" },
+            { word: "Manpower", ipa: "/ˈmænˌpaʊ.ɚ/", type: "n", meaning: "Nhân lực", example: "" },
+            { word: "Master's degree", ipa: "", type: "phr", meaning: "Bằng thạc sĩ", example: "" },
+            { word: "Novice", ipa: "/ˈnɑː.vɪs/", type: "n", meaning: "Người tập sự", example: "" },
+            { word: "Paycheck", ipa: "/ˈpeɪ.tʃek/", type: "n", meaning: "Tiền lương", example: "" },
+            { word: "Self-motivation", ipa: "", type: "n", meaning: "Sự tự tạo động lực", example: "" },
+            { word: "Send a notification", ipa: "", type: "phr", meaning: "Gửi thông báo", example: "" },
+            { word: "Vacancy", ipa: "/ˈveɪ.kən.si/", type: "n", meaning: "Vị trí trống", example: "" },
+            { word: "Wanted", ipa: "/ˈwɑːn.t̬ɪd/", type: "adj", meaning: "Được cần đến", example: "" },
+            { word: "Work history", ipa: "", type: "phr", meaning: "Lịch sử làm việc", example: "" },
+
+            // --- 900 LEVEL ---
+            { word: "Credential", ipa: "/krɪˈden.ʃəl/", type: "n", meaning: "Chứng chỉ/Uy tín", example: "" },
+            { word: "Firsthand", ipa: "/ˈfɝːst.hænd/", type: "adj", meaning: "Trực tiếp", example: "" },
+            { word: "Hiring committee", ipa: "", type: "phr", meaning: "Ủy ban tuyển dụng", example: "" },
+            { word: "Not to mention", ipa: "", type: "phr", meaning: "Chưa kể đến", example: "" },
+            { word: "On occasion", ipa: "", type: "phr", meaning: "Thỉnh thoảng", example: "" },
+            { word: "Overqualified", ipa: "/ˌoʊ.vɚˈkwɑː.lə.faɪd/", type: "adj", meaning: "Thừa năng lực", example: "" },
+            { word: "Screening", ipa: "/ˈskriː.nɪŋ/", type: "n", meaning: "Sự sàng lọc", example: "" },
+            { word: "Lag", ipa: "/læɡ/", type: "v", meaning: "Chậm trễ", example: "" },
+            { word: "On the waiting list", ipa: "", type: "phr", meaning: "Trong danh sách chờ", example: "" },
+            { word: "Oriented", ipa: "/ˈɔːr.i.en.t̬ɪd/", type: "adj", meaning: "Được định hướng", example: "" },
+            { word: "Pertaining to", ipa: "", type: "phr", meaning: "Gắn liền với", example: "" },
+            { word: "Questionably", ipa: "/ˈkwes.tʃə.nə.bli/", type: "adv", meaning: "Đáng ngờ", example: "" },
+            { word: "Regularity", ipa: "/ˌreɡ.jəˈler.ə.t̬i/", type: "n", meaning: "Sự đều đặn", example: "" },
+            { word: "Replenish", ipa: "/rɪˈplen.ɪʃ/", type: "v", meaning: "Làm đầy lại", example: "" },
+            { word: "Simplicity", ipa: "/sɪmˈplɪs.ə.t̬i/", type: "n", meaning: "Sự đơn giản", example: "" },
+            { word: "Stellar", ipa: "/ˈstel.ɚ/", type: "adj", meaning: "Xuất sắc", example: "" },
+            { word: "Versatile", ipa: "/ˈvɝː.sə.t̬əl/", type: "adj", meaning: "Linh hoạt", example: "" },
+            { word: "Adept", ipa: "/əˈdept/", type: "adj", meaning: "Tinh thông", example: "" },
+            { word: "Against all odds", ipa: "", type: "phr", meaning: "Bất chấp khó khăn", example: "" },
+            { word: "Command", ipa: "/kəˈmænd/", type: "n", meaning: "Quyền chỉ huy", example: "" },
+            { word: "Commensurate", ipa: "/kəˈmen.sjɚ.ət/", type: "adj", meaning: "Tương xứng", example: "" },
+            { word: "Computer literate", ipa: "", type: "phr", meaning: "Biết dùng máy tính", example: "" },
+            { word: "Eagerness", ipa: "/ˈiː.ɡɚ.nəs/", type: "n", meaning: "Sự háo hức", example: "" },
+            { word: "Familiarize oneself with", ipa: "", type: "phr", meaning: "Tự làm quen với", example: "" },
+            { word: "Increment", ipa: "/ˈɪŋ.krə.mənt/", type: "n", meaning: "Sự gia tăng", example: "" },
+            { word: "Interpersonal skills", ipa: "", type: "phr", meaning: "Kỹ năng mềm", example: "" },
+            { word: "Mindful", ipa: "/ˈmaɪnd.fəl/", type: "adj", meaning: "Lưu tâm", example: "" },
+            { word: "Preeminent", ipa: "/priːˈem.ə.nənt/", type: "adj", meaning: "Ưu việt", example: "" },
+            { word: "Preliminary", ipa: "/prɪˈlɪm.ə.ner.i/", type: "adj", meaning: "Sơ bộ", example: "" },
+            { word: "Prerequisite", ipa: "/ˌpriːˈrek.wə.zɪt/", type: "n", meaning: "Tiên quyết", example: "" },
+            { word: "Probationer", ipa: "/proʊˈbeɪ.ʃən.ɚ/", type: "n", meaning: "Nhân viên tập sự", example: "" },
+            { word: "Sternly", ipa: "/ˈstɝːn.li/", type: "adv", meaning: "Nghiêm khắc", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                
+                // Logic hiển thị tag loại từ
+                let posClass = 'phr'; // Mặc định màu xám
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (!item.type.includes('phr')) posClass = 'main'; // Từ chính màu xanh
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type">
+                        <span class="pos-tag ${posClass}">
+                            ${item.type}
+                        </span>
+                    </td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        // Init
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

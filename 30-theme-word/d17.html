@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 17: Shipping & Trade - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0D9488; --secondary-bg: #CCFBF1; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #CCFBF1; color: #0F766E; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 17: Thương mại - Vận chuyển</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Fragile", ipa: "/ˈfrædʒ.əl/", type: "adj", meaning: "Dễ vỡ, mỏng manh", example: "Fragile items are wrapped." },
+            { word: "Perishable", ipa: "/ˈper.ɪ.ʃə.bəl/", type: "adj", meaning: "Dễ hỏng, dễ thối", example: "Perishable goods." },
+            { word: "Perish", ipa: "/ˈper.ɪʃ/", type: "v (der)", meaning: "Hỏng, chết", example: "" },
+            { word: "Imperishable", ipa: "/ɪmˈper.ɪ.ʃə.bəl/", type: "adj (ant)", meaning: "Không hư hỏng", example: "" },
+            { word: "Deliver", ipa: "/dɪˈlɪv.ɚ/", type: "v", meaning: "Giao, phát", example: "Packages are delivered." },
+            { word: "Delivery", ipa: "/dɪˈlɪv.ɚ.i/", type: "n (der)", meaning: "Sự giao hàng", example: "" },
+            { word: "Ensure", ipa: "/ɪnˈʃʊr/", type: "v", meaning: "Đảm bảo", example: "Ensure the message was delivered." },
+            { word: "Sure", ipa: "/ʃʊr/", type: "adj (der)", meaning: "Chắc chắn", example: "" },
+            { word: "Assure", ipa: "/əˈʃʊr/", type: "v (syn)", meaning: "Cam đoan", example: "" },
+            { word: "Make certain", ipa: "", type: "phr (syn)", meaning: "Chắc chắn", example: "" },
+            { word: "Courier", ipa: "/ˈkʊr.i.ɚ/", type: "n", meaning: "Người đưa thư, công ty vận chuyển", example: "Send the package by courier." },
+            { word: "Carton", ipa: "/ˈkɑːr.t̬ən/", type: "n", meaning: "Thùng các tông", example: "The carton of goods." },
+            { word: "Address", ipa: "/ˈæd.res/", type: "n", meaning: "Địa chỉ", example: "Address is stored in database." },
+            { word: "Address", ipa: "/əˈdres/", type: "v", meaning: "Giải quyết / Gửi tới", example: "Address the clients' needs." },
+            { word: "Shipment", ipa: "/ˈʃɪp.mənt/", type: "n", meaning: "Việc gửi hàng, lô hàng", example: "Specializes in the shipment of food." },
+            { word: "Freight", ipa: "/freɪt/", type: "n (syn)", meaning: "Hàng hóa", example: "" },
+            { word: "Cargo", ipa: "/ˈkɑːr.ɡoʊ/", type: "n (syn)", meaning: "Hàng hóa", example: "" },
+            { word: "Particularly", ipa: "/pɚˈtɪk.jə.lɚ.li/", type: "adv", meaning: "Đặc biệt", example: "Particularly farmers." },
+            { word: "Particular", ipa: "/pɚˈtɪk.jə.lɚ/", type: "adj (der)", meaning: "Cụ thể", example: "" },
+            { word: "Adequately", ipa: "/ˈæd.ə.kwət.li/", type: "adv", meaning: "Thích đáng, đủ", example: "Glassware is adequately wrapped." },
+            { word: "Adequate", ipa: "/ˈæd.ə.kwət/", type: "adj (der)", meaning: "Đủ", example: "" },
+            { word: "Properly", ipa: "/ˈprɑː.pɚ.li/", type: "adv (syn)", meaning: "Đúng cách", example: "" },
+            { word: "Appropriately", ipa: "/əˈproʊ.pri.ət.li/", type: "adv (syn)", meaning: "Thích hợp", example: "" },
+            { word: "Inadequately", ipa: "/ɪnˈæd.ə.kwət.li/", type: "adv (ant)", meaning: "Không thỏa đáng", example: "" },
+            { word: "Article", ipa: "/ˈɑːr.t̬ɪ.kəl/", type: "n", meaning: "Vật phẩm / Bài báo", example: "Articles of clothing." },
+            { word: "Efficient", ipa: "/ɪˈfɪʃ.ənt/", type: "adj", meaning: "Có hiệu quả", example: "Efficient means of packaging." },
+            { word: "Efficiency", ipa: "/ɪˈfɪʃ.ən.si/", type: "n (der)", meaning: "Hiệu suất", example: "" },
+            { word: "Efficiently", ipa: "/ɪˈfɪʃ.ənt.li/", type: "adv (der)", meaning: "Một cách hiệu quả", example: "" },
+            { word: "Effective", ipa: "/əˈfek.tɪv/", type: "adj (syn)", meaning: "Hiệu quả", example: "" },
+            { word: "Inefficient", ipa: "/ˌɪn.ɪˈfɪʃ.ənt/", type: "adj (ant)", meaning: "Kém hiệu quả", example: "" },
+            { word: "Agency", ipa: "/ˈeɪ.dʒən.si/", type: "n", meaning: "Đại lý, cơ quan", example: "Hired an agency to inspect." },
+            { word: "Enclose", ipa: "/ɪnˈkloʊz/", type: "v", meaning: "Gửi kèm / Vây quanh", example: "Find a copy enclosed." },
+            { word: "Enclosure", ipa: "/ɪnˈkloʊ.ʒɚ/", type: "n (der)", meaning: "Tài liệu đính kèm", example: "" },
+            { word: "Encase", ipa: "/ɪnˈkeɪs/", type: "v", meaning: "Bọc lại", example: "Encased in a protective sleeve." },
+            { word: "Encircle", ipa: "/ɪnˈsɝː.kəl/", type: "v", meaning: "Vây quanh", example: "Encircles the city center." },
+            { word: "Careful", ipa: "/ˈker.fəl/", type: "adj", meaning: "Cẩn thận", example: "Careful with the crates." },
+            { word: "Carefully", ipa: "/ˈker.fəl.i/", type: "adv (der)", meaning: "Một cách cẩn thận", example: "" },
+            { word: "Pick up", ipa: "", type: "phr", meaning: "Nhặt / Lấy / Đón", example: "Pick up from the reception desk." },
+            { word: "Carry", ipa: "/ˈker.i/", type: "v", meaning: "Mang theo / Có bán", example: "Required to carry identification." },
+            { word: "Attach", ipa: "/əˈtætʃ/", type: "v", meaning: "Đính kèm, dán", example: "Attach the label." },
+            { word: "Attached", ipa: "/əˈtætʃt/", type: "adj (der)", meaning: "Được đính kèm", example: "" },
+            { word: "Attachment", ipa: "/əˈtætʃ.mənt/", type: "n (der)", meaning: "Tệp đính kèm", example: "" },
+            { word: "Affix", ipa: "/əˈfɪks/", type: "v (syn)", meaning: "Dán vào", example: "" },
+            { word: "Detach", ipa: "/dɪˈtætʃ/", type: "v (ant)", meaning: "Tháo rời", example: "" },
+            { word: "Formerly", ipa: "/ˈfɔːr.mɚ.li/", type: "adv", meaning: "Trước đây", example: "Formerly in charge." },
+            { word: "Package", ipa: "/ˈpæk.ɪdʒ/", type: "n", meaning: "Gói hàng", example: "Packages are delivered daily." },
+            { word: "React", ipa: "/riˈækt/", type: "v", meaning: "Phản ứng", example: "Reacted negatively." },
+            { word: "Reaction", ipa: "/riˈæk.ʃən/", type: "n (der)", meaning: "Sự phản ứng", example: "" },
+            { word: "Content", ipa: "/ˈkɑːn.tent/", type: "n", meaning: "Nội dung, đồ bên trong", example: "Contents of your package." },
+            { word: "Convenience", ipa: "/kənˈviːn.jəns/", type: "n", meaning: "Sự thuận tiện", example: "For your convenience." },
+            { word: "Convenient", ipa: "/kənˈviːn.jənt/", type: "adj (der)", meaning: "Thuận tiện", example: "" },
+            { word: "Inconvenience", ipa: "/ˌɪn.kənˈviːn.jəns/", type: "n (ant)", meaning: "Sự bất tiện", example: "" },
+            { word: "Acknowledge", ipa: "/əkˈnɑː.lɪdʒ/", type: "v", meaning: "Xác nhận / Ghi nhận", example: "Acknowledge receipt." },
+            { word: "Acknowledgement", ipa: "/əkˈnɑː.lɪdʒ.mənt/", type: "n (der)", meaning: "Sự công nhận", example: "" },
+            { word: "Caution", ipa: "/ˈkɑː.ʃən/", type: "n", meaning: "Sự thận trọng", example: "Use caution when unpacking." },
+            { word: "Cautious", ipa: "/ˈkɑː.ʃəs/", type: "adj (der)", meaning: "Thận trọng", example: "" },
+            { word: "Carelessness", ipa: "/ˈker.ləs.nəs/", type: "n (ant)", meaning: "Sự bất cẩn", example: "" },
+            { word: "Correspondence", ipa: "/ˌkɔːr.əˈspɑːn.dəns/", type: "n", meaning: "Thư từ", example: "Send all correspondence." },
+            { word: "Correspond", ipa: "/ˌkɔːr.əˈspɑːnd/", type: "v (der)", meaning: "Tương xứng / Trao đổi thư", example: "" },
+            { word: "Correspondent", ipa: "/ˌkɔːr.əˈspɑːn.dənt/", type: "n", meaning: "Phóng viên", example: "" },
+            { word: "Separate", ipa: "/ˈsep.ə.reɪt/", type: "v", meaning: "Tách ra, phân loại", example: "Liquids must be separated." },
+            { word: "Separately", ipa: "/ˈsep.ɚ.ət.li/", type: "adv (der)", meaning: "Riêng biệt", example: "" },
+            { word: "Separation", ipa: "/ˌsep.əˈreɪ.ʃən/", type: "n (der)", meaning: "Sự chia cắt", example: "" },
+            { word: "Separate", ipa: "/ˈsep.ɚ.ət/", type: "adj", meaning: "Riêng biệt", example: "In a separate box." },
+            { word: "Remarkable", ipa: "/rɪˈmɑːr.kə.bəl/", type: "adj", meaning: "Đáng chú ý, xuất sắc", example: "A remarkable transformation." },
+            { word: "Remarkably", ipa: "/rɪˈmɑːr.kə.bli/", type: "adv (der)", meaning: "Đáng kể", example: "" },
+            { word: "Handle", ipa: "/ˈhæn.dəl/", type: "v", meaning: "Xử lý", example: "Handled with care." },
+            { word: "Handling", ipa: "/ˈhæn.dlɪŋ/", type: "n (der)", meaning: "Sự xử lý", example: "" },
+            { word: "Take care of", ipa: "", type: "phr (syn)", meaning: "Chăm sóc", example: "" },
+            { word: "Treat", ipa: "/triːt/", type: "v (syn)", meaning: "Đối xử", example: "" },
+            { word: "Manage", ipa: "/ˈmæn.ədʒ/", type: "v (syn)", meaning: "Quản lý", example: "" },
+            { word: "Warehouse", ipa: "/ˈwer.haʊs/", type: "n", meaning: "Nhà kho", example: "Go to the warehouse." },
+            { word: "Impose", ipa: "/ɪmˈpoʊz/", type: "v", meaning: "Áp đặt, đánh thuế", example: "Impose taxes." },
+            { word: "Imposition", ipa: "/ˌɪm.pəˈzɪʃ.ən/", type: "n (der)", meaning: "Sự áp đặt", example: "" },
+            { word: "Levy", ipa: "/ˈlev.i/", type: "v (syn)", meaning: "Đánh thuế", example: "" },
+            { word: "Storage", ipa: "/ˈstɔːr.ɪdʒ/", type: "n", meaning: "Sự lưu kho", example: "Placed in storage." },
+            { word: "Store", ipa: "/stɔːr/", type: "v (der)", meaning: "Lưu trữ", example: "" },
+            { word: "Detach", ipa: "/dɪˈtætʃ/", type: "v", meaning: "Tách ra, gỡ ra", example: "Detach the form." },
+            { word: "Separate", ipa: "/ˈsep.ə.reɪt/", type: "v (syn)", meaning: "Tách rời", example: "" },
+            { word: "Envelope", ipa: "/ˈɑːn.və.loʊp/", type: "n", meaning: "Phong bì", example: "Stamped on each envelope." },
+            { word: "Envelop", ipa: "/ɪnˈvel.əp/", type: "v (der)", meaning: "Bao bọc", example: "" },
+            { word: "Exclusion", ipa: "/ɪkˈskluː.ʒən/", type: "n", meaning: "Sự loại trừ", example: "Exclusion of shipping fees." },
+            { word: "Exclude", ipa: "/ɪkˈskluːd/", type: "v (der)", meaning: "Loại trừ", example: "" },
+            { word: "Exclusive", ipa: "/ɪkˈskluː.sɪv/", type: "adj (der)", meaning: "Độc quyền", example: "" },
+            { word: "Exclusively", ipa: "/ɪkˈskluː.sɪv.li/", type: "adv (der)", meaning: "Dành riêng", example: "" },
+            { word: "Recipient", ipa: "/rɪˈsɪp.i.ənt/", type: "n", meaning: "Người nhận", example: "Enter the recipient's address." },
+            { word: "Sender", ipa: "/ˈsen.dɚ/", type: "n (ant)", meaning: "Người gửi", example: "" },
+            { word: "Affix", ipa: "/əˈfɪks/", type: "v", meaning: "Dán, đóng dấu", example: "Affix a stamp." },
+            { word: "Incorrect", ipa: "/ˌɪn.kəˈrekt/", type: "adj", meaning: "Sai, không đúng", example: "Incorrect information." },
+            { word: "Incorrectly", ipa: "/ˌɪn.kəˈrekt.li/", type: "adv (der)", meaning: "Sai", example: "" },
+            { word: "Inaccurate", ipa: "/ɪnˈæk.jɚ.ət/", type: "adj (syn)", meaning: "Không chính xác", example: "" },
+            { word: "Oblige", ipa: "/əˈblaɪdʒ/", type: "v", meaning: "Bắt buộc", example: "Obliged to destroy." },
+            { word: "Obligation", ipa: "/ˌɑː.bləˈɡeɪ.ʃən/", type: "n (der)", meaning: "Nghĩa vụ", example: "" },
+            { word: "Obligatory", ipa: "/əˈblɪɡ.ə.tɔːr.i/", type: "adj (der)", meaning: "Bắt buộc", example: "" },
+            { word: "Step", ipa: "/step/", type: "n", meaning: "Bước, biện pháp", example: "Completed the final step." },
+            { word: "Step", ipa: "/step/", type: "v", meaning: "Bước", example: "" },
+            { word: "Take steps", ipa: "", type: "phr (syn)", meaning: "Thực hiện biện pháp", example: "" },
+
+            // --- BASIC & EXTRAS ---
+            { word: "Butcher's shop", ipa: "", type: "phr", meaning: "Cửa hàng thịt", example: "" },
+            { word: "Cargo", ipa: "/ˈkɑːr.ɡoʊ/", type: "n", meaning: "Hàng hóa", example: "" },
+            { word: "Clinic", ipa: "/ˈklɪn.ɪk/", type: "n", meaning: "Phòng khám", example: "" },
+            { word: "Crate", ipa: "/kreɪt/", type: "n", meaning: "Thùng thưa", example: "" },
+            { word: "Flow", ipa: "/floʊ/", type: "n/v", meaning: "Dòng chảy / Chảy", example: "" },
+            { word: "Following week", ipa: "", type: "phr", meaning: "Tuần sau", example: "" },
+            { word: "Get a ticket", ipa: "", type: "phr", meaning: "Mua vé", example: "" },
+            { word: "In storage", ipa: "", type: "phr", meaning: "Trong kho", example: "" },
+            { word: "Load", ipa: "/loʊd/", type: "n/v", meaning: "Tải trọng / Chất hàng", example: "" },
+            { word: "Mail", ipa: "/meɪl/", type: "n/v", meaning: "Thư / Gửi thư", example: "" },
+            { word: "Museum", ipa: "/mjuːˈziː.əm/", type: "n", meaning: "Bảo tàng", example: "" },
+            { word: "Parcel", ipa: "/ˈpɑːr.səl/", type: "n", meaning: "Bưu kiện", example: "" },
+            { word: "Pick up packages", ipa: "", type: "phr", meaning: "Lấy hàng", example: "" },
+            { word: "Pottery", ipa: "/ˈpɑː.t̬ɚ.i/", type: "n", meaning: "Đồ gốm", example: "" },
+            { word: "Public park", ipa: "", type: "phr", meaning: "Công viên công cộng", example: "" },
+            { word: "Stamp", ipa: "/stæmp/", type: "n/v", meaning: "Tem / Đóng dấu", example: "" },
+            { word: "Van", ipa: "/væn/", type: "n", meaning: "Xe tải nhỏ", example: "" },
+            { word: "Venue", ipa: "/ˈven.juː/", type: "n", meaning: "Địa điểm", example: "" },
+            { word: "Weight", ipa: "/weɪt/", type: "n", meaning: "Trọng lượng", example: "" },
+            { word: "Barrier", ipa: "/ˈber.i.ɚ/", type: "n", meaning: "Rào cản", example: "" },
+            { word: "Base", ipa: "/beɪs/", type: "n", meaning: "Căn cứ", example: "" },
+            { word: "Delay", ipa: "/dɪˈleɪ/", type: "n/v", meaning: "Sự trì hoãn / Làm chậm", example: "" },
+            { word: "Due date", ipa: "", type: "phr", meaning: "Ngày đáo hạn", example: "" },
+            { word: "Instructor", ipa: "/ɪnˈstrʌk.tɚ/", type: "n", meaning: "Người hướng dẫn", example: "" },
+            { word: "Offload", ipa: "/ˌɑːfˈloʊd/", type: "v", meaning: "Dỡ hàng", example: "" },
+            { word: "Parking pass", ipa: "", type: "phr", meaning: "Thẻ đỗ xe", example: "" },
+            { word: "Shipping", ipa: "/ˈʃɪp.ɪŋ/", type: "n", meaning: "Việc vận chuyển", example: "" },
+            { word: "Trade", ipa: "/treɪd/", type: "n", meaning: "Thương mại", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "As of now", ipa: "", type: "phr", meaning: "Kể từ bây giờ", example: "" },
+            { word: "Broker", ipa: "/ˈbroʊ.kɚ/", type: "n", meaning: "Người môi giới", example: "" },
+            { word: "Canal", ipa: "/kəˈnæl/", type: "n", meaning: "Kênh đào", example: "" },
+            { word: "Carry a parcel", ipa: "", type: "phr", meaning: "Mang bưu kiện", example: "" },
+            { word: "Closing", ipa: "/ˈkloʊ.zɪŋ/", type: "n", meaning: "Sự kết thúc", example: "" },
+            { word: "Courier service", ipa: "", type: "phr", meaning: "Dịch vụ chuyển phát", example: "" },
+            { word: "Door-to-door", ipa: "", type: "phr", meaning: "Giao tận nơi", example: "" },
+            { word: "Drive off", ipa: "", type: "phr", meaning: "Lái xe đi", example: "" },
+            { word: "Drop off", ipa: "", type: "phr", meaning: "Thả xuống", example: "" },
+            { word: "Drycleaner", ipa: "/ˌdraɪˈkliː.nɚ/", type: "n", meaning: "Tiệm giặt khô", example: "" },
+            { word: "Floor manager", ipa: "", type: "phr", meaning: "Quản lý tầng", example: "" },
+            { word: "Hold handrail", ipa: "", type: "phr", meaning: "Vịn tay vịn", example: "" },
+            { word: "In transit", ipa: "", type: "phr", meaning: "Đang vận chuyển", example: "" },
+            { word: "Inn", ipa: "/ɪn/", type: "n", meaning: "Nhà trọ", example: "" },
+            { word: "Lab report", ipa: "", type: "phr", meaning: "Báo cáo thí nghiệm", example: "" },
+            { word: "Lab technician", ipa: "", type: "phr", meaning: "Kỹ thuật viên phòng lab", example: "" },
+            { word: "Lace", ipa: "/leɪs/", type: "n/v", meaning: "Dây buộc / Buộc", example: "" },
+            { word: "Legal department", ipa: "", type: "phr", meaning: "Phòng pháp chế", example: "" },
+            { word: "Load A onto B", ipa: "", type: "phr", meaning: "Chất A lên B", example: "" },
+            { word: "Load a truck", ipa: "", type: "phr", meaning: "Chất hàng lên xe", example: "" },
+            { word: "Loaded with", ipa: "", type: "phr", meaning: "Chất đầy", example: "" },
+            { word: "Loading", ipa: "/ˈloʊ.dɪŋ/", type: "n", meaning: "Việc chất hàng", example: "" },
+            { word: "Lost in delivery", ipa: "", type: "phr", meaning: "Thất lạc khi giao", example: "" },
+            { word: "Mailing list", ipa: "", type: "phr", meaning: "Danh sách gửi thư", example: "" },
+            { word: "Make a delivery", ipa: "", type: "phr", meaning: "Giao hàng", example: "" },
+            { word: "Packing tape", ipa: "", type: "phr", meaning: "Băng dính gói hàng", example: "" },
+            { word: "Pass over", ipa: "", type: "phr", meaning: "Bỏ qua", example: "" },
+            { word: "Pavement", ipa: "/ˈpeɪv.mənt/", type: "n", meaning: "Vỉa hè", example: "" },
+            { word: "People on foot", ipa: "", type: "phr", meaning: "Người đi bộ", example: "" },
+            { word: "Pick up passengers", ipa: "", type: "phr", meaning: "Đón khách", example: "" },
+            { word: "Pier", ipa: "/pɪr/", type: "n", meaning: "Bến tàu", example: "" },
+            { word: "Pile up", ipa: "", type: "phr", meaning: "Chất đống", example: "" },
+            { word: "Postal", ipa: "/ˈpoʊ.stəl/", type: "adj", meaning: "Thuộc bưu điện", example: "" },
+            { word: "Strap", ipa: "/stræp/", type: "n/v", meaning: "Dây đai / Buộc", example: "" },
+            { word: "Time limit", ipa: "", type: "phr", meaning: "Thời hạn", example: "" },
+            { word: "Waterway", ipa: "/ˈwɑː.t̬ɚ.weɪ/", type: "n", meaning: "Đường thủy", example: "" },
+            { word: "Weigh", ipa: "/weɪ/", type: "v", meaning: "Cân", example: "" },
+            { word: "Weight limit", ipa: "", type: "phr", meaning: "Giới hạn trọng lượng", example: "" },
+            { word: "Wrap up", ipa: "", type: "phr", meaning: "Gói lại", example: "" },
+            { word: "Correction", ipa: "/kəˈrek.ʃən/", type: "n", meaning: "Sự sửa chữa", example: "" },
+            { word: "Delivery option", ipa: "", type: "phr", meaning: "Tùy chọn giao hàng", example: "" },
+            { word: "Discard", ipa: "/dɪˈskɑːrd/", type: "v", meaning: "Loại bỏ", example: "" },
+            { word: "Express mail", ipa: "", type: "phr", meaning: "Thư chuyển phát nhanh", example: "" },
+            { word: "Fortunately", ipa: "/ˈfɔːr.tʃən.ət.li/", type: "adv", meaning: "May mắn thay", example: "" },
+            { word: "Ideally", ipa: "/aɪˈdiː.ə.li/", type: "adv", meaning: "Lý tưởng nhất", example: "" },
+            { word: "Load size", ipa: "", type: "phr", meaning: "Kích thước tải", example: "" },
+            { word: "Marginally", ipa: "/ˈmɑːr.dʒɪ.nəl.i/", type: "adv", meaning: "Một chút", example: "" },
+            { word: "Ordered", ipa: "/ˈɔːr.dɚd/", type: "adj", meaning: "Có trật tự", example: "" },
+            { word: "Ordering", ipa: "/ˈɔːr.dɚ.ɪŋ/", type: "n", meaning: "Việc đặt hàng", example: "" },
+            { word: "Ordinarily", ipa: "/ˌɔːr.dənˈer.əl.i/", type: "adv", meaning: "Thông thường", example: "" },
+            { word: "Packaging", ipa: "/ˈpæk.ɪ.dʒɪŋ/", type: "n", meaning: "Bao bì", example: "" },
+            { word: "Provided that", ipa: "", type: "conj", meaning: "Miễn là", example: "" },
+            { word: "Respond to", ipa: "", type: "phr", meaning: "Phản hồi", example: "" },
+            { word: "Separation", ipa: "/ˌsep.əˈreɪ.ʃən/", type: "n", meaning: "Sự chia tách", example: "" },
+            { word: "Sizable", ipa: "/ˈsaɪ.zə.bəl/", type: "adj", meaning: "Khá lớn", example: "" },
+            { word: "Society", ipa: "/səˈsaɪ.ə.t̬i/", type: "n", meaning: "Xã hội", example: "" },
+            { word: "Accelerate", ipa: "/əkˈsel.ə.reɪt/", type: "v", meaning: "Tăng tốc", example: "" },
+            { word: "Additional charge", ipa: "", type: "phr", meaning: "Phí bổ sung", example: "" },
+            { word: "Ahead of schedule", ipa: "", type: "phr", meaning: "Trước thời hạn", example: "" },
+            { word: "At the last minute", ipa: "", type: "phr", meaning: "Vào phút chót", example: "" },
+            { word: "By hand", ipa: "", type: "phr", meaning: "Bằng tay", example: "" },
+            { word: "Car maintenance", ipa: "", type: "phr", meaning: "Bảo dưỡng xe", example: "" },
+            { word: "City official", ipa: "", type: "phr", meaning: "Quan chức thành phố", example: "" },
+            { word: "Free of charge", ipa: "", type: "phr", meaning: "Miễn phí", example: "" },
+            { word: "Postage", ipa: "/ˈpoʊ.stɪdʒ/", type: "n", meaning: "Bưu phí", example: "" },
+            { word: "Trade negotiation", ipa: "", type: "phr", meaning: "Đàm phán thương mại", example: "" },
+            { word: "Trade show", ipa: "", type: "phr", meaning: "Triển lãm thương mại", example: "" },
+            { word: "Without delay", ipa: "", type: "phr", meaning: "Không chậm trễ", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Freight", ipa: "/freɪt/", type: "n", meaning: "Hàng hóa vận chuyển", example: "" },
+            { word: "Heritage", ipa: "/ˈher.ɪ.t̬ɪdʒ/", type: "n", meaning: "Di sản", example: "" },
+            { word: "Janitor", ipa: "/ˈdʒæn.ə.t̬ɚ/", type: "n", meaning: "Người gác cổng", example: "" },
+            { word: "Loading dock", ipa: "", type: "phr", meaning: "Bến bốc hàng", example: "" },
+            { word: "Logistics", ipa: "/ləˈdʒɪs.tɪks/", type: "n", meaning: "Hậu cần", example: "" },
+            { word: "Realtor", ipa: "/ˈriː.əl.tɔːr/", type: "n", meaning: "Môi giới bất động sản", example: "" },
+            { word: "Registered mail", ipa: "", type: "phr", meaning: "Thư bảo đảm", example: "" },
+            { word: "Wheelbarrow", ipa: "/ˈwiːlˌber.oʊ/", type: "n", meaning: "Xe cút kít", example: "" },
+            { word: "Classified", ipa: "/ˈklæs.ə.faɪd/", type: "adj", meaning: "Đã phân loại / Mật", example: "" },
+            { word: "Consulate", ipa: "/ˈkɑːn.sjə.lət/", type: "n", meaning: "Lãnh sự quán", example: "" },
+            { word: "Decidedly", ipa: "/dɪˈsaɪ.dɪd.li/", type: "adv", meaning: "Dứt khoát", example: "" },
+            { word: "Inaugurate", ipa: "/ɪˈnɑː.ɡjə.reɪt/", type: "v", meaning: "Khánh thành", example: "" },
+            { word: "Institute", ipa: "/ˈɪn.stə.tuːt/", type: "n", meaning: "Viện / Học viện", example: "" },
+            { word: "Institution", ipa: "/ˌɪn.stəˈtuː.ʃən/", type: "n", meaning: "Tổ chức / Cơ quan", example: "" },
+            { word: "Openly", ipa: "/ˈoʊ.pən.li/", type: "adv", meaning: "Công khai", example: "" },
+            { word: "Oversight", ipa: "/ˈoʊ.vɚ.saɪt/", type: "n", meaning: "Sự giám sát", example: "" },
+            { word: "Province", ipa: "/ˈprɑː.vɪns/", type: "n", meaning: "Tỉnh", example: "" },
+            { word: "Selective", ipa: "/səˈlek.tɪv/", type: "adj", meaning: "Có chọn lọc", example: "" },
+            { word: "Transportable", ipa: "/trænˈspɔːr.t̬ə.bəl/", type: "adj", meaning: "Có thể vận chuyển", example: "" },
+            { word: "Alumni association", ipa: "", type: "phr", meaning: "Hội cựu sinh viên", example: "" },
+            { word: "Bilateral", ipa: "/ˌbaɪˈlæt̬.ɚ.əl/", type: "adj", meaning: "Song phương", example: "" },
+            { word: "Diplomat", ipa: "/ˈdɪp.lə.mæt/", type: "n", meaning: "Nhà ngoại giao", example: "" },
+            { word: "Embargo", ipa: "/ɪmˈbɑːr.ɡoʊ/", type: "n", meaning: "Lệnh cấm vận", example: "" },
+            { word: "Expatriate", ipa: "/ekˈspeɪ.tri.ət/", type: "n", meaning: "Người nước ngoài", example: "" },
+            { word: "Expedite", ipa: "/ˈek.spə.daɪt/", type: "v", meaning: "Xúc tiến", example: "" },
+            { word: "Handling", ipa: "/ˈhæn.dlɪŋ/", type: "n", meaning: "Cách xử lý", example: "" },
+            { word: "Import license", ipa: "", type: "phr", meaning: "Giấy phép nhập khẩu", example: "" },
+            { word: "Intended recipient", ipa: "", type: "phr", meaning: "Người nhận dự kiến", example: "" },
+            { word: "Progression", ipa: "/prəˈɡreʃ.ən/", type: "n", meaning: "Sự tiến triển", example: "" },
+            { word: "Reciprocal", ipa: "/rɪˈsɪp.rə.kəl/", type: "adj", meaning: "Lẫn nhau", example: "" },
+            { word: "Stow", ipa: "/stoʊ/", type: "v", meaning: "Cất giữ", example: "" },
+            { word: "Surplus", ipa: "/ˈsɝː.pləs/", type: "n", meaning: "Số dư", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 11: Product Development - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #7C3AED; --secondary-bg: #F5F3FF; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #F5F3FF; color: #7C3AED; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 11: Phát triển sản phẩm</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Research", ipa: "/rɪˈsɝːtʃ/", type: "n", meaning: "Sự nghiên cứu", example: "Started a research program." },
+            { word: "Research", ipa: "/rɪˈsɝːtʃ/", type: "v", meaning: "Nghiên cứu", example: "" },
+            { word: "Researcher", ipa: "/rɪˈsɝː.tʃɚ/", type: "n (der)", meaning: "Nhà nghiên cứu", example: "" },
+            { word: "Study", ipa: "/ˈstʌd.i/", type: "v (syn)", meaning: "Nghiên cứu", example: "" },
+            { word: "Devise", ipa: "/dɪˈvaɪz/", type: "v", meaning: "Phát minh, sáng chế", example: "Devised a more efficient system." },
+            { word: "Device", ipa: "/dɪˈvaɪs/", type: "n (der)", meaning: "Thiết bị", example: "" },
+            { word: "Contrive", ipa: "/kənˈtraɪv/", type: "v (syn)", meaning: "Nghĩ ra", example: "" },
+            { word: "Invent", ipa: "/ɪnˈvent/", type: "v (syn)", meaning: "Phát minh", example: "" },
+            { word: "Revolutionary", ipa: "/ˌrev.əˈluː.ʃən.er.i/", type: "adj", meaning: "Mang tính cách mạng", example: "Revolutionary new engine." },
+            { word: "Revolution", ipa: "/ˌrev.əˈluː.ʃən/", type: "n (der)", meaning: "Cuộc cách mạng", example: "" },
+            { word: "Innovative", ipa: "/ˈɪn.ə.veɪ.t̬ɪv/", type: "adj", meaning: "Tân tiến, đổi mới", example: "Provides innovative solutions." },
+            { word: "Innovate", ipa: "/ˈɪn.ə.veɪt/", type: "v (der)", meaning: "Đổi mới", example: "" },
+            { word: "Innovation", ipa: "/ˌɪn.əˈveɪ.ʃən/", type: "n (der)", meaning: "Sự đổi mới", example: "" },
+            { word: "Feature", ipa: "/ˈfiː.tʃɚ/", type: "n", meaning: "Đặc điểm, tính năng", example: "Has several new features." },
+            { word: "Feature", ipa: "/ˈfiː.tʃɚ/", type: "v", meaning: "Có tính năng, đặc trưng", example: "Features high energy efficiency." },
+            { word: "Characteristic", ipa: "/ˌker.ək.təˈrɪs.tɪk/", type: "n (syn)", meaning: "Đặc điểm", example: "" },
+            { word: "Inspiration", ipa: "/ˌɪn.spəˈreɪ.ʃən/", type: "n", meaning: "Cảm hứng", example: "Draws her inspiration from tradition." },
+            { word: "Inspire", ipa: "/ɪnˈspaɪr/", type: "v (der)", meaning: "Truyền cảm hứng", example: "" },
+            { word: "Inspirational", ipa: "/ˌɪn.spəˈreɪ.ʃən.əl/", type: "adj (der)", meaning: "Gây cảm hứng", example: "" },
+            { word: "Sufficiently", ipa: "/səˈfɪʃ.ənt.li/", type: "adv", meaning: "Đủ, thỏa đáng", example: "Sufficiently strong to resist breakage." },
+            { word: "Sufficient", ipa: "/səˈfɪʃ.ənt/", type: "adj (der)", meaning: "Đủ", example: "" },
+            { word: "Sufficiency", ipa: "/səˈfɪʃ.ən.si/", type: "n (der)", meaning: "Sự đầy đủ", example: "" },
+            { word: "Deficiently", ipa: "/dɪˈfɪʃ.ənt.li/", type: "adv (ant)", meaning: "Thiếu hụt", example: "" },
+            { word: "Patent", ipa: "/ˈpæt.ənt/", type: "n", meaning: "Bằng sáng chế", example: "Submitted for a patent application." },
+            { word: "Envision", ipa: "/ɪnˈvɪʒ.ən/", type: "v", meaning: "Mường tượng, hình dung", example: "Envisions its product being sold." },
+            { word: "Extend", ipa: "/ɪkˈstend/", type: "v", meaning: "Gia hạn / Mở rộng / Bày tỏ", example: "Extended the deadline." },
+            { word: "Extent", ipa: "/ɪkˈstent/", type: "n (der)", meaning: "Quy mô", example: "" },
+            { word: "Extension", ipa: "/ɪkˈsten.ʃən/", type: "n (der)", meaning: "Sự gia hạn", example: "" },
+            { word: "Extensive", ipa: "/ɪkˈsten.sɪv/", type: "adj (der)", meaning: "Rộng lớn", example: "" },
+            { word: "Lengthen", ipa: "/ˈleŋ.θən/", type: "v (syn)", meaning: "Kéo dài", example: "" },
+            { word: "Offer", ipa: "/ˈɑː.fɚ/", type: "v (syn)", meaning: "Bày tỏ", example: "" },
+            { word: "Following", ipa: "/ˈfɑː.loʊ.ɪŋ/", type: "prep", meaning: "Sau, tiếp theo", example: "Launched following months of research." },
+            { word: "Following", ipa: "/ˈfɑː.loʊ.ɪŋ/", type: "adj", meaning: "Sau đây", example: "In the following languages." },
+            { word: "Intend", ipa: "/ɪnˈtend/", type: "v", meaning: "Có ý định", example: "Intends to release new appliances." },
+            { word: "Intention", ipa: "/ɪnˈten.ʃən/", type: "n (der)", meaning: "Ý định", example: "" },
+            { word: "Intent", ipa: "/ɪnˈtent/", type: "n (der)", meaning: "Mục đích", example: "" },
+            { word: "Grant", ipa: "/ɡrænt/", type: "v", meaning: "Cấp, ban", example: "Patent was granted." },
+            { word: "Grant", ipa: "/ɡrænt/", type: "n", meaning: "Trợ cấp", example: "Receive a government grant." },
+            { word: "Allowance", ipa: "/əˈlaʊ.əns/", type: "n (syn)", meaning: "Sự cho phép", example: "" },
+            { word: "Allow", ipa: "/əˈlaʊ/", type: "v", meaning: "Cho phép", example: "Allows users to conduct searches." },
+            { word: "Allowable", ipa: "/əˈlaʊ.ə.bəl/", type: "adj (der)", meaning: "Có thể cho phép", example: "" },
+            { word: "Allowed", ipa: "/əˈlaʊd/", type: "adj (der)", meaning: "Được cho phép", example: "" },
+            { word: "Allowance", ipa: "/əˈlaʊ.əns/", type: "n (der)", meaning: "Sự cho phép", example: "" },
+            { word: "Inspect", ipa: "/ɪnˈspekt/", type: "v", meaning: "Kiểm tra", example: "Inspects all equipments." },
+            { word: "Inspection", ipa: "/ɪnˈspek.ʃən/", type: "n (der)", meaning: "Sự kiểm tra", example: "" },
+            { word: "Inspector", ipa: "/ɪnˈspek.tɚ/", type: "n (der)", meaning: "Thanh tra viên", example: "" },
+            { word: "Improve", ipa: "/ɪmˈpruːv/", type: "v", meaning: "Cải thiện", example: "Improve staff productivity." },
+            { word: "Improvement", ipa: "/ɪmˈpruːv.mənt/", type: "n (der)", meaning: "Sự cải thiện", example: "" },
+            { word: "Upgrade", ipa: "/ˈʌp.ɡreɪd/", type: "v (syn)", meaning: "Nâng cấp", example: "" },
+            { word: "Increasingly", ipa: "/ɪnˈkriː.sɪŋ.li/", type: "adv", meaning: "Ngày càng tăng", example: "An increasingly important factor." },
+            { word: "Increase", ipa: "/ɪnˈkriːs/", type: "v (der)", meaning: "Tăng", example: "" },
+            { word: "Invest", ipa: "/ɪnˈvest/", type: "v", meaning: "Đầu tư", example: "Invested millions of dollars." },
+            { word: "Various", ipa: "/ˈver.i.əs/", type: "adj", meaning: "Đa dạng, nhiều", example: "Has various features." },
+            { word: "Vary", ipa: "/ˈver.i/", type: "v (der)", meaning: "Thay đổi", example: "" },
+            { word: "Variety", ipa: "/vəˈraɪ.ə.t̬i/", type: "n (der)", meaning: "Sự đa dạng", example: "" },
+            { word: "Upgrade", ipa: "/ˈʌp.ɡreɪd/", type: "n", meaning: "Sự nâng cấp", example: "One free computer upgrade." },
+            { word: "Upgrade", ipa: "/ˈʌp.ɡreɪd/", type: "v", meaning: "Nâng cấp", example: "Upgraded her cell phone." },
+            { word: "Updated", ipa: "/ʌpˈdeɪ.t̬ɪd/", type: "adj (der)", meaning: "Được cập nhật", example: "" },
+            { word: "Manual", ipa: "/ˈmæn.ju.əl/", type: "n", meaning: "Sách hướng dẫn", example: "Writing the product manual." },
+            { word: "Manual", ipa: "/ˈmæn.ju.əl/", type: "adj", meaning: "Thủ công", example: "" },
+            { word: "Explore", ipa: "/ɪkˈsplɔːr/", type: "v", meaning: "Khám phá, tìm hiểu", example: "Explore our website." },
+            { word: "Response", ipa: "/rɪˈspɑːns/", type: "n", meaning: "Sự phản hồi", example: "Submit written responses." },
+            { word: "Respond", ipa: "/rɪˈspɑːnd/", type: "v (der)", meaning: "Phản hồi", example: "" },
+            { word: "Appearance", ipa: "/əˈpɪr.əns/", type: "n", meaning: "Vẻ ngoài, diện mạo", example: "Modernized the product's appearance." },
+            { word: "Appear", ipa: "/əˈpɪr/", type: "v (der)", meaning: "Xuất hiện", example: "" },
+            { word: "Apparently", ipa: "/əˈper.ənt.li/", type: "adv (der)", meaning: "Hình như", example: "" },
+            { word: "Outlook", ipa: "/ˈaʊt.lʊk/", type: "n (syn)", meaning: "Quang cảnh", example: "" },
+            { word: "Successful", ipa: "/səkˈses.fəl/", type: "adj", meaning: "Thành công", example: "Most successful product." },
+            { word: "Succeed", ipa: "/səkˈsiːd/", type: "v (der)", meaning: "Thành công", example: "" },
+            { word: "Success", ipa: "/səkˈses/", type: "n (der)", meaning: "Sự thành công", example: "" },
+            { word: "Hold", ipa: "/hoʊld/", type: "v", meaning: "Chứa, giữ", example: "Holds up to 3kg." },
+            { word: "Contain", ipa: "/kənˈteɪn/", type: "v (syn)", meaning: "Chứa đựng", example: "" },
+            { word: "Advance", ipa: "/ədˈvæns/", type: "n", meaning: "Sự tiến bộ", example: "Researches advances in technology." },
+            { word: "Advancement", ipa: "/ədˈvæns.mənt/", type: "n (der)", meaning: "Sự cải tiến", example: "" },
+            { word: "Advanced", ipa: "/ədˈvænst/", type: "adj (der)", meaning: "Tiên tiến", example: "" },
+            { word: "Setback", ipa: "/ˈset.bæk/", type: "n (ant)", meaning: "Thoái trào", example: "" },
+            { word: "Reliable", ipa: "/rɪˈlaɪ.ə.bəl/", type: "adj", meaning: "Đáng tin cậy", example: "Products are reliable." },
+            { word: "Rely", ipa: "/rɪˈlaɪ/", type: "v (der)", meaning: "Tin vào", example: "" },
+            { word: "Reliability", ipa: "/rɪˌlaɪ.əˈbɪl.ə.t̬i/", type: "n (der)", meaning: "Độ tin cậy", example: "" },
+            { word: "Trustworthy", ipa: "/ˈtrʌstˌwɝː.ði/", type: "adj (syn)", meaning: "Đáng tin", example: "" },
+            { word: "Dependable", ipa: "/dɪˈpen.də.bəl/", type: "adj (syn)", meaning: "Đáng tin", example: "" },
+            { word: "Quality", ipa: "/ˈkwɑː.lə.t̬i/", type: "n", meaning: "Chất lượng", example: "Quality control division." },
+            { word: "Domestic", ipa: "/dəˈmes.tɪk/", type: "adj", meaning: "Nội địa", example: "Sales in the domestic market." },
+            { word: "Development", ipa: "/dɪˈvel.əp.mənt/", type: "n", meaning: "Sự phát triển", example: "Final stage of development." },
+            { word: "Develop", ipa: "/dɪˈvel.əp/", type: "v (der)", meaning: "Phát triển", example: "" },
+            { word: "Developer", ipa: "/dɪˈvel.ə.pɚ/", type: "n (der)", meaning: "Nhà phát triển", example: "" },
+            { word: "Availability", ipa: "/əˌveɪ.ləˈbɪl.ə.t̬i/", type: "n", meaning: "Sự có sẵn", example: "Availability depends on demand." },
+            { word: "Available", ipa: "/əˈveɪ.lə.bəl/", type: "adj (der)", meaning: "Có sẵn", example: "" },
+            { word: "Update", ipa: "/ˈʌp.deɪt/", type: "n", meaning: "Sự cập nhật", example: "The website update." },
+            { word: "Update", ipa: "/ʌpˈdeɪt/", type: "v", meaning: "Cập nhật", example: "Updated the software." },
+            { word: "Accurate", ipa: "/ˈæk.jɚ.ət/", type: "adj", meaning: "Chính xác", example: "Accounting software is accurate." },
+            { word: "Accuracy", ipa: "/ˈæk.jɚ.ə.si/", type: "n (der)", meaning: "Độ chính xác", example: "" },
+            { word: "Inaccurate", ipa: "/ɪnˈæk.jɚ.ət/", type: "adj (ant)", meaning: "Không chính xác", example: "" },
+            { word: "Complicated", ipa: "/ˈkɑːm.plə.keɪ.t̬ɪd/", type: "adj", meaning: "Phức tạp", example: "Create a complicated situation." },
+            { word: "Complicate", ipa: "/ˈkɑːm.plə.keɪt/", type: "v (der)", meaning: "Làm phức tạp", example: "" },
+            { word: "Accomplished", ipa: "/əˈkɑːm.plɪʃt/", type: "adj", meaning: "Tài năng, hoàn hảo", example: "The accomplished chemist." },
+            { word: "Accomplish", ipa: "/əˈkɑːm.plɪʃ/", type: "v (der)", meaning: "Hoàn thành", example: "" },
+            { word: "Inquiry", ipa: "/ˈɪn.kwə.ri/", type: "n", meaning: "Câu hỏi, thắc mắc", example: "Call for service inquiries." },
+            { word: "Inquire", ipa: "/ɪnˈkwaɪr/", type: "v (der)", meaning: "Hỏi", example: "" },
+            { word: "Indication", ipa: "/ˌɪn.dəˈkeɪ.ʃən/", type: "n", meaning: "Dấu hiệu", example: "Indication of a technical fault." },
+            { word: "Indicate", ipa: "/ˈɪn.də.keɪt/", type: "v (der)", meaning: "Biểu thị", example: "" },
+            { word: "Indicative", ipa: "/ɪnˈdɪk.ə.tɪv/", type: "adj (der)", meaning: "Ngụ ý", example: "" },
+            { word: "Manufacturer", ipa: "/ˌmæn.jəˈfæk.tʃɚ.ɚ/", type: "n", meaning: "Nhà sản xuất", example: "The manufacturer guarantees products." },
+            { word: "Manufacture", ipa: "/ˌmæn.jəˈfæk.tʃɚ/", type: "n/v (der)", meaning: "Sản xuất", example: "" },
+            { word: "Compatible", ipa: "/kəmˈpæt̬.ə.bəl/", type: "adj", meaning: "Tương thích", example: "Compatible with all models." },
+            { word: "Compatibility", ipa: "/kəmˌpæt̬.əˈbɪl.ə.t̬i/", type: "n (der)", meaning: "Tính tương thích", example: "" },
+            { word: "Superior", ipa: "/səˈpɪr.i.ɚ/", type: "adj", meaning: "Vượt trội, cao cấp", example: "Superior to those on the market." },
+            { word: "Superiority", ipa: "/səˌpɪr.iˈɔːr.ə.t̬i/", type: "n (der)", meaning: "Sự vượt trội", example: "" },
+            { word: "Inferior", ipa: "/ɪnˈfɪr.i.ɚ/", type: "adj (ant)", meaning: "Kém hơn", example: "" },
+            { word: "Absolute", ipa: "/ˈæb.sə.luːt/", type: "adj", meaning: "Tuyệt đối", example: "An absolute minimum." },
+            { word: "Absolutely", ipa: "/ˌæb.səˈluːt.li/", type: "adv (der)", meaning: "Hoàn toàn", example: "" },
+            { word: "Broaden", ipa: "/ˈbrɑː.dən/", type: "v", meaning: "Mở rộng", example: "Broadening the scope." },
+            { word: "Broad", ipa: "/brɑːd/", type: "adj (der)", meaning: "Rộng", example: "" },
+            { word: "Breadth", ipa: "/bredθ/", type: "n (der)", meaning: "Bề rộng", example: "" },
+            { word: "Widen", ipa: "/ˈwaɪ.dən/", type: "v (syn)", meaning: "Mở rộng", example: "" },
+            { word: "Corrosion", ipa: "/kəˈroʊ.ʒən/", type: "n", meaning: "Sự ăn mòn", example: "Resistant to corrosion." },
+            { word: "Corrode", ipa: "/kəˈroʊd/", type: "v (der)", meaning: "Ăn mòn", example: "" },
+
+            // --- BASIC / EXTRAS ---
+            { word: "Brand new", ipa: "", type: "phr", meaning: "Hoàn toàn mới", example: "" },
+            { word: "Break down", ipa: "", type: "phr", meaning: "Hỏng hóc", example: "" },
+            { word: "Developer", ipa: "/dɪˈvel.ə.pɚ/", type: "n", meaning: "Nhà phát triển", example: "" },
+            { word: "Handmade", ipa: "/ˈhændˈmeɪd/", type: "adj", meaning: "Làm thủ công", example: "" },
+            { word: "In a row", ipa: "", type: "phr", meaning: "Liên tiếp", example: "" },
+            { word: "Late", ipa: "/leɪt/", type: "adj/adv", meaning: "Muộn", example: "" },
+            { word: "Lid", ipa: "/lɪd/", type: "n", meaning: "Nắp", example: "" },
+            { word: "Sample", ipa: "/ˈsæm.pəl/", type: "n/v", meaning: "Mẫu / Thử", example: "" },
+            { word: "Shape", ipa: "/ʃeɪp/", type: "n/v", meaning: "Hình dáng / Định hình", example: "" },
+            { word: "Switch off", ipa: "", type: "phr", meaning: "Tắt", example: "" },
+            { word: "Turn off", ipa: "", type: "phr", meaning: "Tắt", example: "" },
+            { word: "Be known for", ipa: "", type: "phr", meaning: "Nổi tiếng về", example: "" },
+            { word: "Be made of", ipa: "", type: "phr", meaning: "Làm bằng", example: "" },
+            { word: "Catalog", ipa: "/ˈkæt̬.əl.ɑːɡ/", type: "n", meaning: "Danh mục", example: "" },
+            { word: "Chemist", ipa: "/ˈkem.ɪst/", type: "n", meaning: "Nhà hóa học", example: "" },
+            { word: "Close down", ipa: "", type: "phr", meaning: "Đóng cửa", example: "" },
+            { word: "Control", ipa: "/kənˈtroʊl/", type: "n/v", meaning: "Kiểm soát", example: "" },
+            { word: "Design", ipa: "/dɪˈzaɪn/", type: "n/v", meaning: "Thiết kế", example: "" },
+            { word: "Discovery", ipa: "/dɪˈskʌv.ɚ.i/", type: "n", meaning: "Sự khám phá", example: "" },
+            { word: "Historic", ipa: "/hɪˈstɔːr.ɪk/", type: "adj", meaning: "Mang tính lịch sử", example: "" },
+            { word: "Invention", ipa: "/ɪnˈven.ʃən/", type: "n", meaning: "Phát minh", example: "" },
+            { word: "Original", ipa: "/əˈrɪdʒ.ən.əl/", type: "adj", meaning: "Ban đầu, gốc", example: "" },
+            { word: "Receive", ipa: "/rɪˈsiːv/", type: "v", meaning: "Nhận", example: "" },
+            { word: "Repeat", ipa: "/rɪˈpiːt/", type: "v", meaning: "Lặp lại", example: "" },
+            { word: "Request form", ipa: "", type: "phr", meaning: "Phiếu yêu cầu", example: "" },
+            { word: "Sensor", ipa: "/ˈsen.sɔːr/", type: "n", meaning: "Cảm biến", example: "" },
+            { word: "Technique", ipa: "/tekˈniːk/", type: "n", meaning: "Kỹ thuật", example: "" },
+            { word: "Test", ipa: "/test/", type: "n/v", meaning: "Kiểm tra", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "A series of", ipa: "", type: "phr", meaning: "Một chuỗi", example: "" },
+            { word: "Check the manual", ipa: "", type: "phr", meaning: "Xem hướng dẫn", example: "" },
+            { word: "Come up with", ipa: "", type: "phr", meaning: "Nghĩ ra", example: "" },
+            { word: "Enter a contest", ipa: "", type: "phr", meaning: "Tham gia cuộc thi", example: "" },
+            { word: "Give a demonstration", ipa: "", type: "phr", meaning: "Làm mẫu", example: "" },
+            { word: "Go straight to", ipa: "", type: "phr", meaning: "Đi thẳng đến", example: "" },
+            { word: "Laboratory", ipa: "/ˈlæb.rə.tɔːr.i/", type: "n", meaning: "Phòng thí nghiệm", example: "" },
+            { word: "Latest work", ipa: "", type: "phr", meaning: "Tác phẩm mới nhất", example: "" },
+            { word: "Lightweight", ipa: "/ˈlaɪt.weɪt/", type: "adj", meaning: "Nhẹ", example: "" },
+            { word: "Out-of-date", ipa: "", type: "adj", meaning: "Lỗi thời", example: "" },
+            { word: "Product designer", ipa: "", type: "phr", meaning: "Nhà thiết kế sản phẩm", example: "" },
+            { word: "Product display", ipa: "", type: "phr", meaning: "Trưng bày sản phẩm", example: "" },
+            { word: "Redesign", ipa: "/ˌriː.dɪˈzaɪn/", type: "n", meaning: "Thiết kế lại", example: "" },
+            { word: "Trial period", ipa: "", type: "phr", meaning: "Giai đoạn thử nghiệm", example: "" },
+            { word: "Try out", ipa: "", type: "phr", meaning: "Dùng thử", example: "" },
+            { word: "Unplug the equipment", ipa: "", type: "phr", meaning: "Rút phích cắm", example: "" },
+            { word: "Up-to-date", ipa: "", type: "adj", meaning: "Cập nhật", example: "" },
+            { word: "User's guide", ipa: "", type: "phr", meaning: "Hướng dẫn sử dụng", example: "" },
+            { word: "Waterproof", ipa: "/ˈwɑː.t̬ɚ.pruːf/", type: "adj", meaning: "Chống nước", example: "" },
+            { word: "Well-prepared", ipa: "", type: "adj", meaning: "Chuẩn bị kỹ", example: "" },
+            { word: "With the lights on", ipa: "", type: "phr", meaning: "Bật đèn", example: "" },
+            { word: "Advancement", ipa: "/ədˈvæns.mənt/", type: "n", meaning: "Sự tiến bộ", example: "" },
+            { word: "Appliance", ipa: "/əˈplaɪ.əns/", type: "n", meaning: "Thiết bị", example: "" },
+            { word: "Aside from", ipa: "", type: "phr", meaning: "Ngoài ra", example: "" },
+            { word: "Certified", ipa: "/ˈsɝː.t̬ə.faɪd/", type: "adj", meaning: "Được chứng nhận", example: "" },
+            { word: "Complementary", ipa: "/ˌkɑːm.pləˈmen.t̬ɚ.i/", type: "adj", meaning: "Bổ sung", example: "" },
+            { word: "Composition", ipa: "/ˌkɑːm.pəˈzɪʃ.ən/", type: "n", meaning: "Thành phần", example: "" },
+            { word: "Consist of", ipa: "", type: "phr", meaning: "Bao gồm", example: "" },
+            { word: "Cooperative", ipa: "/koʊˈɑː.pɚ.ə.tɪv/", type: "adj", meaning: "Hợp tác", example: "" },
+            { word: "Delighted", ipa: "/dɪˈlaɪ.t̬ɪd/", type: "adj", meaning: "Vui mừng", example: "" },
+            { word: "Designed", ipa: "/dɪˈzaɪnd/", type: "adj", meaning: "Được thiết kế", example: "" },
+            { word: "Durable", ipa: "/ˈdʊr.ə.bəl/", type: "adj", meaning: "Bền", example: "" },
+            { word: "Electronics", ipa: "/iˌlekˈtrɑː.nɪks/", type: "n", meaning: "Điện tử", example: "" },
+            { word: "Except for", ipa: "", type: "phr", meaning: "Ngoại trừ", example: "" },
+            { word: "Exploration", ipa: "/ˌek.spləˈreɪ.ʃən/", type: "n", meaning: "Sự thăm dò", example: "" },
+            { word: "Imaginable", ipa: "/ɪˈmædʒ.ə.nə.bəl/", type: "adj", meaning: "Có thể tưởng tượng", example: "" },
+            { word: "Innovate", ipa: "/ˈɪn.ə.veɪt/", type: "v", meaning: "Đổi mới", example: "" },
+            { word: "Interpretation", ipa: "/ɪnˌtɝː.prəˈteɪ.ʃən/", type: "n", meaning: "Sự giải thích", example: "" },
+            { word: "Licensed", ipa: "/ˈlaɪ.sənst/", type: "adj", meaning: "Được cấp phép", example: "" },
+            { word: "Mechanical", ipa: "/məˈkæn.ɪ.kəl/", type: "adj", meaning: "Thuộc cơ khí", example: "" },
+            { word: "Prediction", ipa: "/prɪˈdɪk.ʃən/", type: "n", meaning: "Sự dự đoán", example: "" },
+            { word: "Prototype", ipa: "/ˈproʊ.t̬ə.taɪp/", type: "n", meaning: "Nguyên mẫu", example: "" },
+            { word: "Quantity", ipa: "/ˈkwɑːn.t̬ə.t̬i/", type: "n", meaning: "Số lượng", example: "" },
+            { word: "Remnant", ipa: "/ˈrem.nənt/", type: "n", meaning: "Tàn dư", example: "" },
+            { word: "Screen", ipa: "/skriːn/", type: "n", meaning: "Màn hình", example: "" },
+            { word: "Suspend", ipa: "/səˈspend/", type: "v", meaning: "Đình chỉ", example: "" },
+            { word: "Technical", ipa: "/ˈtek.nɪ.kəl/", type: "adj", meaning: "Kỹ thuật", example: "" },
+            { word: "Unfavorable", ipa: "/ʌnˈfeɪ.vər.ə.bəl/", type: "adj", meaning: "Bất lợi", example: "" },
+            { word: "Vulnerable to", ipa: "", type: "phr", meaning: "Dễ bị tổn thương", example: "" },
+            { word: "Be carried out", ipa: "", type: "phr", meaning: "Được thực hiện", example: "" },
+            { word: "Be designed to do", ipa: "", type: "phr", meaning: "Được thiết kế để", example: "" },
+            { word: "Breakthrough", ipa: "/ˈbreɪk.θruː/", type: "n", meaning: "Đột phá", example: "" },
+            { word: "By the time", ipa: "", type: "phr", meaning: "Vào lúc", example: "" },
+            { word: "Collaboration", ipa: "/kəˌlæb.əˈreɪ.ʃən/", type: "n", meaning: "Sự cộng tác", example: "" },
+            { word: "Copyright", ipa: "/ˈkɑː.pi.raɪt/", type: "n", meaning: "Bản quyền", example: "" },
+            { word: "Custom-built", ipa: "/ˌkʌs.təmˈbɪlt/", type: "adj", meaning: "Làm theo yêu cầu", example: "" },
+            { word: "Customize", ipa: "/ˈkʌs.tə.maɪz/", type: "v", meaning: "Tùy chỉnh", example: "" },
+            { word: "Disruption", ipa: "/dɪsˈrʌp.ʃən/", type: "n", meaning: "Sự gián đoạn", example: "" },
+            { word: "Energy efficiency", ipa: "", type: "phr", meaning: "Tiết kiệm năng lượng", example: "" },
+            { word: "Energy source", ipa: "", type: "phr", meaning: "Nguồn năng lượng", example: "" },
+            { word: "Expand into", ipa: "", type: "phr", meaning: "Mở rộng sang", example: "" },
+            { word: "Fuel consumption", ipa: "", type: "phr", meaning: "Tiêu thụ nhiên liệu", example: "" },
+            { word: "Guidance", ipa: "/ˈɡaɪ.dəns/", type: "n", meaning: "Sự chỉ đạo", example: "" },
+            { word: "Keep one's eye on", ipa: "", type: "phr", meaning: "Để mắt tới", example: "" },
+            { word: "Limited edition", ipa: "", type: "phr", meaning: "Phiên bản giới hạn", example: "" },
+            { word: "Long-lasting", ipa: "/ˌlɑːŋˈlæs.tɪŋ/", type: "adj", meaning: "Bền lâu", example: "" },
+            { word: "Plenty of", ipa: "", type: "phr", meaning: "Nhiều", example: "" },
+            { word: "Smoke detector", ipa: "", type: "phr", meaning: "Máy báo khói", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Be stacked", ipa: "", type: "phr", meaning: "Được xếp chồng", example: "" },
+            { word: "Hectic", ipa: "/ˈhek.tɪk/", type: "adj", meaning: "Sôi nổi, bận rộn", example: "" },
+            { word: "Intently", ipa: "/ɪnˈtent.li/", type: "adv", meaning: "Chăm chú", example: "" },
+            { word: "Ornamental", ipa: "/ˌɔːr.nəˈmen.t̬əl/", type: "adj", meaning: "Để trang trí", example: "" },
+            { word: "Reassign", ipa: "/ˌriː.əˈsaɪn/", type: "v", meaning: "Phân công lại", example: "" },
+            { word: "Specimen", ipa: "/ˈspes.ə.mɪn/", type: "n", meaning: "Mẫu vật", example: "" },
+            { word: "Achievable", ipa: "/əˈtʃiː.və.bəl/", type: "adj", meaning: "Có thể đạt được", example: "" },
+            { word: "Apparatus", ipa: "/ˌæp.əˈræt̬.əs/", type: "n", meaning: "Bộ máy / Dụng cụ", example: "" },
+            { word: "Concession", ipa: "/kənˈseʃ.ən/", type: "n", meaning: "Sự nhượng bộ", example: "" },
+            { word: "Concurrently", ipa: "/kənˈkɝː.ənt.li/", type: "adv", meaning: "Đồng thời", example: "" },
+            { word: "Configuration", ipa: "/kənˌfɪɡ.jəˈreɪ.ʃən/", type: "n", meaning: "Cấu hình", example: "" },
+            { word: "Detectable", ipa: "/dɪˈtek.tə.bəl/", type: "adj", meaning: "Có thể phát hiện", example: "" },
+            { word: "Distill", ipa: "/dɪˈstɪl/", type: "v", meaning: "Chưng cất", example: "" },
+            { word: "Dysfunction", ipa: "/dɪsˈfʌŋk.ʃən/", type: "n", meaning: "Rối loạn chức năng", example: "" },
+            { word: "Embedded", ipa: "/ɪmˈbed.ɪd/", type: "adj", meaning: "Được nhúng vào", example: "" },
+            { word: "Evolve", ipa: "/ɪˈvɑːlv/", type: "v", meaning: "Tiến hóa", example: "" },
+            { word: "Flammable", ipa: "/ˈflæm.ə.bəl/", type: "adj", meaning: "Dễ cháy", example: "" },
+            { word: "Implant", ipa: "/ɪmˈplænt/", type: "v", meaning: "Cấy ghép", example: "" },
+            { word: "Patronize", ipa: "/ˈpeɪ.trə.naɪz/", type: "v", meaning: "Bảo trợ / Ghé thăm", example: "" },
+            { word: "Staple", ipa: "/ˈsteɪ.pəl/", type: "n", meaning: "Ghim dập / Sản phẩm chủ lực", example: "" },
+            { word: "Steer", ipa: "/stɪr/", type: "v", meaning: "Lái, hướng dẫn", example: "" },
+            { word: "Sturdily", ipa: "/ˈstɝː.dəl.i/", type: "adv", meaning: "Vững chắc", example: "" },
+            { word: "Transparent", ipa: "/trænˈsper.ənt/", type: "adj", meaning: "Trong suốt", example: "" },
+            { word: "Be geared to", ipa: "", type: "phr", meaning: "Hướng tới", example: "" },
+            { word: "Bewildering", ipa: "/bɪˈwɪl.dɚ.ɪŋ/", type: "adj", meaning: "Gây hoang mang", example: "" },
+            { word: "Bring out", ipa: "", type: "phr", meaning: "Đưa ra", example: "" },
+            { word: "Cutting-edge", ipa: "/ˌkʌt̬.ɪŋ ˈedʒ/", type: "adj", meaning: "Tiên tiến nhất", example: "" },
+            { word: "Obsolete", ipa: "/ˌɑːb.səlˈiːt/", type: "adj", meaning: "Lỗi thời", example: "" },
+            { word: "Quality control standards", ipa: "", type: "phr", meaning: "Tiêu chuẩn kiểm soát chất lượng", example: "" },
+            { word: "State-of-the-art", ipa: "/ˌsteɪt.əv.ðiˈɑːrt/", type: "adj", meaning: "Hiện đại nhất", example: "" },
+            { word: "Streamline", ipa: "/ˈstriːm.laɪn/", type: "v", meaning: "Tinh giản / Hợp lý hóa", example: "" },
+            { word: "Top-of-the-line", ipa: "", type: "adj", meaning: "Hàng đầu", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

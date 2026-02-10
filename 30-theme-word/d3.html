@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 03: Office Work (1) - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #7C3AED; --secondary-bg: #F5F3FF; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #F5F3FF; color: #5B21B6; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 03: Công việc văn phòng (1)</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            { word: "Accustomed", ipa: "/əˈkʌs.təmd/", type: "adj", meaning: "Quen với", example: "Employees are accustomed to using the new software." },
+            { word: "Corporation", ipa: "/ˌkɔːr.pəˈreɪ.ʃən/", type: "n", meaning: "Tập đoàn, công ty", example: "Heads a multinational corporation." },
+            { word: "Corporate", ipa: "/ˈkɔːr.pɚ.ət/", type: "adj (der)", meaning: "Thuộc về đoàn thể/công ty", example: "" },
+            { word: "Demanding", ipa: "/dɪˈmæn.dɪŋ/", type: "adj", meaning: "Đòi hỏi khắt khe", example: "A demanding supervisor." },
+            { word: "Demand", ipa: "/dɪˈmænd/", type: "v (der)", meaning: "Yêu cầu", example: "" },
+            { word: "Colleague", ipa: "/ˈkɑː.liːɡ/", type: "n", meaning: "Đồng nghiệp", example: "Cooperation among colleagues." },
+            { word: "Associate", ipa: "/əˈsoʊ.ʃi.eɪt/", type: "n (syn)", meaning: "Cộng sự", example: "" },
+            { word: "Coworker", ipa: "/ˈkoʊˌwɝː.kɚ/", type: "n (syn)", meaning: "Đồng nghiệp", example: "" },
+            { word: "Peer", ipa: "/pɪr/", type: "n (syn)", meaning: "Người ngang hàng", example: "" },
+            { word: "Division", ipa: "/dɪˈvɪʒ.ən/", type: "n", meaning: "Bộ phận, sự phân chia", example: "Transfer to the automobile division." },
+            { word: "Divide", ipa: "/dɪˈvaɪd/", type: "v (der)", meaning: "Chia ra", example: "" },
+            { word: "Category", ipa: "/ˈkæt̬.ə.ɡɔːr.i/", type: "n", meaning: "Hạng mục", example: "" },
+            { word: "Compartment", ipa: "/kəmˈpɑːrt.mənt/", type: "n", meaning: "Ngăn, gian", example: "" },
+            { word: "Request", ipa: "/rɪˈkwest/", type: "n", meaning: "Lời yêu cầu", example: "Factory tours are available upon request." },
+            { word: "Request", ipa: "/rɪˈkwest/", type: "v", meaning: "Yêu cầu", example: "Mike requested a copy of the contract." },
+            { word: "Commission", ipa: "/kəˈmɪʃ.ən/", type: "n (syn)", meaning: "Nhiệm vụ, sự ủy thác", example: "" },
+            { word: "Efficiently", ipa: "/ɪˈfɪʃ.ənt.li/", type: "adv", meaning: "Một cách hiệu quả", example: "Work more efficiently." },
+            { word: "Efficient", ipa: "/ɪˈfɪʃ.ənt/", type: "adj (der)", meaning: "Hiệu quả", example: "" },
+            { word: "Efficiency", ipa: "/ɪˈfɪʃ.ən.si/", type: "n (der)", meaning: "Hiệu suất", example: "" },
+            { word: "Manage", ipa: "/ˈmæn.ədʒ/", type: "v", meaning: "Quản lý, xoay xở", example: "Colleen could manage the new store." },
+            { word: "Management", ipa: "/ˈmæn.ədʒ.mənt/", type: "n (der)", meaning: "Sự quản lý / Ban quản lý", example: "" },
+            { word: "Manageable", ipa: "/ˈmæn.ədʒ.ə.bəl/", type: "adj (der)", meaning: "Có thể quản lý", example: "" },
+            { word: "Handle", ipa: "/ˈhæn.dəl/", type: "v (syn)", meaning: "Xử lý", example: "" },
+            { word: "Submit", ipa: "/səbˈmɪt/", type: "v", meaning: "Nộp, đệ trình", example: "Submit a résumé to the personnel manager." },
+            { word: "Submission", ipa: "/səbˈmɪʃ.ən/", type: "n (der)", meaning: "Sự đệ trình", example: "" },
+            { word: "Turn in", ipa: "", type: "phr (syn)", meaning: "Nộp", example: "" },
+            { word: "Hand in", ipa: "", type: "phr (syn)", meaning: "Nộp", example: "" },
+            { word: "Directly", ipa: "/daɪˈrekt.li/", type: "adv", meaning: "Trực tiếp", example: "Report directly to the head office." },
+            { word: "Direct", ipa: "/daɪˈrekt/", type: "v (der)", meaning: "Hướng dẫn", example: "" },
+            { word: "Direction", ipa: "/daɪˈrek.ʃən/", type: "n (der)", meaning: "Phương hướng", example: "" },
+            { word: "Remind", ipa: "/rɪˈmaɪnd/", type: "v", meaning: "Nhắc nhở", example: "Reminded Mr. Johnson of his meeting." },
+            { word: "Reminder", ipa: "/rɪˈmaɪn.dɚ/", type: "n (der)", meaning: "Lời nhắc", example: "" },
+            { word: "Instruct", ipa: "/ɪnˈstrʌkt/", type: "v", meaning: "Hướng dẫn, chỉ thị", example: "Instructed the staff to read materials." },
+            { word: "Instruction", ipa: "/ɪnˈstrʌk.ʃən/", type: "n (der)", meaning: "Chỉ dẫn", example: "" },
+            { word: "Instructor", ipa: "/ɪnˈstrʌk.tɚ/", type: "n (der)", meaning: "Người hướng dẫn", example: "" },
+            { word: "Deadline", ipa: "/ˈded.laɪn/", type: "n", meaning: "Hạn chót", example: "Finished the project ahead of the deadline." },
+            { word: "Sample", ipa: "/ˈsæm.pəl/", type: "n", meaning: "Mẫu thử", example: "Prepare samples of our products." },
+            { word: "Sample", ipa: "/ˈsæm.pəl/", type: "v", meaning: "Thử (đồ ăn/hàng)", example: "Sampled some cake." },
+            { word: "Notify", ipa: "/ˈnoʊ.t̬ə.faɪ/", type: "v", meaning: "Thông báo", example: "Notify their supervisors in writing." },
+            { word: "Notification", ipa: "/ˌnoʊ.t̬ə.fəˈkeɪ.ʃən/", type: "n (der)", meaning: "Sự thông báo", example: "" },
+            { word: "Inform", ipa: "/ɪnˈfɔːrm/", type: "v (syn)", meaning: "Thông báo", example: "" },
+            { word: "Announce", ipa: "/əˈnaʊns/", type: "v (syn)", meaning: "Thông báo (công khai)", example: "" },
+            { word: "Reveal", ipa: "/rɪˈviːl/", type: "v (syn)", meaning: "Tiết lộ", example: "" },
+            { word: "Perform", ipa: "/pɚˈfɔːrm/", type: "v", meaning: "Thực hiện, thi hành", example: "Repairs were being performed." },
+            { word: "Conduct", ipa: "/kənˈdʌkt/", type: "v (syn)", meaning: "Tiến hành", example: "" },
+            { word: "Complete", ipa: "/kəmˈpliːt/", type: "v (syn)", meaning: "Hoàn thành", example: "" },
+            { word: "Monitor", ipa: "/ˈmɑː.nə.t̬ɚ/", type: "v", meaning: "Giám sát, theo dõi", example: "Monitor progress on the project." },
+            { word: "Deserve", ipa: "/dɪˈzɝːv/", type: "v", meaning: "Xứng đáng", example: "Deserves the Employee of the Year Award." },
+            { word: "Deserved", ipa: "/dɪˈzɝːvd/", type: "adj (der)", meaning: "Xứng đáng", example: "" },
+            { word: "Assignment", ipa: "/əˈsaɪn.mənt/", type: "n", meaning: "Nhiệm vụ, công việc được giao", example: "Took the assignment in India." },
+            { word: "Entire", ipa: "/ɪnˈtaɪr/", type: "adj", meaning: "Toàn bộ, trọn vẹn", example: "The entire team gathers." },
+            { word: "Entirety", ipa: "/ɪnˈtaɪr.ə.t̬i/", type: "n (der)", meaning: "Tính trọn vẹn", example: "" },
+            { word: "Release", ipa: "/rɪˈliːs/", type: "v", meaning: "Phát hành", example: "Released its annual report." },
+            { word: "Release", ipa: "/rɪˈliːs/", type: "n", meaning: "Sự phát hành, ra mắt", example: "Ready for release." },
+            { word: "Extension", ipa: "/ɪkˈsten.ʃən/", type: "n", meaning: "Sự gia hạn / Máy lẻ", example: "Granted an extension of the deadline." },
+            { word: "Extend", ipa: "/ɪkˈstend/", type: "v (der)", meaning: "Gia hạn, mở rộng", example: "" },
+            { word: "Extensive", ipa: "/ɪkˈsten.sɪv/", type: "adj (der)", meaning: "Rộng rãi", example: "" },
+            { word: "Electronically", ipa: "/iˌlekˈtrɑː.nɪ.kəl.i/", type: "adv", meaning: "Bằng điện tử", example: "Send invoices electronically." },
+            { word: "Electronic", ipa: "/iˌlekˈtrɑː.nɪk/", type: "adj (der)", meaning: "Thuộc điện tử", example: "" },
+            { word: "Attendance", ipa: "/əˈten.dəns/", type: "n", meaning: "Sự tham gia, có mặt", example: "Attendance records." },
+            { word: "Attend", ipa: "/əˈtend/", type: "v (der)", meaning: "Tham dự", example: "" },
+            { word: "Attendant", ipa: "/əˈten.dənt/", type: "n (der)", meaning: "Người phục vụ/tham dự", example: "" },
+            { word: "Absolutely", ipa: "/ˌæb.səˈluːt.li/", type: "adv", meaning: "Chắc chắn, hoàn toàn", example: "It is absolutely necessary." },
+            { word: "Absolute", ipa: "/ˈæb.sə.luːt/", type: "adj (der)", meaning: "Tuyệt đối", example: "" },
+            { word: "Delegate", ipa: "/ˈdel.ə.ɡeɪt/", type: "v", meaning: "Ủy thác, giao phó", example: "Delegate responsibilities." },
+            { word: "Delegate", ipa: "/ˈdel.ə.ɡət/", type: "n", meaning: "Đại biểu", example: "A delegate sent to the trade fair." },
+            { word: "Delegation", ipa: "/ˌdel.əˈɡeɪ.ʃən/", type: "n (der)", meaning: "Phái đoàn", example: "" },
+            { word: "Attentively", ipa: "/əˈten.tɪv.li/", type: "adv", meaning: "Chăm chú", example: "Listened attentively." },
+            { word: "Supervision", ipa: "/ˌsuː.pɚˈvɪʒ.ən/", type: "n", meaning: "Sự giám sát", example: "Close supervision ensures quality." },
+            { word: "Supervise", ipa: "/ˈsuː.pɚ.vaɪz/", type: "v (der)", meaning: "Giám sát", example: "" },
+            { word: "Supervisor", ipa: "/ˈsuː.pɚ.vaɪ.zɚ/", type: "n (der)", meaning: "Người giám sát", example: "" },
+            { word: "Workshop", ipa: "/ˈwɝːk.ʃɑːp/", type: "n", meaning: "Hội thảo", example: "Speak at the workshop." },
+            { word: "Draw", ipa: "/drɑː/", type: "v", meaning: "Lôi kéo, thu hút", example: "Draws 800 employees." },
+            { word: "Attract", ipa: "/əˈtrækt/", type: "v (syn)", meaning: "Thu hút", example: "" },
+            { word: "Revision", ipa: "/rɪˈvɪʒ.ən/", type: "n", meaning: "Sự sửa đổi", example: "Make revisions to the proposal." },
+            { word: "Revise", ipa: "/rɪˈvaɪz/", type: "v (der)", meaning: "Sửa đổi", example: "" },
+            { word: "Revised", ipa: "/rɪˈvaɪzd/", type: "adj (der)", meaning: "Được sửa đổi", example: "" },
+            { word: "Reluctantly", ipa: "/rɪˈlʌk.tənt.li/", type: "adv", meaning: "Miễn cưỡng", example: "Reluctantly agreed." },
+            { word: "Acquaint", ipa: "/əˈkweɪnt/", type: "v", meaning: "Làm quen", example: "Acquaints new employees with procedures." },
+            { word: "Acquaintance", ipa: "/əˈkweɪn.təns/", type: "n (der)", meaning: "Người quen", example: "" },
+            { word: "Convey", ipa: "/kənˈveɪ/", type: "v", meaning: "Truyền đạt, chuyển", example: "Conveyed the message." },
+            { word: "Conveyor", ipa: "/kənˈveɪ.ɚ/", type: "n (der)", meaning: "Băng chuyền", example: "" },
+            { word: "Check", ipa: "/tʃek/", type: "v", meaning: "Kiểm tra", example: "Check your computer regularly." },
+            { word: "Inspect", ipa: "/ɪnˈspekt/", type: "v (syn)", meaning: "Kiểm tra", example: "" },
+            { word: "Examine", ipa: "/ɪɡˈzæm.ɪn/", type: "v (syn)", meaning: "Kiểm tra", example: "" },
+            { word: "Headquarters", ipa: "/ˈhedˌkwɔːr.t̬ɚz/", type: "n", meaning: "Trụ sở chính", example: "Headquarters is located in London." },
+            { word: "File", ipa: "/faɪl/", type: "v", meaning: "Sắp xếp, lưu trữ, nộp", example: "Documents are filed." },
+            { word: "File", ipa: "/faɪl/", type: "n", meaning: "Hồ sơ", example: "" },
+            { word: "Oversee", ipa: "/ˌoʊ.vɚˈsiː/", type: "v", meaning: "Giám sát", example: "Oversee the office relocation." },
+            { word: "Involved", ipa: "/ɪnˈvɑːlvd/", type: "adj", meaning: "Có liên quan, tham gia", example: "Deeply involved in decision-making." },
+            { word: "Involve", ipa: "/ɪnˈvɑːlv/", type: "v (der)", meaning: "Liên quan", example: "" },
+            { word: "Involvement", ipa: "/ɪnˈvɑːlv.mənt/", type: "n (der)", meaning: "Sự tham gia", example: "" },
+            { word: "Concentrate", ipa: "/ˈkɑːn.sən.treɪt/", type: "v", meaning: "Tập trung", example: "Concentrate on developing new strategies." },
+            { word: "Concentration", ipa: "/ˌkɑːn.sənˈtreɪ.ʃən/", type: "n (der)", meaning: "Sự tập trung", example: "" },
+            { word: "Concentrated", ipa: "/ˈkɑːn.sən.treɪ.t̬ɪd/", type: "adj (der)", meaning: "Tập trung", example: "" },
+            // --- BASIC / EXTRA ---
+            { word: "A sheet of", ipa: "", type: "phr", meaning: "Một tờ/tấm", example: "" },
+            { word: "Business card", ipa: "", type: "phr", meaning: "Danh thiếp", example: "" },
+            { word: "Cartridge", ipa: "/ˈkɑːr.trɪdʒ/", type: "n", meaning: "Hộp mực", example: "" },
+            { word: "Daily", ipa: "/ˈdeɪ.li/", type: "adj/adv", meaning: "Hàng ngày", example: "" },
+            { word: "Edit", ipa: "/ˈed.ɪt/", type: "v", meaning: "Biên tập", example: "" },
+            { word: "Hand", ipa: "/hænd/", type: "n/v", meaning: "Bàn tay / Trao tay", example: "" },
+            { word: "In order to", ipa: "", type: "phr", meaning: "Để làm gì", example: "" },
+            { word: "Laptop", ipa: "/ˈlæp.tɑːp/", type: "n", meaning: "Máy tính xách tay", example: "" },
+            { word: "Name tag", ipa: "", type: "phr", meaning: "Bảng tên", example: "" },
+            { word: "On vacation", ipa: "", type: "phr", meaning: "Trong kỳ nghỉ", example: "" },
+            { word: "Paper jam", ipa: "", type: "phr", meaning: "Kẹt giấy", example: "" },
+            { word: "Paperwork", ipa: "/ˈpeɪ.pɚ.wɝːk/", type: "n", meaning: "Công việc giấy tờ", example: "" },
+            { word: "Partition", ipa: "/pɑːrˈtɪʃ.ən/", type: "n", meaning: "Vách ngăn", example: "" },
+            { word: "Rush hour", ipa: "", type: "phr", meaning: "Giờ cao điểm", example: "" },
+            { word: "Section", ipa: "/ˈsek.ʃən/", type: "n", meaning: "Phần, mục", example: "" },
+            { word: "Sheet", ipa: "/ʃiːt/", type: "n", meaning: "Tờ, tấm", example: "" },
+            { word: "Tabletop", ipa: "/ˈteɪ.bəl.tɑːp/", type: "n", meaning: "Mặt bàn", example: "" },
+            { word: "Telephone call", ipa: "", type: "phr", meaning: "Cuộc gọi", example: "" },
+            { word: "Trash bin", ipa: "", type: "phr", meaning: "Thùng rác", example: "" },
+            { word: "Upstairs", ipa: "/ʌpˈsterz/", type: "adj/adv", meaning: "Tầng trên", example: "" },
+            { word: "As if", ipa: "", type: "phr", meaning: "Như thể", example: "" },
+            { word: "As well as", ipa: "", type: "phr", meaning: "Cũng như", example: "" },
+            { word: "Be aware of", ipa: "", type: "phr", meaning: "Nhận thức về", example: "" },
+            { word: "Be known as", ipa: "", type: "phr", meaning: "Được biết đến là", example: "" },
+            { word: "Be likely to", ipa: "", type: "phr", meaning: "Có khả năng", example: "" },
+            { word: "Detail", ipa: "/ˈdiː.teɪl/", type: "n", meaning: "Chi tiết", example: "" },
+            { word: "Offering", ipa: "/ˈɑː.fɚ.ɪŋ/", type: "n", meaning: "Sự đề nghị, tặng phẩm", example: "" },
+            { word: "On one's own", ipa: "", type: "phr", meaning: "Tự mình", example: "" },
+            { word: "Adjust the mirror", ipa: "", type: "phr", meaning: "Điều chỉnh gương", example: "" },
+            { word: "Advance reservation", ipa: "", type: "phr", meaning: "Đặt trước", example: "" },
+            { word: "Arrange an appointment", ipa: "", type: "phr", meaning: "Sắp xếp cuộc hẹn", example: "" },
+            { word: "Bulletin board", ipa: "", type: "phr", meaning: "Bảng thông báo", example: "" },
+            { word: "Call back", ipa: "", type: "phr", meaning: "Gọi lại", example: "" },
+            { word: "Confused", ipa: "/kənˈfjuːzd/", type: "adj", meaning: "Bối rối", example: "" },
+            { word: "Deadline", ipa: "/ˈded.laɪn/", type: "n", meaning: "Hạn chót", example: "" },
+            { word: "Errand", ipa: "/ˈer.ənd/", type: "n", meaning: "Việc lặt vặt", example: "" },
+            { word: "Extend an invitation", ipa: "", type: "phr", meaning: "Mời", example: "" },
+            { word: "Get a permit", ipa: "", type: "phr", meaning: "Xin giấy phép", example: "" },
+            { word: "Hand in", ipa: "", type: "phr", meaning: "Nộp", example: "" },
+            { word: "Have a day off", ipa: "", type: "phr", meaning: "Có ngày nghỉ", example: "" },
+            { word: "Have a long day", ipa: "", type: "phr", meaning: "Một ngày dài", example: "" },
+            { word: "Head up", ipa: "", type: "phr", meaning: "Lãnh đạo", example: "" },
+            { word: "In a hurry", ipa: "", type: "phr", meaning: "Vội vã", example: "" },
+            { word: "In alphabetical order", ipa: "", type: "phr", meaning: "Theo thứ tự ABC", example: "" },
+            { word: "In luck", ipa: "", type: "phr", meaning: "May mắn", example: "" },
+            { word: "Leave A up to B", ipa: "", type: "phr", meaning: "Để A cho B lo", example: "" },
+            { word: "Leave A with B", ipa: "", type: "phr", meaning: "Để A lại cho B", example: "" },
+            { word: "Listing", ipa: "/ˈlɪs.tɪŋ/", type: "n", meaning: "Danh sách", example: "" },
+            { word: "Make a call", ipa: "", type: "phr", meaning: "Gọi điện", example: "" },
+            { word: "Make a correction", ipa: "", type: "phr", meaning: "Sửa sai", example: "" },
+            { word: "Make a final change", ipa: "", type: "phr", meaning: "Thay đổi lần cuối", example: "" },
+            { word: "Make a note of", ipa: "", type: "phr", meaning: "Ghi chú lại", example: "" },
+            { word: "Make an impression", ipa: "", type: "phr", meaning: "Tạo ấn tượng", example: "" },
+            { word: "Move ahead with", ipa: "", type: "phr", meaning: "Tiến hành", example: "" },
+            { word: "On a business trip", ipa: "", type: "phr", meaning: "Đi công tác", example: "" },
+            { word: "On a weekly basis", ipa: "", type: "phr", meaning: "Hàng tuần", example: "" },
+            { word: "On business", ipa: "", type: "phr", meaning: "Đi công tác", example: "" },
+            { word: "On duty", ipa: "", type: "phr", meaning: "Trong ca trực", example: "" },
+            { word: "Pick up the phone", ipa: "", type: "phr", meaning: "Nghe điện thoại", example: "" },
+            { word: "Scrub", ipa: "/skrʌb/", type: "v", meaning: "Chà xát", example: "" },
+            { word: "Seal", ipa: "/siːl/", type: "n/v", meaning: "Con dấu / Đóng dấu", example: "" },
+            { word: "Speak into the microphone", ipa: "", type: "phr", meaning: "Nói vào mic", example: "" },
+            { word: "Speak on the phone", ipa: "", type: "phr", meaning: "Nói chuyện điện thoại", example: "" },
+            { word: "Stand in a line", ipa: "", type: "phr", meaning: "Xếp hàng", example: "" },
+            { word: "Take a message", ipa: "", type: "phr", meaning: "Nhận lời nhắn", example: "" },
+            { word: "Take apart", ipa: "", type: "phr", meaning: "Tháo rời", example: "" },
+            { word: "Utility provider", ipa: "", type: "phr", meaning: "Nhà cung cấp tiện ích", example: "" },
+            { word: "Acquired", ipa: "/əˈkwaɪrd/", type: "adj", meaning: "Thu được", example: "" },
+            { word: "Adapt", ipa: "/əˈdæpt/", type: "v", meaning: "Thích nghi", example: "" },
+            { word: "Administer", ipa: "/ədˈmɪn.ə.stɚ/", type: "v", meaning: "Quản lý", example: "" },
+            { word: "Clerical", ipa: "/ˈkler.ɪ.kəl/", type: "adj", meaning: "Thuộc văn phòng", example: "" },
+            { word: "Conclusive", ipa: "/kənˈkluː.sɪv/", type: "adj", meaning: "Quyết đoán, xác định", example: "" },
+            { word: "Delete", ipa: "/dɪˈliːt/", type: "v", meaning: "Xóa", example: "" },
+            { word: "Editorial", ipa: "/ˌed.əˈtɔːr.i.əl/", type: "adj", meaning: "Thuộc biên tập", example: "" },
+            { word: "Endless", ipa: "/ˈend.ləs/", type: "adj", meaning: "Vô tận", example: "" },
+            { word: "In one's absence", ipa: "", type: "phr", meaning: "Khi ai vắng mặt", example: "" },
+            { word: "On purpose", ipa: "", type: "phr", meaning: "Cố tình", example: "" },
+            { word: "Overseas", ipa: "/ˌoʊ.vɚˈsiːz/", type: "adj/adv", meaning: "Nước ngoài", example: "" },
+            { word: "Perceive", ipa: "/pəˈsiːv/", type: "v", meaning: "Nhận thức", example: "" },
+            { word: "Reminder", ipa: "/rɪˈmaɪn.dɚ/", type: "n", meaning: "Lời nhắc", example: "" },
+            { word: "Strive", ipa: "/straɪv/", type: "v", meaning: "Cố gắng, đấu tranh", example: "" },
+            { word: "Translate", ipa: "/trænzˈleɪt/", type: "v", meaning: "Dịch", example: "" },
+            { word: "Boardroom", ipa: "/ˈbɔːrd.ruːm/", type: "n", meaning: "Phòng họp", example: "" },
+            { word: "Familiarize", ipa: "/fəˈmɪl.i.jə.raɪz/", type: "v", meaning: "Làm quen", example: "" },
+            { word: "In person", ipa: "", type: "phr", meaning: "Trực tiếp", example: "" },
+            { word: "Including", ipa: "/ɪnˈkluː.dɪŋ/", type: "prep", meaning: "Bao gồm", example: "" },
+            { word: "On time", ipa: "", type: "phr", meaning: "Đúng giờ", example: "" },
+            { word: "Panic", ipa: "/ˈpæn.ɪk/", type: "n", meaning: "Sự hoảng loạn", example: "" },
+            { word: "Past due", ipa: "", type: "phr", meaning: "Quá hạn", example: "" },
+            { word: "Put forward", ipa: "", type: "phr", meaning: "Đề xuất", example: "" },
+            { word: "Regard A as B", ipa: "", type: "phr", meaning: "Coi A là B", example: "" },
+            { word: "Return one's call", ipa: "", type: "phr", meaning: "Gọi lại", example: "" },
+            { word: "Secretarial", ipa: "/ˌsek.rəˈter.i.əl/", type: "adj", meaning: "Thuộc thư ký", example: "" },
+            { word: "Take charge of", ipa: "", type: "phr", meaning: "Phụ trách", example: "" },
+            { word: "Take on responsibility", ipa: "", type: "phr", meaning: "Chịu trách nhiệm", example: "" },
+            { word: "Throw one's effort into", ipa: "", type: "phr", meaning: "Dồn sức vào", example: "" },
+            { word: "Arrange items", ipa: "", type: "phr", meaning: "Sắp xếp đồ", example: "" },
+            { word: "Call in sick", ipa: "", type: "phr", meaning: "Báo ốm", example: "" },
+            { word: "Cover one's shift", ipa: "", type: "phr", meaning: "Làm thay ca", example: "" },
+            { word: "Day-to-day operation", ipa: "", type: "phr", meaning: "Hoạt động hàng ngày", example: "" },
+            { word: "In line with", ipa: "", type: "phr", meaning: "Phù hợp với", example: "" },
+            { word: "Officiate", ipa: "/əˈfɪʃ.i.eɪt/", type: "v", meaning: "Thi hành nhiệm vụ", example: "" },
+            { word: "On hold", ipa: "", type: "phr", meaning: "Chờ máy", example: "" },
+            { word: "Set down to work", ipa: "", type: "phr", meaning: "Bắt tay vào làm", example: "" },
+            { word: "Stay awake", ipa: "", type: "phr", meaning: "Tỉnh táo", example: "" },
+            { word: "Strew", ipa: "/struː/", type: "v", meaning: "Rải, rắc", example: "" },
+            { word: "Take the place of", ipa: "", type: "phr", meaning: "Thay thế", example: "" },
+            { word: "Take turns", ipa: "", type: "phr", meaning: "Thay phiên", example: "" },
+            { word: "Behind schedule", ipa: "", type: "phr", meaning: "Chậm tiến độ", example: "" },
+            { word: "Condense", ipa: "/kənˈdens/", type: "v", meaning: "Cô đọng", example: "" },
+            { word: "Follow up on", ipa: "", type: "phr", meaning: "Theo đuổi, điều tra", example: "" },
+            { word: "In writing", ipa: "", type: "phr", meaning: "Bằng văn bản", example: "" },
+            { word: "Popularize", ipa: "/ˈpɑː.pjə.lə.raɪz/", type: "v", meaning: "Phổ cập", example: "" },
+            { word: "Productively", ipa: "/prəˈdʌk.tɪv.li/", type: "adv", meaning: "Có năng suất", example: "" },
+            { word: "Sincerity", ipa: "/sɪnˈser.ə.t̬i/", type: "n", meaning: "Sự chân thành", example: "" },
+            { word: "Utilization", ipa: "/ˌjuː.t̬əl.əˈzeɪ.ʃən/", type: "n", meaning: "Sự tận dụng", example: "" },
+            { word: "Administrative", ipa: "/ədˈmɪn.ə.strə.tɪv/", type: "adj", meaning: "Thuộc hành chính", example: "" },
+            { word: "Be affiliated with", ipa: "", type: "phr", meaning: "Liên kết với", example: "" },
+            { word: "Conglomerate", ipa: "/kənˈɡlɑː.mɚ.ət/", type: "n", meaning: "Tập đoàn", example: "" },
+            { word: "Default", ipa: "/dɪˈfɑːlt/", type: "n", meaning: "Sự vắng mặt / Mặc định", example: "" },
+            { word: "Impending", ipa: "/ɪmˈpen.dɪŋ/", type: "adj", meaning: "Sắp xảy ra", example: "" },
+            { word: "Proponent", ipa: "/prəˈpoʊ.nənt/", type: "n", meaning: "Người ủng hộ", example: "" },
+            { word: "Proprietor", ipa: "/prəˈpraɪə.t̬ɚ/", type: "n", meaning: "Chủ sở hữu", example: "" },
+            { word: "Site inspection", ipa: "", type: "phr", meaning: "Kiểm tra hiện trường", example: "" },
+            { word: "Subordinate", ipa: "/səˈbɔːr.dən.ət/", type: "n", meaning: "Cấp dưới", example: "" },
+            { word: "Subsidiary", ipa: "/səbˈsɪd.i.er.i/", type: "n", meaning: "Công ty con", example: "" },
+            { word: "Take initiative", ipa: "", type: "phr", meaning: "Chủ động", example: "" },
+            { word: "Telecommute", ipa: "/ˌtel.ə.kəˈmjuːt/", type: "v", meaning: "Làm việc từ xa", example: "" }
+        ];
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>'; return; }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (!item.type.includes('phr')) posClass = 'main';
+                tr.innerHTML = `<td class="col-stt">${index + 1}</td><td class="col-word">${item.word}</td><td class="col-ipa">${item.ipa}</td><td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td><td class="col-mean">${item.meaning}</td><td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => item.word.toLowerCase().includes(keyword) || item.meaning.toLowerCase().includes(keyword));
+            renderTable(filteredData);
+        });
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

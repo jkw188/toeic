@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 14: Travel & Airport - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0EA5E9; --secondary-bg: #E0F2FE; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #E0F2FE; color: #0284C7; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 14: Du lịch - Sân bay</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "International", ipa: "/ˌɪn.t̬ɚˈnæʃ.ən.əl/", type: "adj", meaning: "Quốc tế", example: "Passengers for international flights." },
+            { word: "Domestic", ipa: "/dəˈmes.tɪk/", type: "adj (ant)", meaning: "Nội địa", example: "" },
+            { word: "Attraction", ipa: "/əˈtræk.ʃən/", type: "n", meaning: "Điểm tham quan, sự thu hút", example: "The city's best tourist attractions." },
+            { word: "Attract", ipa: "/əˈtrækt/", type: "v (der)", meaning: "Thu hút", example: "" },
+            { word: "Attractive", ipa: "/əˈtræk.tɪv/", type: "adj (der)", meaning: "Hấp dẫn", example: "" },
+            { word: "Itinerary", ipa: "/aɪˈtɪn.ə.rer.i/", type: "n", meaning: "Lịch trình, lộ trình", example: "The itinerary includes a visit to Boston." },
+            { word: "Exotic", ipa: "/ɪɡˈzɑː.t̬ɪk/", type: "adj", meaning: "Kỳ lạ, đẹp độc đáo", example: "Exotic vacation spots." },
+            { word: "Diverse", ipa: "/dɪˈvɝːs/", type: "adj", meaning: "Đa dạng, phong phú", example: "A diverse selection of tours." },
+            { word: "Diversify", ipa: "/dɪˈvɝː.sə.faɪ/", type: "v (der)", meaning: "Đa dạng hóa", example: "" },
+            { word: "Diversity", ipa: "/dɪˈvɝː.sə.t̬i/", type: "n (der)", meaning: "Sự đa dạng", example: "" },
+            { word: "Varied", ipa: "/ˈver.id/", type: "adj (syn)", meaning: "Đa dạng", example: "" },
+            { word: "Superb", ipa: "/suːˈpɝːb/", type: "adj", meaning: "Tuyệt vời, tráng lệ", example: "The service was superb." },
+            { word: "Superbly", ipa: "/suːˈpɝː.bli/", type: "adv (der)", meaning: "Một cách tuyệt vời", example: "" },
+            { word: "Excellent", ipa: "/ˈek.səl.ənt/", type: "adj (syn)", meaning: "Xuất sắc", example: "" },
+            { word: "Outstanding", ipa: "/ˌaʊtˈstæn.dɪŋ/", type: "adj (syn)", meaning: "Nổi bật", example: "" },
+            { word: "Baggage", ipa: "/ˈbæɡ.ɪdʒ/", type: "n", meaning: "Hành lý", example: "Stow baggage under the seat." },
+            { word: "Luggage", ipa: "/ˈlʌɡ.ɪdʒ/", type: "n (syn)", meaning: "Hành lý", example: "" },
+            { word: "Destination", ipa: "/ˌdes.təˈneɪ.ʃən/", type: "n", meaning: "Điểm đến", example: "Information about a travel destination." },
+            { word: "Destine", ipa: "/ˈdes.tɪn/", type: "v (syn)", meaning: "Dành cho", example: "" },
+            { word: "Missing", ipa: "/ˈmɪs.ɪŋ/", type: "adj", meaning: "Thất lạc, bị mất", example: "The missing luggage will be sent." },
+            { word: "Locate", ipa: "/loʊˈkeɪt/", type: "v", meaning: "Định vị, xác định vị trí", example: "Tried to locate the lost luggage." },
+            { word: "Location", ipa: "/loʊˈkeɪ.ʃən/", type: "n (der)", meaning: "Vị trí", example: "" },
+            { word: "Find", ipa: "/faɪnd/", type: "v (syn)", meaning: "Tìm thấy", example: "" },
+            { word: "Approximately", ipa: "/əˈprɑːk.sə.mət.li/", type: "adv", meaning: "Xấp xỉ, khoảng", example: "Takes approximately 13 hours." },
+            { word: "Approximate", ipa: "/əˈprɑːk.sə.mət/", type: "adj (der)", meaning: "Xấp xỉ", example: "" },
+            { word: "Duty", ipa: "/ˈduː.t̬i/", type: "n", meaning: "Thuế / Nhiệm vụ", example: "Pay duty on goods." },
+            { word: "Tax", ipa: "/tæks/", type: "n (syn)", meaning: "Thuế", example: "" },
+            { word: "Process", ipa: "/ˈprɑː.ses/", type: "n", meaning: "Quy trình", example: "Ticketing process." },
+            { word: "Process", ipa: "/ˈprɑː.ses/", type: "v", meaning: "Xử lý", example: "Processes tourist visas." },
+            { word: "Board", ipa: "/bɔːrd/", type: "v", meaning: "Lên tàu/xe/máy bay", example: "Board the plane first." },
+            { word: "Board", ipa: "/bɔːrd/", type: "n", meaning: "Ban, ủy ban", example: "Board of directors." },
+            { word: "Comfortable", ipa: "/ˈkʌm.fɚ.t̬ə.bəl/", type: "adj", meaning: "Thoải mái", example: "The beds are very comfortable." },
+            { word: "Comfort", ipa: "/ˈkʌm.fɚt/", type: "n/v (der)", meaning: "Sự thoải mái / An ủi", example: "" },
+            { word: "Comfortably", ipa: "/ˈkʌm.fɚ.t̬ə.bli/", type: "adv (der)", meaning: "Một cách thoải mái", example: "" },
+            { word: "Declare", ipa: "/dɪˈkler/", type: "v", meaning: "Khai báo (hải quan)", example: "Goods must be declared." },
+            { word: "Declaration", ipa: "/ˌdek.ləˈreɪ.ʃən/", type: "n (der)", meaning: "Tờ khai", example: "" },
+            { word: "Specify", ipa: "/ˈspes.ə.faɪ/", type: "v", meaning: "Ghi rõ, chỉ rõ", example: "Specify which cities to visit." },
+            { word: "Specific", ipa: "/spəˈsɪf.ɪk/", type: "adj (der)", meaning: "Cụ thể", example: "" },
+            { word: "Depart", ipa: "/dɪˈpɑːrt/", type: "v", meaning: "Khởi hành", example: "Flight departs at 10:45 P.M." },
+            { word: "Departure", ipa: "/dɪˈpɑːr.tʃɚ/", type: "n (der)", meaning: "Sự khởi hành", example: "" },
+            { word: "Take off", ipa: "", type: "phr (syn)", meaning: "Cất cánh", example: "" },
+            { word: "Emergency", ipa: "/ɪˈmɝː.dʒən.si/", type: "n", meaning: "Tình huống khẩn cấp", example: "In case of emergency." },
+            { word: "Passenger", ipa: "/ˈpæs.ən.dʒɚ/", type: "n", meaning: "Hành khách", example: "Passengers boarding the ship." },
+            { word: "Outgoing", ipa: "/ˈaʊtˌɡoʊ.ɪŋ/", type: "adj", meaning: "Sắp khởi hành / Sắp nghỉ việc", example: "Outgoing trains." },
+            { word: "Tightly", ipa: "/ˈtaɪt.li/", type: "adv", meaning: "Chặt chẽ", example: "Locked tightly." },
+            { word: "Tour", ipa: "/tʊr/", type: "n", meaning: "Chuyến tham quan", example: "A tour of the plant." },
+            { word: "Tour", ipa: "/tʊr/", type: "v", meaning: "Đi du lịch", example: "" },
+            { word: "Tourist", ipa: "/ˈtʊr.ɪst/", type: "n (der)", meaning: "Du khách", example: "" },
+            { word: "Carrier", ipa: "/ˈker.i.ɚ/", type: "n", meaning: "Hãng vận tải", example: "A popular carrier." },
+            { word: "Customarily", ipa: "/ˌkʌs.təˈmer.əl.i/", type: "adv", meaning: "Theo lẽ thường", example: "Customarily greet with a kiss." },
+            { word: "Customary", ipa: "/ˈkʌs.tə.mer.i/", type: "adj (der)", meaning: "Thông thường", example: "" },
+            { word: "Custom", ipa: "/ˈkʌs.təm/", type: "n (der)", meaning: "Phong tục", example: "" },
+            { word: "Customs", ipa: "/ˈkʌs.təmz/", type: "n (der)", meaning: "Hải quan", example: "" },
+            { word: "Confuse", ipa: "/kənˈfjuːz/", type: "v", meaning: "Gây bối rối", example: "Lack of signs confused visitors." },
+            { word: "Arrive", ipa: "/əˈraɪv/", type: "v", meaning: "Đến nơi", example: "Arrive at its destination." },
+            { word: "Arrival", ipa: "/əˈraɪ.vəl/", type: "n (der)", meaning: "Sự đến", example: "" },
+            { word: "Brochure", ipa: "/broʊˈʃʊr/", type: "n", meaning: "Tờ gấp quảng cáo", example: "Pick up a sightseeing brochure." },
+            { word: "Involve", ipa: "/ɪnˈvɑːlv/", type: "v", meaning: "Bao gồm, liên quan", example: "Involves one transfer." },
+            { word: "Ship", ipa: "/ʃɪp/", type: "v", meaning: "Vận chuyển", example: "Ships cargo internationally." },
+            { word: "Ship", ipa: "/ʃɪp/", type: "n", meaning: "Tàu thủy", example: "Cruise ship." },
+            { word: "Shipment", ipa: "/ˈʃɪp.mənt/", type: "n (der)", meaning: "Lô hàng", example: "" },
+            { word: "Suitcase", ipa: "/ˈsuːt.keɪs/", type: "n", meaning: "Va li", example: "Check in one suitcase." },
+            { word: "Unavailable", ipa: "/ˌʌn.əˈveɪ.lə.bəl/", type: "adj", meaning: "Không có sẵn", example: "Suite is currently unavailable." },
+            { word: "Available", ipa: "/əˈveɪ.lə.bəl/", type: "adj (ant)", meaning: "Có sẵn", example: "" },
+            { word: "Fill out/in", ipa: "", type: "phr", meaning: "Điền vào", example: "Fill out the form." },
+            { word: "Customs", ipa: "/ˈkʌs.təmz/", type: "n", meaning: "Hải quan", example: "Go through customs." },
+            { word: "Away", ipa: "/əˈweɪ/", type: "adv", meaning: "Xa, cách xa", example: "Fifteen miles away." },
+            { word: "Far", ipa: "/fɑːr/", type: "adj/adv (syn)", meaning: "Xa", example: "" },
+            { word: "Dramatic", ipa: "/drəˈmæt̬.ɪk/", type: "adj", meaning: "Ấn tượng, kịch tính", example: "Most dramatic scenery." },
+            { word: "Dramatically", ipa: "/drəˈmæt̬.ɪ.kəl.i/", type: "adv (der)", meaning: "Đáng kể", example: "" },
+            { word: "Hospitality", ipa: "/ˌhɑː.spɪˈtæl.ə.t̬i/", type: "n", meaning: "Sự hiếu khách", example: "Appreciated the hospitality." },
+            { word: "Hospitable", ipa: "/hɑːˈspɪt̬.ə.bəl/", type: "adj (der)", meaning: "Hiếu khách", example: "" },
+            { word: "Indulge", ipa: "/ɪnˈdʌldʒ/", type: "v", meaning: "Tận hưởng, nuông chiều", example: "Indulge in a getaway." },
+            { word: "Indulgence", ipa: "/ɪnˈdʌl.dʒəns/", type: "n (der)", meaning: "Sự đam mê", example: "" },
+            { word: "Proximity", ipa: "/prɑːkˈsɪm.ə.t̬i/", type: "n", meaning: "Sự gần gũi", example: "In close proximity to the hotel." },
+            { word: "Seating", ipa: "/ˈsiː.tɪŋ/", type: "n", meaning: "Chỗ ngồi, sự xếp chỗ", example: "Seating capacity." },
+            { word: "Seat", ipa: "/siːt/", type: "n (der)", meaning: "Ghế ngồi", example: "" },
+            { word: "Unlimited", ipa: "/ʌnˈlɪm.ɪ.t̬ɪd/", type: "adj", meaning: "Vô hạn, không giới hạn", example: "Unlimited mileage." },
+            { word: "Unlimitedly", ipa: "/ʌnˈlɪm.ɪ.t̬ɪd.li/", type: "adv (der)", meaning: "Vô tận", example: "" },
+            { word: "Limited", ipa: "/ˈlɪm.ɪ.t̬ɪd/", type: "adj (ant)", meaning: "Có hạn", example: "" },
+
+            // --- BASIC & EXTRAS ---
+            { word: "Agent", ipa: "/ˈeɪ.dʒənt/", type: "n", meaning: "Đại lý", example: "" },
+            { word: "Airport", ipa: "/ˈer.pɔːrt/", type: "n", meaning: "Sân bay", example: "" },
+            { word: "Beach", ipa: "/biːtʃ/", type: "n", meaning: "Bãi biển", example: "" },
+            { word: "Boat", ipa: "/boʊt/", type: "n", meaning: "Thuyền", example: "" },
+            { word: "Business class", ipa: "", type: "phr", meaning: "Hạng thương gia", example: "" },
+            { word: "Connect", ipa: "/kəˈnekt/", type: "v", meaning: "Kết nối", example: "" },
+            { word: "Departure time", ipa: "", type: "phr", meaning: "Giờ khởi hành", example: "" },
+            { word: "Duty-free shop", ipa: "", type: "phr", meaning: "Cửa hàng miễn thuế", example: "" },
+            { word: "First class", ipa: "", type: "phr", meaning: "Hạng nhất", example: "" },
+            { word: "Flight", ipa: "/flaɪt/", type: "n", meaning: "Chuyến bay", example: "" },
+            { word: "Go on vacation", ipa: "", type: "phr", meaning: "Đi nghỉ", example: "" },
+            { word: "Guidebook", ipa: "/ˈɡaɪd.bʊk/", type: "n", meaning: "Sách hướng dẫn", example: "" },
+            { word: "Journey", ipa: "/ˈdʒɝː.ni/", type: "n", meaning: "Hành trình", example: "" },
+            { word: "Nonstop flight", ipa: "", type: "phr", meaning: "Chuyến bay thẳng", example: "" },
+            { word: "Pack", ipa: "/pæk/", type: "v", meaning: "Đóng gói", example: "" },
+            { word: "Passport", ipa: "/ˈpæs.pɔːrt/", type: "n", meaning: "Hộ chiếu", example: "" },
+            { word: "Pilot", ipa: "/ˈpaɪ.lət/", type: "n", meaning: "Phi công", example: "" },
+            { word: "Salon", ipa: "/səˈlɑːn/", type: "n", meaning: "Tiệm thẩm mỹ", example: "" },
+            { word: "Span", ipa: "/spæn/", type: "v", meaning: "Bắc qua / Kéo dài", example: "" },
+            { word: "Trip", ipa: "/trɪp/", type: "n", meaning: "Chuyến đi", example: "" },
+            { word: "Border", ipa: "/ˈbɔːr.dɚ/", type: "n", meaning: "Biên giới", example: "" },
+            { word: "Central", ipa: "/ˈsen.trəl/", type: "adj", meaning: "Trung tâm", example: "" },
+            { word: "Safe", ipa: "/seɪf/", type: "adj", meaning: "An toàn", example: "" },
+            { word: "Sudden", ipa: "/ˈsʌd.ən/", type: "adj", meaning: "Đột ngột", example: "" },
+            { word: "Travel", ipa: "/ˈtræv.əl/", type: "v/n", meaning: "Du lịch", example: "" },
+            { word: "Underwater", ipa: "/ˌʌn.dɚˈwɑː.t̬ɚ/", type: "adj", meaning: "Dưới nước", example: "" },
+            { word: "Unique", ipa: "/juːˈniːk/", type: "adj", meaning: "Độc nhất", example: "" },
+            { word: "Visitor", ipa: "/ˈvɪz.ɪ.t̬ɚ/", type: "n", meaning: "Du khách", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "Aboard", ipa: "/əˈbɔːrd/", type: "adv/prep", meaning: "Trên tàu/xe", example: "" },
+            { word: "Aircraft", ipa: "/ˈer.kræft/", type: "n", meaning: "Máy bay", example: "" },
+            { word: "Airfare", ipa: "/ˈer.fer/", type: "n", meaning: "Giá vé máy bay", example: "" },
+            { word: "Aisle seat", ipa: "", type: "phr", meaning: "Ghế cạnh lối đi", example: "" },
+            { word: "Be on a trip", ipa: "", type: "phr", meaning: "Đang đi du lịch", example: "" },
+            { word: "Board a flight", ipa: "", type: "phr", meaning: "Lên máy bay", example: "" },
+            { word: "Boarding gate", ipa: "", type: "phr", meaning: "Cửa lên máy bay", example: "" },
+            { word: "Boarding pass", ipa: "", type: "phr", meaning: "Thẻ lên máy bay", example: "" },
+            { word: "Boarding time", ipa: "", type: "phr", meaning: "Giờ lên máy bay", example: "" },
+            { word: "By air", ipa: "", type: "phr", meaning: "Bằng đường hàng không", example: "" },
+            { word: "Carry-on baggage", ipa: "", type: "phr", meaning: "Hành lý xách tay", example: "" },
+            { word: "Connecting flight", ipa: "", type: "phr", meaning: "Chuyến bay nối chuyến", example: "" },
+            { word: "Crew", ipa: "/kruː/", type: "n", meaning: "Phi hành đoàn", example: "" },
+            { word: "Cruise", ipa: "/kruːz/", type: "n", meaning: "Du thuyền", example: "" },
+            { word: "Currency exchange", ipa: "", type: "phr", meaning: "Đổi tiền", example: "" },
+            { word: "Drift", ipa: "/drɪft/", type: "v", meaning: "Trôi dạt", example: "" },
+            { word: "Ferry", ipa: "/ˈfer.i/", type: "n", meaning: "Phà", example: "" },
+            { word: "Flight attendant", ipa: "", type: "phr", meaning: "Tiếp viên hàng không", example: "" },
+            { word: "Fluid", ipa: "/ˈfluː.ɪd/", type: "n", meaning: "Chất lỏng", example: "" },
+            { word: "Guest pass", ipa: "", type: "phr", meaning: "Thẻ khách", example: "" },
+            { word: "Guided tour", ipa: "", type: "phr", meaning: "Tour có hướng dẫn", example: "" },
+            { word: "Immigration", ipa: "/ˌɪm.əˈɡreɪ.ʃən/", type: "n", meaning: "Nhập cư", example: "" },
+            { word: "In-flight", ipa: "", type: "adj", meaning: "Trong chuyến bay", example: "" },
+            { word: "Landing", ipa: "/ˈlæn.dɪŋ/", type: "n", meaning: "Hạ cánh", example: "" },
+            { word: "Landmark", ipa: "/ˈlænd.mɑːrk/", type: "n", meaning: "Danh thắng / Mốc", example: "" },
+            { word: "Layover", ipa: "/ˈleɪˌoʊ.vɚ/", type: "n", meaning: "Thời gian nghỉ", example: "" },
+            { word: "Leave for", ipa: "", type: "phr", meaning: "Rời đi đến", example: "" },
+            { word: "Line up", ipa: "", type: "phr", meaning: "Xếp hàng", example: "" },
+            { word: "Luggage tag", ipa: "", type: "phr", meaning: "Thẻ hành lý", example: "" },
+            { word: "Mainland", ipa: "/ˈmeɪn.lænd/", type: "n", meaning: "Đất liền", example: "" },
+            { word: "Missing luggage", ipa: "", type: "phr", meaning: "Hành lý thất lạc", example: "" },
+            { word: "Native", ipa: "/ˈneɪ.t̬ɪv/", type: "adj", meaning: "Bản địa", example: "" },
+            { word: "Observation tower", ipa: "", type: "phr", meaning: "Tháp quan sát", example: "" },
+            { word: "Overbook", ipa: "/ˌoʊ.vɚˈbʊk/", type: "v", meaning: "Đặt quá số chỗ", example: "" },
+            { word: "Overhead rack", ipa: "", type: "phr", meaning: "Ngăn để đồ trên đầu", example: "" },
+            { word: "Overseas", ipa: "/ˌoʊ.vɚˈsiːz/", type: "adj", meaning: "Nước ngoài", example: "" },
+            { word: "Port", ipa: "/pɔːrt/", type: "n", meaning: "Cảng", example: "" },
+            { word: "Porter", ipa: "/ˈpɔːr.t̬ɚ/", type: "n", meaning: "Người khuân vác", example: "" },
+            { word: "Reclaim", ipa: "/rɪˈkleɪm/", type: "v", meaning: "Nhận lại (hành lý)", example: "" },
+            { word: "Row the boat", ipa: "", type: "phr", meaning: "Chèo thuyền", example: "" },
+            { word: "Stop over", ipa: "", type: "phr", meaning: "Dừng chân", example: "" },
+            { word: "Take off", ipa: "", type: "phr", meaning: "Cất cánh", example: "" },
+            { word: "Take bag off", ipa: "", type: "phr", meaning: "Bỏ túi xuống", example: "" },
+            { word: "Train conductor", ipa: "", type: "phr", meaning: "Nhân viên tàu", example: "" },
+            { word: "Travel agency", ipa: "", type: "phr", meaning: "Đại lý du lịch", example: "" },
+            { word: "Unload", ipa: "/ʌnˈloʊd/", type: "v", meaning: "Dỡ hàng", example: "" },
+            { word: "Unlock", ipa: "/ʌnˈlɑːk/", type: "v", meaning: "Mở khóa", example: "" },
+            { word: "Walking tour", ipa: "", type: "phr", meaning: "Tour đi bộ", example: "" },
+            { word: "Distant", ipa: "/ˈdɪs.tənt/", type: "adj", meaning: "Xa xôi", example: "" },
+            { word: "Favor", ipa: "/ˈfeɪ.vɚ/", type: "n", meaning: "Sự ủng hộ", example: "" },
+            { word: "Overhead", ipa: "/ˈoʊ.vɚ.hed/", type: "adj", meaning: "Ở trên đầu", example: "" },
+            { word: "Remains", ipa: "/rɪˈmeɪnz/", type: "n", meaning: "Tàn tích", example: "" },
+            { word: "Remote", ipa: "/rɪˈmoʊt/", type: "adj", meaning: "Hẻo lánh", example: "" },
+            { word: "Rightly", ipa: "/ˈraɪt.li/", type: "adv", meaning: "Đúng đắn", example: "" },
+            { word: "Travel arrangement", ipa: "", type: "phr", meaning: "Sự sắp xếp chuyến đi", example: "" },
+            { word: "Accumulate", ipa: "/əˈkjuː.mjə.leɪt/", type: "v", meaning: "Tích lũy", example: "" },
+            { word: "Geographic", ipa: "/ˌdʒiː.əˈɡræf.ɪk/", type: "adj", meaning: "Thuộc địa lý", example: "" },
+            { word: "Go through customs", ipa: "", type: "phr", meaning: "Qua hải quan", example: "" },
+            { word: "Jet lag", ipa: "/ˈdʒet ˌlæɡ/", type: "n", meaning: "Lệch múi giờ", example: "" },
+            { word: "Memorable", ipa: "/ˈmem.ər.ə.bəl/", type: "adj", meaning: "Đáng nhớ", example: "" },
+            { word: "Memorial", ipa: "/məˈmɔːr.i.əl/", type: "n", meaning: "Đài tưởng niệm", example: "" },
+            { word: "Precisely", ipa: "/prəˈsaɪs.li/", type: "adv", meaning: "Chính xác", example: "" },
+            { word: "Round trip", ipa: "", type: "phr", meaning: "Khứ hồi", example: "" },
+            { word: "Runway", ipa: "/ˈrʌn.weɪ/", type: "n", meaning: "Đường băng", example: "" },
+            { word: "Seasickness", ipa: "/ˈsiː.sɪk.nəs/", type: "n", meaning: "Say sóng", example: "" },
+            { word: "Suburban train line", ipa: "", type: "phr", meaning: "Tàu ngoại ô", example: "" },
+            { word: "Voyage", ipa: "/ˈvɔɪ.ɪdʒ/", type: "n", meaning: "Chuyến hải trình", example: "" },
+            { word: "Wildlife", ipa: "/ˈwaɪld.laɪf/", type: "n", meaning: "Động vật hoang dã", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Airsickness", ipa: "/ˈer.sɪk.nəs/", type: "n", meaning: "Say máy bay", example: "" },
+            { word: "Barge", ipa: "/bɑːrdʒ/", type: "n", meaning: "Sà lan", example: "" },
+            { word: "Be left unattended", ipa: "", type: "phr", meaning: "Bị bỏ mặc", example: "" },
+            { word: "Buckle up", ipa: "", type: "phr", meaning: "Cài dây an toàn", example: "" },
+            { word: "Carousel", ipa: "/ˌker.əˈsel/", type: "n", meaning: "Băng chuyền hành lý", example: "" },
+            { word: "Channel", ipa: "/ˈtʃæn.əl/", type: "n", meaning: "Kênh, eo biển", example: "" },
+            { word: "Deck", ipa: "/dek/", type: "n", meaning: "Boong tàu", example: "" },
+            { word: "Dock", ipa: "/dɑːk/", type: "n", meaning: "Bến tàu", example: "" },
+            { word: "Harbor", ipa: "/ˈhɑːr.bɚ/", type: "n", meaning: "Bến cảng", example: "" },
+            { word: "Life preserver", ipa: "", type: "phr", meaning: "Phao cứu sinh", example: "" },
+            { word: "Meet one's flight", ipa: "", type: "phr", meaning: "Đón chuyến bay", example: "" },
+            { word: "Stall", ipa: "/stɑːl/", type: "v", meaning: "Trì hoãn", example: "" },
+            { word: "Tie the boat", ipa: "", type: "phr", meaning: "Buộc thuyền", example: "" },
+            { word: "Turbulence", ipa: "/ˈtɝː.bjə.ləns/", type: "n", meaning: "Sự nhiễu loạn", example: "" },
+            { word: "Allowance", ipa: "/əˈlaʊ.əns/", type: "n", meaning: "Sự chiếu cố / Trợ cấp", example: "" },
+            { word: "Concourse", ipa: "/ˈkɑːŋ.kɔːrs/", type: "n", meaning: "Sảnh lớn", example: "" },
+            { word: "Lodging", ipa: "/ˈlɑː.dʒɪŋ/", type: "n", meaning: "Chỗ ở tạm thời", example: "" },
+            { word: "Presumable", ipa: "/prɪˈzuː.mə.bəl/", type: "adj", meaning: "Có thể đoán được", example: "" },
+            { word: "Touch down", ipa: "", type: "phr", meaning: "Hạ cánh", example: "" },
+            { word: "Aviation", ipa: "/ˌeɪ.viˈeɪ.ʃən/", type: "n", meaning: "Hàng không", example: "" },
+            { word: "Charter plane", ipa: "", type: "phr", meaning: "Máy bay thuê riêng", example: "" },
+            { word: "Confer", ipa: "/kənˈfɝː/", type: "v", meaning: "Bàn bạc", example: "" },
+            { word: "Disembark", ipa: "/ˌdɪs.ɪmˈbɑːrk/", type: "v", meaning: "Xuống tàu/xe", example: "" },
+            { word: "Dispense", ipa: "/dɪˈspens/", type: "v", meaning: "Phân phát", example: "" },
+            { word: "Impound", ipa: "/ɪmˈpaʊnd/", type: "v", meaning: "Tịch thu", example: "" },
+            { word: "Motion sickness", ipa: "", type: "phr", meaning: "Say xe", example: "" },
+            { word: "Prestigious", ipa: "/presˈtɪdʒ.əs/", type: "adj", meaning: "Uy tín", example: "" },
+            { word: "Quarantine desk", ipa: "", type: "phr", meaning: "Bàn kiểm dịch", example: "" },
+            { word: "Remittance", ipa: "/rɪˈmɪt.əns/", type: "n", meaning: "Sự chuyển tiền", example: "" },
+            { word: "Swap", ipa: "/swɑːp/", type: "v", meaning: "Trao đổi", example: "" },
+            { word: "Turn up", ipa: "", type: "phr", meaning: "Xuất hiện", example: "" },
+            { word: "Vessel", ipa: "/ˈves.əl/", type: "n", meaning: "Tàu lớn", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

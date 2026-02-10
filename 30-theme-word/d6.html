@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 06: Leisure & Community - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #EA580C; --secondary-bg: #FFF7ED; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #FFF7ED; color: #C2410C; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 06: Thời gian rảnh - Cộng đồng</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Collection", ipa: "/kəˈlek.ʃən/", type: "n", meaning: "Bộ sưu tập, sự thu thập", example: "A unique collection of stamps." },
+            { word: "Collect", ipa: "/kəˈlekt/", type: "v (der)", meaning: "Thu thập", example: "" },
+            { word: "Collector", ipa: "/kəˈlek.tɚ/", type: "n (der)", meaning: "Người sưu tầm", example: "" },
+            { word: "Collectable", ipa: "/kəˈlek.tə.bəl/", type: "n (der)", meaning: "Vật sưu tầm", example: "" },
+            { word: "Exhibition", ipa: "/ˌek.səˈbɪʃ.ən/", type: "n", meaning: "Cuộc triển lãm", example: "Hosted an exhibition of photographs." },
+            { word: "Exhibit", ipa: "/ɪɡˈzɪb.ɪt/", type: "v/n (der)", meaning: "Trưng bày / Vật trưng bày", example: "" },
+            { word: "Celebrity", ipa: "/səˈleb.rə.t̬i/", type: "n", meaning: "Người nổi tiếng", example: "Many celebrities attended the festival." },
+            { word: "Live", ipa: "/laɪv/", type: "adj", meaning: "Trực tiếp, sống", example: "A live music performance." },
+            { word: "Live", ipa: "/lɪv/", type: "v", meaning: "Sống", example: "" },
+            { word: "Living", ipa: "/ˈlɪv.ɪŋ/", type: "adj (der)", meaning: "Đang sống", example: "" },
+            { word: "Alive", ipa: "/əˈlaɪv/", type: "adj (syn)", meaning: "Còn sống", example: "" },
+            { word: "Improvise", ipa: "/ˈɪm.prə.vaɪz/", type: "v", meaning: "Ứng biến, ngẫu hứng", example: "Improvised a jazz melody." },
+            { word: "Improvisation", ipa: "/ɪmˌprɑː.vəˈzeɪ.ʃən/", type: "n (der)", meaning: "Sự ứng biến", example: "" },
+            { word: "Popular", ipa: "/ˈpɑː.pjə.lɚ/", type: "adj", meaning: "Nổi tiếng, phổ biến", example: "Musicals are so popular." },
+            { word: "Popularity", ipa: "/ˌpɑː.pjəˈler.ə.t̬i/", type: "n (der)", meaning: "Sự phổ biến", example: "" },
+            { word: "Likable", ipa: "/ˈlaɪ.kə.bəl/", type: "adj (syn)", meaning: "Dễ mến", example: "" },
+            { word: "Preferred", ipa: "/prɪˈfɝːd/", type: "adj (syn)", meaning: "Được ưa thích hơn", example: "" },
+            { word: "Favorite", ipa: "/ˈfeɪ.vər.ɪt/", type: "adj (syn)", meaning: "Yêu thích nhất", example: "" },
+            { word: "Donation", ipa: "/doʊˈneɪ.ʃən/", type: "n", meaning: "Sự quyên góp", example: "Accepting donations of books." },
+            { word: "Donate", ipa: "/ˈdoʊ.neɪt/", type: "v (der)", meaning: "Quyên góp", example: "" },
+            { word: "Donor", ipa: "/ˈdoʊ.nɚ/", type: "n (der)", meaning: "Người quyên góp", example: "" },
+            { word: "Contribution", ipa: "/ˌkɑːn.trɪˈbjuː.ʃən/", type: "n (syn)", meaning: "Sự đóng góp", example: "" },
+            { word: "Alumni", ipa: "/əˈlʌm.naɪ/", type: "n", meaning: "Cựu sinh viên", example: "Alumni were invited to the ceremony." },
+            { word: "Present", ipa: "/prɪˈzent/", type: "v", meaning: "Trình bày, xuất trình", example: "Please present valid tickets." },
+            { word: "Present", ipa: "/ˈprez.ənt/", type: "adj/n", meaning: "Hiện tại / Quà tặng", example: "" },
+            { word: "Presentation", ipa: "/ˌprez.ənˈteɪ.ʃən/", type: "n (der)", meaning: "Bài thuyết trình", example: "" },
+            { word: "Presenter", ipa: "/prɪˈzen.t̬ɚ/", type: "n (der)", meaning: "Diễn giả", example: "" },
+            { word: "Presently", ipa: "/ˈprez.ənt.li/", type: "adv (der)", meaning: "Hiện thời", example: "" },
+            { word: "Admission", ipa: "/ədˈmɪʃ.ən/", type: "n", meaning: "Sự vào cửa, phí vào cửa", example: "Charged an extra admission fee." },
+            { word: "Admit", ipa: "/ədˈmɪt/", type: "v (der)", meaning: "Nhận vào / Thú nhận", example: "" },
+            { word: "Banquet", ipa: "/ˈbæŋ.kwət/", type: "n", meaning: "Bữa tiệc lớn", example: "Wedding banquets." },
+            { word: "Anniversary", ipa: "/ˌæn.əˈvɝː.sɚ.i/", type: "n", meaning: "Lễ kỷ niệm", example: "Celebrated their 50th anniversary." },
+            { word: "Required", ipa: "/rɪˈkwaɪrd/", type: "adj", meaning: "Cần thiết, bắt buộc", example: "Proper attire is required." },
+            { word: "Succeed", ipa: "/səkˈsiːd/", type: "v", meaning: "Thành công / Kế nhiệm", example: "Succeeded in convincing her family." },
+            { word: "Success", ipa: "/səkˈses/", type: "n (der)", meaning: "Sự thành công", example: "" },
+            { word: "Successful", ipa: "/səkˈses.fəl/", type: "adj (der)", meaning: "Thành công", example: "" },
+            { word: "Successive", ipa: "/səkˈses.ɪv/", type: "adj (der)", meaning: "Liên tiếp", example: "" },
+            { word: "Rest", ipa: "/rest/", type: "v", meaning: "Nghỉ ngơi", example: "Rest on the bench." },
+            { word: "Rest", ipa: "/rest/", type: "n", meaning: "Sự nghỉ ngơi / Phần còn lại", example: "" },
+            { word: "Remainder", ipa: "/rɪˈmeɪn.dɚ/", type: "n (syn)", meaning: "Phần còn lại", example: "" },
+            { word: "Fund-raising", ipa: "/ˈfʌndˌreɪ.zɪŋ/", type: "n", meaning: "Hoạt động gây quỹ", example: "Auctions are a form of fund-raising." },
+            { word: "Resume", ipa: "/rɪˈzuːm/", type: "v", meaning: "Bắt đầu lại, tiếp tục", example: "The play will resume." },
+            { word: "Issue", ipa: "/ˈɪʃ.uː/", type: "n", meaning: "Số báo / Vấn đề", example: "In the April issue." },
+            { word: "Issue", ipa: "/ˈɪʃ.uː/", type: "v", meaning: "Phát hành", example: "" },
+            { word: "Edition", ipa: "/ɪˈdɪʃ.ən/", type: "n (syn)", meaning: "Lần xuất bản", example: "" },
+            { word: "Subscription", ipa: "/səbˈskrɪp.ʃən/", type: "n", meaning: "Sự đăng ký, đặt mua", example: "Get a subscription to the magazine." },
+            { word: "Subscribe", ipa: "/səbˈskraɪb/", type: "v (der)", meaning: "Đăng ký", example: "" },
+            { word: "Appear", ipa: "/əˈpɪr/", type: "v", meaning: "Xuất hiện", example: "Appeared at the bookstore." },
+            { word: "Appearance", ipa: "/əˈpɪr.əns/", type: "n (der)", meaning: "Sự xuất hiện / Vẻ ngoài", example: "" },
+            { word: "Disappear", ipa: "/ˌdɪs.əˈpɪr/", type: "v (ant)", meaning: "Biến mất", example: "" },
+            { word: "Accompany", ipa: "/əˈkʌm.pə.ni/", type: "v", meaning: "Đi cùng, kèm theo", example: "Accompanied her grandmother." },
+            { word: "Edition", ipa: "/ɪˈdɪʃ.ən/", type: "n", meaning: "Phiên bản, lần in", example: "A revised edition." },
+            { word: "Specifically", ipa: "/spəˈsɪf.ɪ.kəl.i/", type: "adv", meaning: "Cụ thể, đặc trưng", example: "Specifically stated." },
+            { word: "Anonymous", ipa: "/əˈnɑː.nə.məs/", type: "adj", meaning: "Ẩn danh, nặc danh", example: "An anonymous donor." },
+            { word: "Commit", ipa: "/kəˈmɪt/", type: "v", meaning: "Cam kết, tận tâm", example: "Committed to providing excellent service." },
+            { word: "Commitment", ipa: "/kəˈmɪt.mənt/", type: "n (der)", meaning: "Sự cam kết", example: "" },
+            { word: "Dedicate", ipa: "/ˈded.ə.keɪt/", type: "v (syn)", meaning: "Cống hiến", example: "" },
+            { word: "Devote", ipa: "/dɪˈvoʊt/", type: "v (syn)", meaning: "Cống hiến", example: "" },
+            { word: "Informative", ipa: "/ɪnˈfɔːr.mə.t̬ɪv/", type: "adj", meaning: "Nhiều thông tin, bổ ích", example: "The documentary was informative." },
+            { word: "Inform", ipa: "/ɪnˈfɔːrm/", type: "v (der)", meaning: "Thông báo", example: "" },
+            { word: "Informed", ipa: "/ɪnˈfɔːrmd/", type: "adj (der)", meaning: "Có hiểu biết", example: "" },
+            { word: "Information", ipa: "/ˌɪn.fɚˈmeɪ.ʃən/", type: "n (der)", meaning: "Thông tin", example: "" },
+            { word: "Audience", ipa: "/ˈɑː.di.əns/", type: "n", meaning: "Khán giả", example: "The audience applauded." },
+            { word: "Author", ipa: "/ˈɑː.θɚ/", type: "n", meaning: "Tác giả", example: "All of the author's stories." },
+            { word: "Note", ipa: "/noʊt/", type: "v", meaning: "Lưu ý, ghi chú", example: "Please note the details." },
+            { word: "Notable", ipa: "/ˈnoʊ.t̬ə.bəl/", type: "adj (der)", meaning: "Đáng chú ý", example: "" },
+            { word: "State", ipa: "/steɪt/", type: "v (syn)", meaning: "Phát biểu", example: "" },
+            { word: "Antique", ipa: "/ænˈtiːk/", type: "n", meaning: "Đồ cổ", example: "Antiques are popular for decor." },
+            { word: "Manuscript", ipa: "/ˈmæn.jə.skrɪpt/", type: "n", meaning: "Bản thảo", example: "Working on several manuscripts." },
+            { word: "Beneficial", ipa: "/ˌben.əˈfɪʃ.əl/", type: "adj", meaning: "Có lợi", example: "Beneficial to the community." },
+            { word: "Benefit", ipa: "/ˈben.ə.fɪt/", type: "n (der)", meaning: "Lợi ích", example: "" },
+            { word: "Harmful", ipa: "/ˈhɑːrm.fəl/", type: "adj (ant)", meaning: "Có hại", example: "" },
+            { word: "Upcoming", ipa: "/ˈʌpˌkʌm.ɪŋ/", type: "adj", meaning: "Sắp tới", example: "Upcoming election." },
+            { word: "Forthcoming", ipa: "/ˌfɔːrθˈkʌm.ɪŋ/", type: "adj (syn)", meaning: "Sắp tới", example: "" },
+            { word: "Lend", ipa: "/lend/", type: "v", meaning: "Cho mượn", example: "The library lends materials." },
+            { word: "Borrow", ipa: "/ˈbɑːr.oʊ/", type: "v (syn)", meaning: "Mượn", example: "" },
+            { word: "Rent", ipa: "/rent/", type: "v (syn)", meaning: "Thuê", example: "" },
+            { word: "Current", ipa: "/ˈkɝː.ənt/", type: "adj", meaning: "Hiện tại, hiện hành", example: "Current subscribers." },
+            { word: "Currently", ipa: "/ˈkɝː.ənt.li/", type: "adv (der)", meaning: "Hiện thời", example: "" },
+            { word: "Present", ipa: "/ˈprez.ənt/", type: "adj (syn)", meaning: "Hiện tại", example: "" },
+            { word: "Valid", ipa: "/ˈvæl.ɪd/", type: "adj (syn)", meaning: "Có hiệu lực", example: "" },
+            { word: "Local", ipa: "/ˈloʊ.kəl/", type: "adj", meaning: "Địa phương", example: "Local high school." },
+            { word: "Locality", ipa: "/loʊˈkæl.ə.t̬i/", type: "n (der)", meaning: "Vị trí", example: "" },
+            { word: "Locally", ipa: "/ˈloʊ.kəl.i/", type: "adv (der)", meaning: "Tại địa phương", example: "" },
+            { word: "Variety", ipa: "/vəˈraɪ.ə.t̬i/", type: "n", meaning: "Sự đa dạng", example: "A variety of magazines." },
+            { word: "Various", ipa: "/ˈver.i.əs/", type: "adj (der)", meaning: "Khác nhau", example: "" },
+            { word: "Vary", ipa: "/ˈver.i/", type: "v (der)", meaning: "Thay đổi", example: "" },
+            { word: "Range", ipa: "/reɪndʒ/", type: "n (syn)", meaning: "Loại / Phạm vi", example: "" },
+            { word: "Advocate", ipa: "/ˈæd.və.kət/", type: "n", meaning: "Người ủng hộ", example: "An advocate of public education." },
+            { word: "Advocate", ipa: "/ˈæd.və.keɪt/", type: "v", meaning: "Ủng hộ", example: "" },
+            { word: "Opponent", ipa: "/əˈpoʊ.nənt/", type: "n (ant)", meaning: "Đối thủ", example: "" },
+            { word: "Contributor", ipa: "/kənˈtrɪb.ju.t̬ɚ/", type: "n", meaning: "Người đóng góp", example: "A regular contributor." },
+            { word: "Contribute", ipa: "/kənˈtrɪb.juːt/", type: "v (der)", meaning: "Đóng góp", example: "" },
+            { word: "Contribution", ipa: "/ˌkɑːn.trɪˈbjuː.ʃən/", type: "n (der)", meaning: "Sự đóng góp", example: "" },
+            { word: "Defy", ipa: "/dɪˈfaɪ/", type: "v", meaning: "Thách thức, không tuân theo", example: "Defies conventional wisdom." },
+            { word: "Defiance", ipa: "/dɪˈfaɪ.əns/", type: "n (der)", meaning: "Sự thách thức", example: "" },
+            { word: "Fascinating", ipa: "/ˈfæs.ən.eɪ.tɪŋ/", type: "adj", meaning: "Hấp dẫn, lôi cuốn", example: "Fascinating pieces of art." },
+            { word: "Fascinate", ipa: "/ˈfæs.ən.eɪt/", type: "v (der)", meaning: "Mê hoặc", example: "" },
+            { word: "Fascination", ipa: "/ˌfæs.ənˈeɪ.ʃən/", type: "n (der)", meaning: "Sự quyến rũ", example: "" },
+            { word: "Showing", ipa: "/ˈʃoʊ.ɪŋ/", type: "n", meaning: "Buổi trình diễn, công chiếu", example: "Premiere showing." },
+
+            // --- BASIC & EXTRAS ---
+            { word: "Backpack", ipa: "/ˈbæk.pæk/", type: "n", meaning: "Ba lô", example: "" },
+            { word: "Bike", ipa: "/baɪk/", type: "n", meaning: "Xe đạp", example: "" },
+            { word: "Cabin", ipa: "/ˈkæb.ɪn/", type: "n", meaning: "Buồng lái / Nhà gỗ", example: "" },
+            { word: "Climb a mountain", ipa: "", type: "phr", meaning: "Leo núi", example: "" },
+            { word: "Film festival", ipa: "", type: "phr", meaning: "Liên hoan phim", example: "" },
+            { word: "Fishing", ipa: "/ˈfɪʃ.ɪŋ/", type: "n", meaning: "Câu cá", example: "" },
+            { word: "Gallery", ipa: "/ˈɡæl.ɚ.i/", type: "n", meaning: "Phòng trưng bày", example: "" },
+            { word: "Invitation", ipa: "/ˌɪn.vəˈteɪ.ʃən/", type: "n", meaning: "Lời mời", example: "" },
+            { word: "Lawn", ipa: "/lɑːn/", type: "n", meaning: "Bãi cỏ", example: "" },
+            { word: "Paint", ipa: "/peɪnt/", type: "v", meaning: "Sơn, vẽ", example: "" },
+            { word: "Painting", ipa: "/ˈpeɪn.tɪŋ/", type: "n", meaning: "Bức tranh", example: "" },
+            { word: "Play cards", ipa: "", type: "phr", meaning: "Chơi bài", example: "" },
+            { word: "Public library", ipa: "", type: "phr", meaning: "Thư viện công cộng", example: "" },
+            { word: "Race", ipa: "/reɪs/", type: "n/v", meaning: "Cuộc đua / Đua", example: "" },
+            { word: "Resort", ipa: "/rɪˈzɔːrt/", type: "n", meaning: "Khu nghỉ dưỡng", example: "" },
+            { word: "Theater", ipa: "/ˈθiː.ə.t̬ɚ/", type: "n", meaning: "Nhà hát", example: "" },
+            { word: "Watch a film", ipa: "", type: "phr", meaning: "Xem phim", example: "" },
+            { word: "Adventure", ipa: "/ədˈven.tʃɚ/", type: "n", meaning: "Cuộc phiêu lưu", example: "" },
+            { word: "Art museum", ipa: "", type: "phr", meaning: "Bảo tàng nghệ thuật", example: "" },
+            { word: "Begin", ipa: "/bɪˈɡɪn/", type: "v", meaning: "Bắt đầu", example: "" },
+            { word: "Bring", ipa: "/brɪŋ/", type: "v", meaning: "Mang theo", example: "" },
+            { word: "Care for", ipa: "", type: "phr", meaning: "Chăm sóc / Thích", example: "" },
+            { word: "Concert", ipa: "/ˈkɑːn.sɚt/", type: "n", meaning: "Buổi hòa nhạc", example: "" },
+            { word: "Length", ipa: "/leŋθ/", type: "n", meaning: "Chiều dài", example: "" },
+            { word: "Leisure", ipa: "/ˈliː.ʒɚ/", type: "n", meaning: "Thời gian rảnh", example: "" },
+            { word: "Librarian", ipa: "/laɪˈbrer.i.ən/", type: "n", meaning: "Thủ thư", example: "" },
+            { word: "Menu", ipa: "/ˈmen.juː/", type: "n", meaning: "Thực đơn", example: "" },
+            { word: "Sightseeing", ipa: "/ˈsaɪtˌsiː.ɪŋ/", type: "n", meaning: "Tham quan", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "Amusement park", ipa: "/əˈmjuːz.mənt ˌpɑːrk/", type: "n", meaning: "Công viên giải trí", example: "" },
+            { word: "Ancient history", ipa: "", type: "phr", meaning: "Lịch sử cổ đại", example: "" },
+            { word: "Artifact", ipa: "/ˈɑːr.t̬ə.fækt/", type: "n", meaning: "Đồ tạo tác", example: "" },
+            { word: "Auditorium", ipa: "/ˌɑː.dəˈtɔːr.i.əm/", type: "n", meaning: "Khán phòng", example: "" },
+            { word: "Be booked up", ipa: "", type: "phr", meaning: "Được đặt hết", example: "" },
+            { word: "Box office", ipa: "/ˈbɑːks ˌɑː.fɪs/", type: "n", meaning: "Phòng vé", example: "" },
+            { word: "Cheerful", ipa: "/ˈtʃɪr.fəl/", type: "adj", meaning: "Vui vẻ", example: "" },
+            { word: "Choir", ipa: "/kwaɪ.ɚ/", type: "n", meaning: "Dàn hợp xướng", example: "" },
+            { word: "Entertain", ipa: "/en.t̬ɚˈteɪn/", type: "v", meaning: "Giải trí / Chiêu đãi", example: "" },
+            { word: "Flower arrangement", ipa: "", type: "phr", meaning: "Cắm hoa", example: "" },
+            { word: "Flower bed", ipa: "", type: "phr", meaning: "Luống hoa", example: "" },
+            { word: "Go to a film", ipa: "", type: "phr", meaning: "Đi xem phim", example: "" },
+            { word: "Grip", ipa: "/ɡrɪp/", type: "v", meaning: "Nắm chặt", example: "" },
+            { word: "Have a race", ipa: "", type: "phr", meaning: "Chạy đua", example: "" },
+            { word: "Jog", ipa: "/dʒɑːɡ/", type: "v", meaning: "Chạy bộ", example: "" },
+            { word: "Musical instrument", ipa: "", type: "phr", meaning: "Nhạc cụ", example: "" },
+            { word: "Oar", ipa: "/ɔːr/", type: "n", meaning: "Mái chèo", example: "" },
+            { word: "Oil painting", ipa: "", type: "phr", meaning: "Tranh sơn dầu", example: "" },
+            { word: "Outdoor", ipa: "/ˈaʊtˌdɔːr/", type: "adj", meaning: "Ngoài trời", example: "" },
+            { word: "Paddle", ipa: "/ˈpæd.əl/", type: "n/v", meaning: "Mái chèo / Chèo", example: "" },
+            { word: "Premiere", ipa: "/prɪˈmɪr/", type: "n", meaning: "Buổi ra mắt", example: "" },
+            { word: "Rake leaves", ipa: "", type: "phr", meaning: "Cào lá", example: "" },
+            { word: "Recreational activity", ipa: "", type: "phr", meaning: "Hoạt động giải trí", example: "" },
+            { word: "Right", ipa: "/raɪt/", type: "n", meaning: "Quyền / Lẽ phải", example: "" },
+            { word: "Running time", ipa: "", type: "phr", meaning: "Thời lượng", example: "" },
+            { word: "Sail a boat", ipa: "", type: "phr", meaning: "Chèo thuyền", example: "" },
+            { word: "Slide down", ipa: "", type: "phr", meaning: "Trượt xuống", example: "" },
+            { word: "Splash", ipa: "/splæʃ/", type: "v", meaning: "Bắn tung tóe", example: "" },
+            { word: "Sport tournament", ipa: "", type: "phr", meaning: "Giải đấu thể thao", example: "" },
+            { word: "Stadium", ipa: "/ˈsteɪ.di.əm/", type: "n", meaning: "Sân vận động", example: "" },
+            { word: "Stroll", ipa: "/stroʊl/", type: "v", meaning: "Đi dạo", example: "" },
+            { word: "Stay up", ipa: "", type: "phr", meaning: "Thức khuya", example: "" },
+            { word: "Take a break", ipa: "", type: "phr", meaning: "Nghỉ ngơi", example: "" },
+            { word: "Take a walk", ipa: "", type: "phr", meaning: "Đi dạo", example: "" },
+            { word: "Take a photograph", ipa: "", type: "phr", meaning: "Chụp ảnh", example: "" },
+            { word: "Take great pleasure", ipa: "", type: "phr", meaning: "Thích thú", example: "" },
+            { word: "Touch up", ipa: "", type: "phr", meaning: "Chỉnh sửa (ảnh)", example: "" },
+            { word: "Vacation package", ipa: "", type: "phr", meaning: "Gói du lịch", example: "" },
+            { word: "Wait for seats", ipa: "", type: "phr", meaning: "Chờ chỗ ngồi", example: "" },
+            { word: "Wait in line", ipa: "", type: "phr", meaning: "Xếp hàng", example: "" },
+            { word: "Water the plants", ipa: "", type: "phr", meaning: "Tưới cây", example: "" },
+            { word: "Amuse", ipa: "/əˈmjuːz/", type: "v", meaning: "Làm vui vẻ", example: "" },
+            { word: "Artistic", ipa: "/ɑːrˈtɪs.tɪk/", type: "adj", meaning: "Có tính nghệ thuật", example: "" },
+            { word: "Donate", ipa: "/ˈdoʊ.neɪt/", type: "v", meaning: "Quyên góp", example: "" },
+            { word: "Even though", ipa: "", type: "phr", meaning: "Mặc dù", example: "" },
+            { word: "Exhibit", ipa: "/ɪɡˈzɪb.ɪt/", type: "v", meaning: "Triển lãm", example: "" },
+            { word: "Exist", ipa: "/ɪɡˈzɪst/", type: "v", meaning: "Tồn tại", example: "" },
+            { word: "Free admission", ipa: "", type: "phr", meaning: "Miễn phí vào cửa", example: "" },
+            { word: "Make oneself at home", ipa: "", type: "phr", meaning: "Cứ tự nhiên", example: "" },
+            { word: "Municipal", ipa: "/mjuːˈnɪs.ə.pəl/", type: "adj", meaning: "Thuộc thành phố", example: "" },
+            { word: "Several", ipa: "/ˈsev.ɚ.əl/", type: "adj", meaning: "Một vài", example: "" },
+            { word: "Spectator", ipa: "/spekˈteɪ.t̬ɚ/", type: "n", meaning: "Khán giả", example: "" },
+            { word: "Usher", ipa: "/ˈʌʃ.ɚ/", type: "n", meaning: "Người chỉ chỗ", example: "" },
+            { word: "Win a contest", ipa: "", type: "phr", meaning: "Thắng cuộc thi", example: "" },
+            { word: "Admission to", ipa: "", type: "phr", meaning: "Được nhận vào", example: "" },
+            { word: "Contestant", ipa: "/kənˈtes.tənt/", type: "n", meaning: "Thí sinh", example: "" },
+            { word: "Delight", ipa: "/dɪˈlaɪt/", type: "n", meaning: "Sự vui sướng", example: "" },
+            { word: "Do one's hair", ipa: "", type: "phr", meaning: "Làm tóc", example: "" },
+            { word: "Enjoyable", ipa: "/ɪnˈdʒɔɪ.ə.bəl/", type: "adj", meaning: "Thú vị", example: "" },
+            { word: "Group rate", ipa: "", type: "phr", meaning: "Giá nhóm", example: "" },
+            { word: "Head for", ipa: "", type: "phr", meaning: "Đi về phía", example: "" },
+            { word: "Out of order", ipa: "", type: "phr", meaning: "Hỏng", example: "" },
+            { word: "Periodical", ipa: "/ˌpɪr.iˈɑː.dɪ.kəl/", type: "n", meaning: "Tạp chí định kỳ", example: "" },
+            { word: "Playing field", ipa: "", type: "phr", meaning: "Sân chơi", example: "" },
+            { word: "Register for", ipa: "", type: "phr", meaning: "Đăng ký", example: "" },
+            { word: "Show up", ipa: "", type: "phr", meaning: "Xuất hiện", example: "" },
+            { word: "Take a tour", ipa: "", type: "phr", meaning: "Đi tham quan", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Be in line", ipa: "", type: "phr", meaning: "Xếp hàng", example: "" },
+            { word: "For a change", ipa: "", type: "phr", meaning: "Để thay đổi không khí", example: "" },
+            { word: "Pass the time", ipa: "", type: "phr", meaning: "Giết thời gian", example: "" },
+            { word: "Pose", ipa: "/poʊz/", type: "v", meaning: "Tạo dáng", example: "" },
+            { word: "Stay tuned", ipa: "", type: "phr", meaning: "Tiếp tục theo dõi", example: "" },
+            { word: "Vacate", ipa: "/veɪˈkeɪt/", type: "v", meaning: "Bỏ trống / Rời khỏi", example: "" },
+            { word: "Appreciative", ipa: "/əˈpriː.ʃə.tɪv/", type: "adj", meaning: "Biết thưởng thức", example: "" },
+            { word: "Casually", ipa: "/ˈkæʒ.u.ə.li/", type: "adv", meaning: "Tình cờ", example: "" },
+            { word: "Enlightening", ipa: "/ɪnˈlaɪ.t̬ən.ɪŋ/", type: "adj", meaning: "Khai sáng", example: "" },
+            { word: "Enthusiastically", ipa: "/ɪnˌθuː.ziˈæs.tɪ.kəl.i/", type: "adv", meaning: "Nhiệt tình", example: "" },
+            { word: "Excellence", ipa: "/ˈek.səl.əns/", type: "n", meaning: "Sự xuất sắc", example: "" },
+            { word: "Excursion", ipa: "/ɪkˈskɝː.ʃən/", type: "n", meaning: "Chuyến tham quan", example: "" },
+            { word: "Festivity", ipa: "/fesˈtɪv.ə.t̬i/", type: "n", meaning: "Lễ hội", example: "" },
+            { word: "Flock", ipa: "/flɑːk/", type: "n/v", meaning: "Đám đông / Tụ tập", example: "" },
+            { word: "Intriguingly", ipa: "/ɪnˈtriː.ɡɪŋ.li/", type: "adv", meaning: "Thú vị, tò mò", example: "" },
+            { word: "Leg room", ipa: "", type: "phr", meaning: "Chỗ để chân", example: "" },
+            { word: "Mural", ipa: "/ˈmjʊr.əl/", type: "n", meaning: "Tranh tường", example: "" },
+            { word: "Portrait", ipa: "/ˈpɔːr.trɪt/", type: "n", meaning: "Chân dung", example: "" },
+            { word: "Publication", ipa: "/ˌpʌb.ləˈkeɪ.ʃən/", type: "n", meaning: "Ấn phẩm", example: "" },
+            { word: "Sculpture", ipa: "/ˈskʌlp.tʃɚ/", type: "n", meaning: "Điêu khắc", example: "" },
+            { word: "Transferable", ipa: "/trænsˈfɝː.ə.bəl/", type: "adj", meaning: "Có thể chuyển nhượng", example: "" },
+            { word: "Unsanitary", ipa: "/ʌnˈsæn.ə.ter.i/", type: "adj", meaning: "Mất vệ sinh", example: "" },
+            { word: "Be in the mood for", ipa: "", type: "phr", meaning: "Có hứng thú với", example: "" },
+            { word: "Botanical garden", ipa: "", type: "phr", meaning: "Vườn bách thảo", example: "" },
+            { word: "Censorship", ipa: "/ˈsen.sɚ.ʃɪp/", type: "n", meaning: "Sự kiểm duyệt", example: "" },
+            { word: "Have yet to", ipa: "", type: "phr", meaning: "Vẫn chưa", example: "" },
+            { word: "Intermission", ipa: "/ˌɪn.t̬ɚˈmɪʃ.ən/", type: "n", meaning: "Giờ giải lao", example: "" },
+            { word: "Memoirs", ipa: "/ˈmem.wɑːrz/", type: "n", meaning: "Hồi ký", example: "" },
+            { word: "Must-see", ipa: "", type: "phr", meaning: "Đáng xem", example: "" },
+            { word: "Rally", ipa: "/ˈræl.i/", type: "n", meaning: "Đại hội / Tập hợp", example: "" },
+            { word: "Ridiculous", ipa: "/rɪˈdɪk.jə.ləs/", type: "adj", meaning: "Lố bịch", example: "" },
+            { word: "Roam around", ipa: "", type: "phr", meaning: "Đi lang thang", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>'; return; }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+                tr.innerHTML = `<td class="col-stt">${index + 1}</td><td class="col-word">${item.word}</td><td class="col-ipa">${item.ipa}</td><td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td><td class="col-mean">${item.meaning}</td><td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => item.word.toLowerCase().includes(keyword) || item.meaning.toLowerCase().includes(keyword));
+            renderTable(filteredData);
+        });
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

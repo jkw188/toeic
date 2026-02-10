@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 10: Shopping - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #EC4899; --secondary-bg: #FDF2F8; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #FDF2F8; color: #DB2777; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 10: Mua sắm</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Purchase", ipa: "/ˈpɝː.tʃəs/", type: "v", meaning: "Mua", example: "Purchased a laptop computer." },
+            { word: "Purchase", ipa: "/ˈpɝː.tʃəs/", type: "n", meaning: "Việc mua hàng", example: "For every purchase of $100." },
+            { word: "Buy", ipa: "/baɪ/", type: "v (syn)", meaning: "Mua", example: "" },
+            { word: "Installment", ipa: "/ɪnˈstɔːl.mənt/", type: "n", meaning: "Sự trả góp", example: "Pay in monthly installments." },
+            { word: "Affordable", ipa: "/əˈfɔːr.də.bəl/", type: "adj", meaning: "Giá phải chăng", example: "Launched an affordable sedan." },
+            { word: "Afford", ipa: "/əˈfɔːrd/", type: "v (der)", meaning: "Đủ khả năng chi trả", example: "" },
+            { word: "Affordability", ipa: "/əˌfɔːr.dəˈbɪl.ə.t̬i/", type: "n (der)", meaning: "Khả năng chi trả", example: "" },
+            { word: "Reasonable", ipa: "/ˈriː.zən.ə.bəl/", type: "adj (syn)", meaning: "Hợp lý", example: "" },
+            { word: "Expensive", ipa: "/ɪkˈspen.sɪv/", type: "adj (ant)", meaning: "Đắt tiền", example: "" },
+            { word: "Exactly", ipa: "/ɪɡˈzækt.li/", type: "adv", meaning: "Chính xác", example: "Decide exactly what style fits." },
+            { word: "Exact", ipa: "/ɪɡˈzækt/", type: "adj (der)", meaning: "Chính xác", example: "" },
+            { word: "Precisely", ipa: "/prəˈsaɪs.li/", type: "adv (syn)", meaning: "Chính xác", example: "" },
+            { word: "Auction", ipa: "/ˈɑːk.ʃən/", type: "n", meaning: "Cuộc bán đấu giá", example: "Sold at the auction." },
+            { word: "Authentic", ipa: "/ɑːˈθen.tɪk/", type: "adj", meaning: "Đích thực, thật", example: "Serves authentic Spanish cuisine." },
+            { word: "Genuine", ipa: "/ˈdʒen.ju.ɪn/", type: "adj (syn)", meaning: "Thật", example: "" },
+            { word: "Fake", ipa: "/feɪk/", type: "adj (ant)", meaning: "Giả", example: "" },
+            { word: "Charge", ipa: "/tʃɑːrdʒ/", type: "n", meaning: "Phí / Trách nhiệm", example: "Includes shipping charges." },
+            { word: "Charge", ipa: "/tʃɑːrdʒ/", type: "v", meaning: "Thu phí / Ghi nợ", example: "Charged the fee to her credit card." },
+            { word: "Expense", ipa: "/ɪkˈspens/", type: "n (syn)", meaning: "Chi phí", example: "" },
+            { word: "Notice", ipa: "/ˈnoʊ.t̬ɪs/", type: "n", meaning: "Thông báo", example: "Effective until further notice." },
+            { word: "Notify", ipa: "/ˈnoʊ.t̬ə.faɪ/", type: "v (der)", meaning: "Thông báo", example: "" },
+            { word: "Noticeable", ipa: "/ˈnoʊ.t̬ɪ.sə.bəl/", type: "adj (der)", meaning: "Đáng chú ý", example: "" },
+            { word: "Experienced", ipa: "/ɪkˈspɪr.i.ənst/", type: "adj", meaning: "Có kinh nghiệm", example: "The most experienced salesperson." },
+            { word: "Instruction", ipa: "/ɪnˈstrʌk.ʃən/", type: "n", meaning: "Lời chỉ dẫn", example: "Gives instructions for returning items." },
+            { word: "Instructional", ipa: "/ɪnˈstrʌk.ʃən.əl/", type: "adj (der)", meaning: "Thuộc hướng dẫn", example: "" },
+            { word: "Expert", ipa: "/ˈek.spɝːt/", type: "n", meaning: "Chuyên gia", example: "An expert at finding bargains." },
+            { word: "Expert", ipa: "/ˈek.spɝːt/", type: "adj", meaning: "Thành thạo", example: "An expert designer." },
+            { word: "Expertly", ipa: "/ˈek.spɝːt.li/", type: "adv (der)", meaning: "Một cách thành thạo", example: "" },
+            { word: "Warranty", ipa: "/ˈwɔːr.ən.t̬i/", type: "n", meaning: "Giấy bảo hành", example: "Under warranty for two years." },
+            { word: "Refund", ipa: "/ˈriː.fʌnd/", type: "n", meaning: "Sự hoàn tiền", example: "Get a full refund." },
+            { word: "Refund", ipa: "/rɪˈfʌnd/", type: "v", meaning: "Hoàn lại", example: "" },
+            { word: "Refundable", ipa: "/rɪˈfʌn.də.bəl/", type: "adj (der)", meaning: "Có thể hoàn trả", example: "" },
+            { word: "Subscriber", ipa: "/səbˈskraɪ.bɚ/", type: "n", meaning: "Người đăng ký", example: "Millions of subscribers." },
+            { word: "Subscription", ipa: "/səbˈskrɪp.ʃən/", type: "n (der)", meaning: "Sự đăng ký", example: "" },
+            { word: "Delivery", ipa: "/dɪˈlɪv.ɚ.i/", type: "n", meaning: "Sự giao hàng", example: "Guarantee delivery within three days." },
+            { word: "Deliver", ipa: "/dɪˈlɪv.ɚ/", type: "v (der)", meaning: "Giao hàng", example: "" },
+            { word: "Price", ipa: "/praɪs/", type: "n", meaning: "Giá cả", example: "A retail price of $150." },
+            { word: "Receipt", ipa: "/rɪˈsiːt/", type: "n", meaning: "Biên lai", example: "Original receipt is required." },
+            { word: "Receive", ipa: "/rɪˈsiːv/", type: "v (der)", meaning: "Nhận", example: "" },
+            { word: "Offer", ipa: "/ˈɑː.fɚ/", type: "v", meaning: "Cung cấp, tặng", example: "Offers gift cards." },
+            { word: "Offer", ipa: "/ˈɑː.fɚ/", type: "n", meaning: "Lời đề nghị, ưu đãi", example: "Promotional offers." },
+            { word: "Provide", ipa: "/prəˈvaɪd/", type: "v (syn)", meaning: "Cung cấp", example: "" },
+            { word: "Carefully", ipa: "/ˈker.fəl.i/", type: "adv", meaning: "Cẩn thận", example: "Follow directions carefully." },
+            { word: "Careful", ipa: "/ˈker.fəl/", type: "adj (der)", meaning: "Cẩn thận", example: "" },
+            { word: "Carelessly", ipa: "/ˈker.ləs.li/", type: "adv (ant)", meaning: "Bất cẩn", example: "" },
+            { word: "Benefit", ipa: "/ˈben.ə.fɪt/", type: "n", meaning: "Lợi ích, ưu đãi", example: "Offers many benefits." },
+            { word: "Benefit", ipa: "/ˈben.ə.fɪt/", type: "v", meaning: "Được hưởng lợi", example: "Shoppers benefit from coupons." },
+            { word: "Beneficial", ipa: "/ˌben.əˈfɪʃ.əl/", type: "adj (der)", meaning: "Có lợi", example: "" },
+            { word: "Beneficiary", ipa: "/ˌben.əˈfɪʃ.i.er.i/", type: "n (der)", meaning: "Người thụ hưởng", example: "" },
+            { word: "Exclusively", ipa: "/ɪkˈskluː.sɪv.li/", type: "adv", meaning: "Dành riêng, duy nhất", example: "Available exclusively to members." },
+            { word: "Exclusive", ipa: "/ɪkˈskluː.sɪv/", type: "adj (der)", meaning: "Độc quyền", example: "" },
+            { word: "Exclude", ipa: "/ɪkˈskluːd/", type: "v (der)", meaning: "Loại trừ", example: "" },
+            { word: "Solely", ipa: "/ˈsoʊl.li/", type: "adv (syn)", meaning: "Duy nhất", example: "" },
+            { word: "Description", ipa: "/dɪˈskrɪp.ʃən/", type: "n", meaning: "Sự mô tả", example: "A more extensive description." },
+            { word: "Describe", ipa: "/dɪˈskraɪb/", type: "v (der)", meaning: "Mô tả", example: "" },
+            { word: "Account", ipa: "/əˈkaʊnt/", type: "n (syn)", meaning: "Bản báo cáo", example: "" },
+            { word: "Relatively", ipa: "/ˈrel.ə.t̬ɪv.li/", type: "adv", meaning: "Tương đối", example: "A relatively lenient return policy." },
+            { word: "Relative", ipa: "/ˈrel.ə.t̬ɪv/", type: "adj (der)", meaning: "Tương đối", example: "" },
+            { word: "Spare", ipa: "/sper/", type: "v", meaning: "Tiết kiệm, dành ra", example: "Spared no expense." },
+            { word: "Spare", ipa: "/sper/", type: "adj", meaning: "Dự phòng", example: "Order spare parts." },
+            { word: "Preparation", ipa: "/ˌprep.əˈreɪ.ʃən/", type: "n", meaning: "Sự chuẩn bị", example: "Preparations are under way." },
+            { word: "Area", ipa: "/ˈer.i.ə/", type: "n", meaning: "Khu vực", example: "Stores in this area." },
+            { word: "Site", ipa: "/saɪt/", type: "n (syn)", meaning: "Địa điểm", example: "" },
+            { word: "Clearance", ipa: "/ˈklɪr.əns/", type: "n", meaning: "Sự xả hàng / Giấy phép", example: "A clearance sale." },
+            { word: "Authorization", ipa: "/ˌɑː.θɚ.əˈzeɪ.ʃən/", type: "n (syn)", meaning: "Sự cho phép", example: "" },
+            { word: "Alter", ipa: "/ˈɑːl.tɚ/", type: "v", meaning: "Thay đổi, sửa đổi", example: "Length of pants be altered." },
+            { word: "Alteration", ipa: "/ˌɑːl.təˈreɪ.ʃən/", type: "n (der)", meaning: "Sự thay đổi", example: "" },
+            { word: "Modify", ipa: "/ˈmɑː.də.faɪ/", type: "v (syn)", meaning: "Sửa đổi", example: "" },
+            { word: "Apply", ipa: "/əˈplaɪ/", type: "v", meaning: "Áp dụng / Ứng tuyển", example: "Applied the discount." },
+            { word: "Application", ipa: "/ˌæp.ləˈkeɪ.ʃən/", type: "n (der)", meaning: "Đơn ứng tuyển", example: "" },
+            { word: "Applicant", ipa: "/ˈæp.lə.kənt/", type: "n (der)", meaning: "Ứng viên", example: "" },
+            { word: "Applicable", ipa: "/əˈplɪk.ə.bəl/", type: "adj (der)", meaning: "Có thể áp dụng", example: "" },
+            { word: "Mutually", ipa: "/ˈmjuː.tʃu.ə.li/", type: "adv", meaning: "Lẫn nhau", example: "Mutually agreeable price." },
+            { word: "Method", ipa: "/ˈmeθ.əd/", type: "n", meaning: "Phương pháp", example: "Method of payment." },
+            { word: "Approach", ipa: "/əˈproʊtʃ/", type: "n (syn)", meaning: "Cách tiếp cận", example: "" },
+            { word: "Acceptable", ipa: "/əkˈsep.tə.bəl/", type: "adj", meaning: "Chấp nhận được", example: "Acceptable as business attire." },
+            { word: "Fine", ipa: "/faɪn/", type: "adj (syn)", meaning: "Ổn", example: "" },
+            { word: "Desire", ipa: "/dɪˈzaɪr/", type: "n", meaning: "Niềm khao khát", example: "Create a desire in consumers." },
+            { word: "Desire", ipa: "/dɪˈzaɪr/", type: "v", meaning: "Ao ước", example: "Desire the latest devices." },
+            { word: "Desirable", ipa: "/dɪˈzaɪr.ə.bəl/", type: "adj (der)", meaning: "Đáng khao khát", example: "" },
+            { word: "Redeemable", ipa: "/rɪˈdiː.mə.bəl/", type: "adj", meaning: "Có thể quy đổi", example: "Redeemable at any branch." },
+            { word: "Redeem", ipa: "/rɪˈdiːm/", type: "v (der)", meaning: "Quy đổi", example: "" },
+            { word: "Officially", ipa: "/əˈfɪʃ.əl.i/", type: "adv", meaning: "Chính thức", example: "Officially open next month." },
+            { word: "Official", ipa: "/əˈfɪʃ.əl/", type: "adj (der)", meaning: "Chính thức", example: "" },
+            { word: "Formally", ipa: "/ˈfɔːr.mə.li/", type: "adv (syn)", meaning: "Trịnh trọng", example: "" },
+            { word: "Consumption", ipa: "/kənˈsʌmp.ʃən/", type: "n", meaning: "Sự tiêu thụ", example: "Consumption of high-end products." },
+            { word: "Qualify", ipa: "/ˈkwɑː.lə.faɪ/", type: "v", meaning: "Đủ điều kiện", example: "Qualify for credit cards." },
+            { word: "Qualification", ipa: "/ˌkwɑː.lə.fəˈkeɪ.ʃən/", type: "n (der)", meaning: "Trình độ", example: "" },
+            { word: "Qualified", ipa: "/ˈkwɑː.lə.faɪd/", type: "adj (der)", meaning: "Đủ khả năng", example: "" },
+            { word: "Fabric", ipa: "/ˈfæb.rɪk/", type: "n", meaning: "Vải", example: "Made of natural fabric." },
+            { word: "Valid", ipa: "/ˈvæl.ɪd/", type: "adj", meaning: "Có hiệu lực, hợp lệ", example: "A valid receipt." },
+            { word: "Effective", ipa: "/əˈfek.tɪv/", type: "adj (syn)", meaning: "Hiệu quả", example: "" },
+            { word: "Invalid", ipa: "/ɪnˈvæl.ɪd/", type: "adj (ant)", meaning: "Không hợp lệ", example: "" },
+            { word: "Vendor", ipa: "/ˈven.dɚ/", type: "n", meaning: "Người bán hàng, nhà cung cấp", example: "Street filled with vendors." },
+
+            // --- BASIC / EXTRAS ---
+            { word: "Bakery", ipa: "/ˈbeɪ.kɚ.i/", type: "n", meaning: "Tiệm bánh", example: "" },
+            { word: "Best-selling", ipa: "/ˌbestˈsel.ɪŋ/", type: "adj", meaning: "Bán chạy nhất", example: "" },
+            { word: "Cashier", ipa: "/kæˈʃɪr/", type: "n", meaning: "Thu ngân", example: "" },
+            { word: "Clothing", ipa: "/ˈkloʊ.ðɪŋ/", type: "n", meaning: "Quần áo", example: "" },
+            { word: "Corner", ipa: "/ˈkɔːr.nɚ/", type: "n", meaning: "Góc", example: "" },
+            { word: "Costume", ipa: "/ˈkɑː.stuːm/", type: "n", meaning: "Trang phục", example: "" },
+            { word: "Free", ipa: "/friː/", type: "adj", meaning: "Miễn phí", example: "" },
+            { word: "Label", ipa: "/ˈleɪ.bəl/", type: "n", meaning: "Nhãn", example: "" },
+            { word: "Necklace", ipa: "/ˈnek.ləs/", type: "n", meaning: "Vòng cổ", example: "" },
+            { word: "Photography equipment", ipa: "", type: "phr", meaning: "Thiết bị nhiếp ảnh", example: "" },
+            { word: "Shelf", ipa: "/ʃelf/", type: "n", meaning: "Cái kệ", example: "" },
+            { word: "Shop", ipa: "/ʃɑːp/", type: "n", meaning: "Cửa hàng", example: "" },
+            { word: "Shopper", ipa: "/ˈʃɑː.pɚ/", type: "n", meaning: "Người mua sắm", example: "" },
+            { word: "Size", ipa: "/saɪz/", type: "n", meaning: "Kích cỡ", example: "" },
+            { word: "Sunglasses", ipa: "/ˈsʌnˌɡlæs.ɪz/", type: "n", meaning: "Kính râm", example: "" },
+            { word: "Supermarket", ipa: "/ˈsuː.pɚˌmɑːr.kɪt/", type: "n", meaning: "Siêu thị", example: "" },
+            { word: "Wear", ipa: "/wer/", type: "v", meaning: "Mặc", example: "" },
+            { word: "Basis", ipa: "/ˈbeɪ.sɪs/", type: "n", meaning: "Cơ sở / Nền tảng", example: "" },
+            { word: "Brand", ipa: "/brænd/", type: "n", meaning: "Thương hiệu", example: "" },
+            { word: "Department store", ipa: "", type: "phr", meaning: "Cửa hàng bách hóa", example: "" },
+            { word: "Discount store", ipa: "", type: "phr", meaning: "Cửa hàng giảm giá", example: "" },
+            { word: "Display", ipa: "/dɪˈspleɪ/", type: "v/n", meaning: "Trưng bày", example: "" },
+            { word: "Fit", ipa: "/fɪt/", type: "v", meaning: "Vừa vặn", example: "" },
+            { word: "Fully", ipa: "/ˈfʊl.i/", type: "adv", meaning: "Hoàn toàn", example: "" },
+            { word: "Grocery", ipa: "/ˈɡroʊ.sɚ.i/", type: "n", meaning: "Cửa hàng tạp hóa", example: "" },
+            { word: "Keep", ipa: "/kiːp/", type: "v", meaning: "Giữ", example: "" },
+            { word: "Store", ipa: "/stɔːr/", type: "n/v", meaning: "Cửa hàng / Lưu trữ", example: "" },
+            { word: "Tax", ipa: "/tæks/", type: "n", meaning: "Thuế", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "At the moment", ipa: "", type: "phr", meaning: "Ngay lúc này", example: "" },
+            { word: "Celebrate", ipa: "/ˈsel.ə.breɪt/", type: "v", meaning: "Kỷ niệm", example: "" },
+            { word: "Decorative item", ipa: "", type: "phr", meaning: "Vật trang trí", example: "" },
+            { word: "Discounted coupon", ipa: "", type: "phr", meaning: "Phiếu giảm giá", example: "" },
+            { word: "For sale", ipa: "", type: "phr", meaning: "Để bán", example: "" },
+            { word: "Half price", ipa: "", type: "phr", meaning: "Nửa giá", example: "" },
+            { word: "Have A strapped to shoulder", ipa: "", type: "phr", meaning: "Đeo A trên vai", example: "" },
+            { word: "Instead", ipa: "/ɪnˈsted/", type: "adv", meaning: "Thay vì", example: "" },
+            { word: "Make a purchase", ipa: "", type: "phr", meaning: "Mua hàng", example: "" },
+            { word: "Make no difference", ipa: "", type: "phr", meaning: "Không có gì khác biệt", example: "" },
+            { word: "Make payment", ipa: "", type: "phr", meaning: "Thanh toán", example: "" },
+            { word: "Not that I'm aware of", ipa: "", type: "phr", meaning: "Tôi không biết điều đó", example: "" },
+            { word: "Out of town", ipa: "", type: "phr", meaning: "Đi vắng / Ngoài thành phố", example: "" },
+            { word: "Overcoat", ipa: "/ˈoʊ.vɚ.koʊt/", type: "n", meaning: "Áo khoác dài", example: "" },
+            { word: "Pay in cash", ipa: "", type: "phr", meaning: "Trả tiền mặt", example: "" },
+            { word: "Put out for display", ipa: "", type: "phr", meaning: "Đem ra trưng bày", example: "" },
+            { word: "Shoelace", ipa: "/ˈʃuː.leɪs/", type: "n", meaning: "Dây giày", example: "" },
+            { word: "Shopkeeper", ipa: "/ˈʃɑːpˌkiː.pɚ/", type: "n", meaning: "Chủ cửa hàng", example: "" },
+            { word: "Showroom", ipa: "/ˈʃoʊ.ruːm/", type: "n", meaning: "Phòng trưng bày", example: "" },
+            { word: "Sleeve", ipa: "/sliːv/", type: "n", meaning: "Tay áo", example: "" },
+            { word: "Souvenir", ipa: "/ˌsuː.vəˈnɪr/", type: "n", meaning: "Quà lưu niệm", example: "" },
+            { word: "Stack", ipa: "/stæk/", type: "n", meaning: "Đống, chồng", example: "" },
+            { word: "Stand in line", ipa: "", type: "phr", meaning: "Đứng xếp hàng", example: "" },
+            { word: "Storefront", ipa: "/ˈstɔːr.frʌnt/", type: "n", meaning: "Mặt tiền cửa hàng", example: "" },
+            { word: "Stylish", ipa: "/ˈstaɪ.lɪʃ/", type: "adj", meaning: "Sành điệu", example: "" },
+            { word: "Tag", ipa: "/tæɡ/", type: "n", meaning: "Nhãn, thẻ", example: "" },
+            { word: "Take the order", ipa: "", type: "phr", meaning: "Nhận đơn hàng", example: "" },
+            { word: "Try on", ipa: "", type: "phr", meaning: "Thử đồ", example: "" },
+            { word: "Underline", ipa: "/ˌʌn.dɚˈlaɪn/", type: "v", meaning: "Gạch chân", example: "" },
+            { word: "Watch band", ipa: "", type: "phr", meaning: "Dây đồng hồ", example: "" },
+            { word: "Window-shopping", ipa: "/ˈwɪn.doʊˌʃɑː.pɪŋ/", type: "n", meaning: "Đi ngắm đồ (không mua)", example: "" },
+            { word: "Afford to do", ipa: "", type: "phr", meaning: "Đủ khả năng làm gì", example: "" },
+            { word: "Apparel", ipa: "/əˈper.əl/", type: "n", meaning: "Quần áo", example: "" },
+            { word: "Dairy products", ipa: "", type: "phr", meaning: "Sản phẩm từ sữa", example: "" },
+            { word: "Elsewhere", ipa: "/ˈels.wer/", type: "adv", meaning: "Nơi khác", example: "" },
+            { word: "Gift certificate", ipa: "", type: "phr", meaning: "Phiếu quà tặng", example: "" },
+            { word: "Glassware", ipa: "/ˈɡlæs.wer/", type: "n", meaning: "Đồ thủy tinh", example: "" },
+            { word: "Inexpensive", ipa: "/ˌɪn.ɪkˈspen.sɪv/", type: "adj", meaning: "Không đắt", example: "" },
+            { word: "Lately", ipa: "/ˈleɪt.li/", type: "adv", meaning: "Gần đây", example: "" },
+            { word: "Latest", ipa: "/ˈleɪ.t̬ɪst/", type: "adj", meaning: "Mới nhất", example: "" },
+            { word: "Luxury", ipa: "/ˈlʌk.ʃɚ.i/", type: "n", meaning: "Sự sang trọng", example: "" },
+            { word: "Outerwear", ipa: "/ˈaʊ.t̬ɚ.wer/", type: "n", meaning: "Áo khoác ngoài", example: "" },
+            { word: "Outlet", ipa: "/ˈaʊt.let/", type: "n", meaning: "Cửa hàng tiêu thụ", example: "" },
+            { word: "Portable", ipa: "/ˈpɔːr.t̬ə.bəl/", type: "adj", meaning: "Xách tay / Di động", example: "" },
+            { word: "Readership", ipa: "/ˈriː.dɚ.ʃɪp/", type: "n", meaning: "Độc giả", example: "" },
+            { word: "Readily", ipa: "/ˈred.əl.i/", type: "adv", meaning: "Sẵn sàng / Dễ dàng", example: "" },
+            { word: "Refundable", ipa: "/rɪˈfʌn.də.bəl/", type: "adj", meaning: "Có thể hoàn tiền", example: "" },
+            { word: "Value", ipa: "/ˈvæl.juː/", type: "n", meaning: "Giá trị", example: "" },
+            { word: "A selection of", ipa: "", type: "phr", meaning: "Một tuyển tập", example: "" },
+            { word: "A variety of", ipa: "", type: "phr", meaning: "Nhiều loại", example: "" },
+            { word: "At a discounted price", ipa: "", type: "phr", meaning: "Với giá giảm", example: "" },
+            { word: "By check", ipa: "", type: "phr", meaning: "Bằng séc", example: "" },
+            { word: "By credit card", ipa: "", type: "phr", meaning: "Bằng thẻ tín dụng", example: "" },
+            { word: "By no means", ipa: "", type: "phr", meaning: "Tuyệt đối không", example: "" },
+            { word: "Extra charge", ipa: "", type: "phr", meaning: "Phụ phí", example: "" },
+            { word: "Get in line", ipa: "", type: "phr", meaning: "Xếp hàng", example: "" },
+            { word: "Give a discount", ipa: "", type: "phr", meaning: "Giảm giá", example: "" },
+            { word: "In cash", ipa: "", type: "phr", meaning: "Bằng tiền mặt", example: "" },
+            { word: "Merchandise", ipa: "/ˈmɝː.tʃən.daɪs/", type: "n", meaning: "Hàng hóa", example: "" },
+            { word: "No later than", ipa: "", type: "phr", meaning: "Muộn nhất là", example: "" },
+            { word: "Showcase", ipa: "/ˈʃoʊ.keɪs/", type: "n", meaning: "Tủ trưng bày / Buổi giới thiệu", example: "" },
+            { word: "Textile", ipa: "/ˈtek.staɪl/", type: "n", meaning: "Dệt may", example: "" },
+            { word: "Thrifty", ipa: "/ˈθrɪf.ti/", type: "adj", meaning: "Tiết kiệm", example: "" },
+            { word: "Under warranty", ipa: "", type: "phr", meaning: "Được bảo hành", example: "" },
+            { word: "Valid for", ipa: "", type: "phr", meaning: "Có hiệu lực cho", example: "" },
+            { word: "Voucher", ipa: "/ˈvaʊ.tʃɚ/", type: "n", meaning: "Phiếu mua hàng", example: "" },
+            { word: "Wholesale", ipa: "/ˈhoʊl.seɪl/", type: "adj", meaning: "Bán buôn", example: "" },
+            { word: "Wrap a present", ipa: "", type: "phr", meaning: "Gói quà", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Automotive repair shop", ipa: "", type: "phr", meaning: "Xưởng sửa xe", example: "" },
+            { word: "Awning", ipa: "/ˈɑː.nɪŋ/", type: "n", meaning: "Mái hiên", example: "" },
+            { word: "Cash register", ipa: "", type: "phr", meaning: "Máy tính tiền", example: "" },
+            { word: "Cooking utensil", ipa: "", type: "phr", meaning: "Dụng cụ nấu ăn", example: "" },
+            { word: "Display case", ipa: "", type: "phr", meaning: "Tủ trưng bày", example: "" },
+            { word: "Garment", ipa: "/ˈɡɑːr.mənt/", type: "n", meaning: "Quần áo", example: "" },
+            { word: "Look different", ipa: "", type: "phr", meaning: "Trông khác biệt", example: "" },
+            { word: "Tailor", ipa: "/ˈteɪ.lɚ/", type: "n", meaning: "Thợ may", example: "" },
+            { word: "Wind a watch", ipa: "", type: "phr", meaning: "Lên dây cót đồng hồ", example: "" },
+            { word: "Collectable", ipa: "/kəˈlek.tə.bəl/", type: "adj", meaning: "Đáng sưu tầm", example: "" },
+            { word: "Conversely", ipa: "/kənˈvɝːs.li/", type: "adv", meaning: "Ngược lại", example: "" },
+            { word: "Dilute", ipa: "/daɪˈluːt/", type: "v", meaning: "Pha loãng", example: "" },
+            { word: "Exposition", ipa: "/ˌek.spəˈzɪʃ.ən/", type: "n", meaning: "Cuộc triển lãm / Sự phơi bày", example: "" },
+            { word: "Generic", ipa: "/dʒəˈner.ɪk/", type: "adj", meaning: "Chung / Không thương hiệu", example: "" },
+            { word: "High-end", ipa: "/ˌhaɪˈend/", type: "adj", meaning: "Cao cấp", example: "" },
+            { word: "Merchant", ipa: "/ˈmɝː.tʃənt/", type: "n", meaning: "Thương gia", example: "" },
+            { word: "Observably", ipa: "/əbˈzɝː.və.bli/", type: "adv", meaning: "Dễ thấy", example: "" },
+            { word: "Predictably", ipa: "/prɪˈdɪk.tə.bli/", type: "adv", meaning: "Như dự đoán", example: "" },
+            { word: "Secondhand", ipa: "/ˌsek.əndˈhænd/", type: "adj", meaning: "Đồ cũ", example: "" },
+            { word: "Stylishly", ipa: "/ˈstaɪ.lɪʃ.li/", type: "adv", meaning: "Một cách sành điệu", example: "" },
+            { word: "At a substantial discount", ipa: "", type: "phr", meaning: "Giảm giá mạnh", example: "" },
+            { word: "Bargain over prices", ipa: "", type: "phr", meaning: "Mặc cả giá", example: "" },
+            { word: "Embellish", ipa: "/ɪmˈbel.ɪʃ/", type: "v", meaning: "Trang trí / Thêu dệt", example: "" },
+            { word: "Embroider", ipa: "/ɪmˈbrɔɪ.dɚ/", type: "v", meaning: "Thêu", example: "" },
+            { word: "Equivalent", ipa: "/ɪˈkwɪv.əl.ənt/", type: "adj", meaning: "Tương đương", example: "" },
+            { word: "Exhilarating", ipa: "/ɪɡˈzɪl.ə.reɪ.tɪŋ/", type: "adj", meaning: "Làm phấn chấn", example: "" },
+            { word: "Exorbitant price", ipa: "", type: "phr", meaning: "Giá cắt cổ", example: "" },
+            { word: "Exquisite", ipa: "/ɪkˈskwɪz.ɪt/", type: "adj", meaning: "Tinh tế", example: "" },
+            { word: "Extravagance", ipa: "/ɪkˈstræv.ə.ɡəns/", type: "n", meaning: "Sự phung phí", example: "" },
+            { word: "Lavish", ipa: "/ˈlæv.ɪʃ/", type: "adj", meaning: "Xa hoa", example: "" },
+            { word: "Redeem", ipa: "/rɪˈdiːm/", type: "v", meaning: "Quy đổi / Chuộc lại", example: "" },
+            { word: "Undercharge", ipa: "/ˌʌn.dɚˈtʃɑːrdʒ/", type: "v", meaning: "Tính giá thấp", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

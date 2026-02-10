@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 22: Meetings - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #7C3AED; --secondary-bg: #F5F3FF; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #F5F3FF; color: #7C3AED; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 22: Hội họp</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Agenda", ipa: "/əˈdʒen.də/", type: "n", meaning: "Chương trình nghị sự", example: "Planned the agenda." },
+            { word: "Convene", ipa: "/kənˈviːn/", type: "v", meaning: "Triệu tập, nhóm họp", example: "CEOs will convene tomorrow." },
+            { word: "Convention", ipa: "/kənˈven.ʃən/", type: "n (der)", meaning: "Hội nghị", example: "" },
+            { word: "Refute", ipa: "/rɪˈfjuːt/", type: "v", meaning: "Bác bỏ, bẻ lại", example: "Did not refute the allegations." },
+            { word: "Refutation", ipa: "/ˌref.juˈteɪ.ʃən/", type: "n (der)", meaning: "Sự bác bỏ", example: "" },
+            { word: "Coordination", ipa: "/koʊˌɔːr.dənˈeɪ.ʃən/", type: "n", meaning: "Sự phối hợp", example: "Taken on the coordination." },
+            { word: "Coordinate", ipa: "/koʊˈɔːr.dən.eɪt/", type: "v (der)", meaning: "Phối hợp", example: "" },
+            { word: "Coordinator", ipa: "/koʊˈɔːr.dən.eɪ.t̬ɚ/", type: "n (der)", meaning: "Điều phối viên", example: "" },
+            { word: "Unanimous", ipa: "/juːˈnæn.ə.məs/", type: "adj", meaning: "Nhất trí, đồng lòng", example: "Gained unanimous support." },
+            { word: "Unanimously", ipa: "/juːˈnæn.ə.məs.li/", type: "adv (der)", meaning: "Nhất trí", example: "" },
+            { word: "Convince", ipa: "/kənˈvɪns/", type: "v", meaning: "Thuyết phục", example: "Convinced the investors." },
+            { word: "Convincing", ipa: "/kənˈvɪn.sɪŋ/", type: "adj (der)", meaning: "Có sức thuyết phục", example: "" },
+            { word: "Convinced", ipa: "/kənˈvɪnst/", type: "adj (der)", meaning: "Tin chắc", example: "" },
+            { word: "Consensus", ipa: "/kənˈsen.səs/", type: "n", meaning: "Sự đồng thuận", example: "Reached a consensus." },
+            { word: "Consent", ipa: "/kənˈsent/", type: "v/n (der)", meaning: "Đồng ý", example: "" },
+            { word: "Agreement", ipa: "/əˈɡriː.mənt/", type: "n (syn)", meaning: "Sự đồng ý", example: "" },
+            { word: "Defer", ipa: "/dɪˈfɝː/", type: "v", meaning: "Trì hoãn", example: "Deadline has been deferred." },
+            { word: "Postpone", ipa: "/poʊstˈpoʊn/", type: "v (syn)", meaning: "Hoãn", example: "" },
+            { word: "Delay", ipa: "/dɪˈleɪ/", type: "v (syn)", meaning: "Làm chậm trễ", example: "" },
+            { word: "Usually", ipa: "/ˈjuː.ʒu.ə.li/", type: "adv", meaning: "Thường xuyên", example: "Usually discuss the schedule." },
+            { word: "Usual", ipa: "/ˈjuː.ʒu.əl/", type: "adj (der)", meaning: "Thông thường", example: "" },
+            { word: "Unusually", ipa: "/ʌnˈjuː.ʒu.ə.li/", type: "adv (ant)", meaning: "Bất thường", example: "" },
+            { word: "Reschedule", ipa: "/ˌriːˈsked.juːl/", type: "v", meaning: "Dời lịch, sắp xếp lại", example: "Conference may be rescheduled." },
+            { word: "Meeting", ipa: "/ˈmiː.t̬ɪŋ/", type: "n", meaning: "Cuộc họp", example: "Meeting will begin at 10." },
+            { word: "Determine", ipa: "/dɪˈtɝː.mɪn/", type: "v", meaning: "Xác định, quyết định", example: "Determine the cause." },
+            { word: "Determination", ipa: "/dɪˌtɝː.mɪˈneɪ.ʃən/", type: "n (der)", meaning: "Sự quyết tâm", example: "" },
+            { word: "Determined", ipa: "/dɪˈtɝː.mɪnd/", type: "adj (der)", meaning: "Quyết tâm", example: "" },
+            { word: "Report", ipa: "/rɪˈpɔːrt/", type: "v", meaning: "Báo cáo / Trình diện", example: "Reported his findings." },
+            { word: "Report", ipa: "/rɪˈpɔːrt/", type: "n", meaning: "Bản báo cáo", example: "Presented a report." },
+            { word: "Reportedly", ipa: "/rɪˈpɔːr.t̬ɪd.li/", type: "adv (der)", meaning: "Theo như đưa tin", example: "" },
+            { word: "Come", ipa: "/kʌm/", type: "v (syn)", meaning: "Đến", example: "" },
+            { word: "Comment", ipa: "/ˈkɑː.ment/", type: "v", meaning: "Bình luận", example: "Refused to comment." },
+            { word: "Comment", ipa: "/ˈkɑː.ment/", type: "n", meaning: "Lời bình luận", example: "" },
+            { word: "Phase", ipa: "/feɪz/", type: "n", meaning: "Giai đoạn", example: "Project's third phase." },
+            { word: "Approve", ipa: "/əˈpruːv/", type: "v", meaning: "Chấp thuận, phê duyệt", example: "Approved the proposal." },
+            { word: "Approved", ipa: "/əˈpruːvd/", type: "adj (der)", meaning: "Được tán thành", example: "" },
+            { word: "Enclosed", ipa: "/ɪnˈkloʊzd/", type: "adj", meaning: "Được đính kèm", example: "A program is enclosed." },
+            { word: "Enclose", ipa: "/ɪnˈkloʊz/", type: "v (der)", meaning: "Gửi kèm", example: "" },
+            { word: "Easy", ipa: "/ˈiː.zi/", type: "adj", meaning: "Dễ dàng", example: "Not easy to make." },
+            { word: "Ease", ipa: "/iːz/", type: "n (der)", meaning: "Sự thanh thản", example: "" },
+            { word: "Easily", ipa: "/ˈiː.zəl.i/", type: "adv (der)", meaning: "Dễ dàng", example: "" },
+            { word: "Record", ipa: "/ˈrek.ɚd/", type: "n", meaning: "Hồ sơ, biên bản", example: "Reviewed the accounts record." },
+            { word: "Record", ipa: "/rɪˈkɔːrd/", type: "v", meaning: "Ghi lại", example: "Recorded everything." },
+            { word: "Recording", ipa: "/rɪˈkɔːr.dɪŋ/", type: "n (confusing)", meaning: "Bản thu âm", example: "" },
+            { word: "Suggestion", ipa: "/səˈdʒes.tʃən/", type: "n", meaning: "Sự đề nghị", example: "Made a useful suggestion." },
+            { word: "Suggest", ipa: "/səˈdʒest/", type: "v (der)", meaning: "Gợi ý", example: "" },
+            { word: "Proposal", ipa: "/prəˈpoʊ.zəl/", type: "n (confusing)", meaning: "Đề xuất", example: "" },
+            { word: "Attention", ipa: "/əˈten.ʃən/", type: "n", meaning: "Sự chú ý", example: "Paid attention to the address." },
+            { word: "Attentive", ipa: "/əˈten.tɪv/", type: "adj (der)", meaning: "Chăm chú", example: "" },
+            { word: "Attentively", ipa: "/əˈten.tɪv.li/", type: "adv (der)", meaning: "Một cách chăm chú", example: "" },
+            { word: "Object", ipa: "/əbˈdʒekt/", type: "v", meaning: "Phản đối", example: "Objected to taking a break." },
+            { word: "Object", ipa: "/ˈɑːb.dʒɪkt/", type: "n", meaning: "Vật thể", example: "" },
+            { word: "Objection", ipa: "/əbˈdʒek.ʃən/", type: "n (der)", meaning: "Sự phản đối", example: "" },
+            { word: "Coincidentally", ipa: "/koʊˌɪn.sɪˈden.t̬əl.i/", type: "adv", meaning: "Trùng hợp thay", example: "Both coincidentally from Taiwan." },
+            { word: "Crowded", ipa: "/ˈkraʊ.dɪd/", type: "adj", meaning: "Đông đúc", example: "Venue being too crowded." },
+            { word: "Undergo", ipa: "/ˌʌn.dɚˈɡoʊ/", type: "v", meaning: "Trải qua", example: "Undergoing renovation." },
+            { word: "Outcome", ipa: "/ˈaʊt.kʌm/", type: "n", meaning: "Kết quả", example: "Outcome of the study." },
+            { word: "Narrowly", ipa: "/ˈner.oʊ.li/", type: "adv", meaning: "Hẹp, kỹ lưỡng", example: "Narrowly focused on trends." },
+            { word: "Narrow", ipa: "/ˈner.oʊ/", type: "v (der)", meaning: "Thu hẹp", example: "" },
+            { word: "Differ", ipa: "/ˈdɪf.ɚ/", type: "v", meaning: "Khác, bất đồng", example: "Differ in their opinions." },
+            { word: "Difference", ipa: "/ˈdɪf.ɚ.əns/", type: "n (der)", meaning: "Sự khác biệt", example: "" },
+            { word: "Different", ipa: "/ˈdɪf.ɚ.ənt/", type: "adj (der)", meaning: "Khác nhau", example: "" },
+            { word: "Discuss", ipa: "/dɪˈskʌs/", type: "v", meaning: "Thảo luận", example: "Discussed the proposal." },
+            { word: "Discussion", ipa: "/dɪˈskʌʃ.ən/", type: "n (der)", meaning: "Cuộc thảo luận", example: "" },
+            { word: "Share", ipa: "/ʃer/", type: "v (syn)", meaning: "Chia sẻ", example: "" },
+            { word: "Give", ipa: "/ɡɪv/", type: "v", meaning: "Đưa ra, phát biểu", example: "Give a speech." },
+            { word: "Given", ipa: "/ˈɡɪv.ən/", type: "adj (der)", meaning: "Được cho / Cụ thể", example: "" },
+            { word: "Brief", ipa: "/briːf/", type: "v", meaning: "Tóm tắt", example: "Briefed the staff." },
+            { word: "Brief", ipa: "/briːf/", type: "adj", meaning: "Ngắn gọn", example: "" },
+            { word: "Briefly", ipa: "/ˈbriːf.li/", type: "adv (der)", meaning: "Vắn tắt", example: "" },
+            { word: "Distract", ipa: "/dɪˈstrækt/", type: "v", meaning: "Làm xao nhãng", example: "Distracted by noise." },
+            { word: "Distraction", ipa: "/dɪˈstræk.ʃən/", type: "n (der)", meaning: "Sự xao nhãng", example: "" },
+            { word: "Emphasis", ipa: "/ˈem.fə.sɪs/", type: "n", meaning: "Sự nhấn mạnh", example: "Placed an emphasis on." },
+            { word: "Emphasize", ipa: "/ˈem.fə.saɪz/", type: "v (der)", meaning: "Nhấn mạnh", example: "" },
+            { word: "Emphatic", ipa: "/emˈfæt̬.ɪk/", type: "adj (der)", meaning: "Mạnh mẽ", example: "" },
+            { word: "Stress", ipa: "/stres/", type: "n (syn)", meaning: "Sự nhấn mạnh", example: "" },
+            { word: "Press", ipa: "/pres/", type: "n", meaning: "Báo chí", example: "The press covered the talks." },
+            { word: "Press", ipa: "/pres/", type: "v", meaning: "Ấn, nhấn", example: "Pressed the button." },
+            { word: "Pressure", ipa: "/ˈpreʃ.ɚ/", type: "n (der)", meaning: "Áp lực", example: "" },
+            { word: "Media", ipa: "/ˈmiː.di.ə/", type: "n (syn)", meaning: "Truyền thông", example: "" },
+            { word: "Organize", ipa: "/ˈɔːr.ɡən.aɪz/", type: "v", meaning: "Tổ chức", example: "Organized a series of seminars." },
+            { word: "Organization", ipa: "/ˌɔːr.ɡən.əˈzeɪ.ʃən/", type: "n (der)", meaning: "Tổ chức", example: "" },
+            { word: "Organizer", ipa: "/ˈɔːr.ɡən.aɪ.zɚ/", type: "n (der)", meaning: "Người tổ chức", example: "" },
+            { word: "Mention", ipa: "/ˈmen.ʃən/", type: "v", meaning: "Đề cập", example: "Mentioned his concern." },
+            { word: "Mention", ipa: "/ˈmen.ʃən/", type: "n", meaning: "Sự đề cập", example: "" },
+            { word: "Persuasive", ipa: "/pɚˈsweɪ.sɪv/", type: "adj", meaning: "Thuyết phục", example: "Persuasive arguments." },
+            { word: "Persuade", ipa: "/pɚˈsweɪd/", type: "v (der)", meaning: "Thuyết phục", example: "" },
+            { word: "Persuasion", ipa: "/pɚˈsweɪ.ʒən/", type: "n (der)", meaning: "Sự thuyết phục", example: "" },
+            { word: "Unconvincing", ipa: "/ˌʌn.kənˈvɪn.sɪŋ/", type: "adj (ant)", meaning: "Không thuyết phục", example: "" },
+            { word: "Understanding", ipa: "/ˌʌn.dɚˈstæn.dɪŋ/", type: "adj", meaning: "Thấu hiểu, cảm thông", example: "An understanding attitude." },
+            { word: "Understand", ipa: "/ˌʌn.dɚˈstænd/", type: "v (der)", meaning: "Hiểu", example: "" },
+            { word: "Understandable", ipa: "/ˌʌn.dɚˈstæn.də.bəl/", type: "adj (der)", meaning: "Có thể hiểu được", example: "" },
+            { word: "Adjourn", ipa: "/əˈdʒɝːn/", type: "v", meaning: "Dời lại, hoãn lại", example: "Meeting was adjourned." },
+            { word: "Constructive", ipa: "/kənˈstrʌk.tɪv/", type: "adj", meaning: "Mang tính xây dựng", example: "Constructive criticism." },
+            { word: "Construct", ipa: "/kənˈstrʌkt/", type: "v (der)", meaning: "Xây dựng", example: "" },
+            { word: "Construction", ipa: "/kənˈstrʌk.ʃən/", type: "n (der)", meaning: "Việc xây dựng", example: "" },
+            { word: "Destructive", ipa: "/dɪˈstrʌk.tɪv/", type: "adj (ant)", meaning: "Phá hoại", example: "" },
+            { word: "Preside", ipa: "/prɪˈzaɪd/", type: "v", meaning: "Chủ trì", example: "Preside over the gathering." },
+            { word: "President", ipa: "/ˈprez.ɪ.dənt/", type: "n (der)", meaning: "Chủ tịch", example: "" },
+            { word: "Presidency", ipa: "/ˈprez.ɪ.dən.si/", type: "n (der)", meaning: "Nhiệm kỳ chủ tịch", example: "" },
+            { word: "Irrelevant", ipa: "/ɪˈrel.ə.vənt/", type: "adj", meaning: "Không liên quan", example: "Irrelevant to the topic." },
+            { word: "Relevant", ipa: "/ˈrel.ə.vənt/", type: "adj (ant)", meaning: "Liên quan", example: "" },
+            { word: "Irrespective", ipa: "/ˌɪr.ɪˈspek.tɪv/", type: "adj (confusing)", meaning: "Bất kể", example: "Irrespective of location." },
+            { word: "Constraint", ipa: "/kənˈstreɪnt/", type: "n", meaning: "Sự hạn chế", example: "Time constraints." },
+            { word: "Constrain", ipa: "/kənˈstreɪn/", type: "v (der)", meaning: "Bắt ép", example: "" },
+            { word: "Inhibition", ipa: "/ˌɪn.hɪˈbɪʃ.ən/", type: "n (confusing)", meaning: "Sự kiềm chế", example: "" },
+
+            // --- BASIC & EXTRAS ---
+            { word: "Annual meeting", ipa: "", type: "phr", meaning: "Cuộc họp thường niên", example: "" },
+            { word: "Conference room", ipa: "", type: "phr", meaning: "Phòng họp", example: "" },
+            { word: "Guest speaker", ipa: "", type: "phr", meaning: "Diễn giả khách mời", example: "" },
+            { word: "Hand out", ipa: "", type: "phr", meaning: "Phát ra", example: "" },
+            { word: "Holiday", ipa: "/ˈhɑː.lə.deɪ/", type: "n", meaning: "Ngày lễ", example: "" },
+            { word: "Let's end", ipa: "", type: "phr", meaning: "Hãy kết thúc", example: "" },
+            { word: "Meeting time", ipa: "", type: "phr", meaning: "Giờ họp", example: "" },
+            { word: "Scan", ipa: "/skæn/", type: "v", meaning: "Quét / Nhìn lướt", example: "" },
+            { word: "Shake hands", ipa: "", type: "phr", meaning: "Bắt tay", example: "" },
+            { word: "Speech", ipa: "/spiːtʃ/", type: "n", meaning: "Bài phát biểu", example: "" },
+            { word: "Teammate", ipa: "/ˈtiːm.meɪt/", type: "n", meaning: "Đồng đội", example: "" },
+            { word: "Water", ipa: "/ˈwɑː.t̬ɚ/", type: "v", meaning: "Tưới nước", example: "" },
+            { word: "Write down", ipa: "", type: "phr", meaning: "Viết xuống", example: "" },
+            { word: "Advise A of B", ipa: "", type: "phr", meaning: "Báo cho A biết B", example: "" },
+            { word: "Be held", ipa: "", type: "phr", meaning: "Được tổ chức", example: "" },
+            { word: "Be scheduled for", ipa: "", type: "phr", meaning: "Được lên lịch", example: "" },
+            { word: "Business talk", ipa: "", type: "phr", meaning: "Chuyện công việc", example: "" },
+            { word: "Conversation", ipa: "/ˌkɑːn.vɚˈseɪ.ʃən/", type: "n", meaning: "Cuộc trò chuyện", example: "" },
+            { word: "Debate", ipa: "/dɪˈbeɪt/", type: "v/n", meaning: "Tranh luận", example: "" },
+            { word: "Express", ipa: "/ɪkˈspres/", type: "v", meaning: "Bày tỏ", example: "" },
+            { word: "Gathering", ipa: "/ˈɡæð.ɚ.ɪŋ/", type: "n", meaning: "Sự tụ họp", example: "" },
+            { word: "Judge", ipa: "/dʒʌdʒ/", type: "v", meaning: "Đánh giá", example: "" },
+            { word: "Local time", ipa: "", type: "phr", meaning: "Giờ địa phương", example: "" },
+            { word: "Result in", ipa: "", type: "phr", meaning: "Dẫn đến", example: "" },
+            { word: "Seating chart", ipa: "", type: "phr", meaning: "Sơ đồ chỗ ngồi", example: "" },
+            { word: "Seminar", ipa: "/ˈsem.ə.nɑːr/", type: "n", meaning: "Hội thảo", example: "" },
+            { word: "Vote", ipa: "/voʊt/", type: "v/n", meaning: "Bầu cử / Lá phiếu", example: "" },
+            { word: "Weekly", ipa: "/ˈwiː.kli/", type: "adj", meaning: "Hàng tuần", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "A large attendance", ipa: "", type: "phr", meaning: "Đông người tham dự", example: "" },
+            { word: "Attend a conference", ipa: "", type: "phr", meaning: "Dự hội nghị", example: "" },
+            { word: "Business attire", ipa: "", type: "phr", meaning: "Trang phục công sở", example: "" },
+            { word: "Conference call", ipa: "", type: "phr", meaning: "Cuộc họp qua điện thoại", example: "" },
+            { word: "Convention", ipa: "/kənˈven.ʃən/", type: "n", meaning: "Hội nghị", example: "" },
+            { word: "Face to face", ipa: "", type: "phr", meaning: "Trực tiếp", example: "" },
+            { word: "Film footage", ipa: "", type: "phr", meaning: "Đoạn phim", example: "" },
+            { word: "Get an appointment", ipa: "", type: "phr", meaning: "Có cuộc hẹn", example: "" },
+            { word: "Get back in touch", ipa: "", type: "phr", meaning: "Liên lạc lại", example: "" },
+            { word: "Get in touch with", ipa: "", type: "phr", meaning: "Liên lạc với", example: "" },
+            { word: "Give a presentation", ipa: "", type: "phr", meaning: "Thuyết trình", example: "" },
+            { word: "Have a discussion", ipa: "", type: "phr", meaning: "Thảo luận", example: "" },
+            { word: "Keynote address", ipa: "", type: "phr", meaning: "Bài diễn văn chính", example: "" },
+            { word: "Keynote speaker", ipa: "", type: "phr", meaning: "Diễn giả chính", example: "" },
+            { word: "Make a speech", ipa: "", type: "phr", meaning: "Phát biểu", example: "" },
+            { word: "Make adjustments", ipa: "", type: "phr", meaning: "Điều chỉnh", example: "" },
+            { word: "Pass around", ipa: "", type: "phr", meaning: "Chuyền tay", example: "" },
+            { word: "Pass out", ipa: "", type: "phr", meaning: "Phân phát / Ngất xỉu", example: "" },
+            { word: "Put in an offer", ipa: "", type: "phr", meaning: "Đưa ra đề nghị", example: "" },
+            { word: "Run a meeting", ipa: "", type: "phr", meaning: "Điều hành cuộc họp", example: "" },
+            { word: "Schedule an appointment", ipa: "", type: "phr", meaning: "Sắp xếp cuộc hẹn", example: "" },
+            { word: "Speak up", ipa: "", type: "phr", meaning: "Nói to lên", example: "" },
+            { word: "Stare into", ipa: "", type: "phr", meaning: "Nhìn chằm chằm", example: "" },
+            { word: "Take down", ipa: "", type: "phr", meaning: "Ghi chép / Tháo dỡ", example: "" },
+            { word: "Take notes", ipa: "", type: "phr", meaning: "Ghi chú", example: "" },
+            { word: "Take part in", ipa: "", type: "phr", meaning: "Tham gia", example: "" },
+            { word: "Visual aid", ipa: "", type: "phr", meaning: "Giáo cụ trực quan", example: "" },
+            { word: "Conventional", ipa: "/kənˈven.ʃən.əl/", type: "adj", meaning: "Thông thường", example: "" },
+            { word: "Custom", ipa: "/ˈkʌs.təm/", type: "n", meaning: "Phong tục", example: "" },
+            { word: "Hold back", ipa: "", type: "phr", meaning: "Kìm lại", example: "" },
+            { word: "Intense", ipa: "/ɪnˈtens/", type: "adj", meaning: "Mãnh liệt", example: "" },
+            { word: "Misprint", ipa: "/ˌmɪsˈprɪnt/", type: "n", meaning: "Lỗi in ấn", example: "" },
+            { word: "Occupied", ipa: "/ˈɑː.kjə.paɪd/", type: "adj", meaning: "Đang sử dụng", example: "" },
+            { word: "Participate in", ipa: "", type: "phr", meaning: "Tham gia", example: "" },
+            { word: "Punctual", ipa: "/ˈpʌŋk.tʃu.əl/", type: "adj", meaning: "Đúng giờ", example: "" },
+            { word: "To start with", ipa: "", type: "phr", meaning: "Để bắt đầu", example: "" },
+            { word: "Arrange a conference", ipa: "", type: "phr", meaning: "Sắp xếp hội nghị", example: "" },
+            { word: "Be supposed to", ipa: "", type: "phr", meaning: "Được cho là", example: "" },
+            { word: "Biweekly", ipa: "/baɪˈwiː.kli/", type: "adj", meaning: "Hai tuần một lần", example: "" },
+            { word: "Bring up", ipa: "", type: "phr", meaning: "Đề cập / Nuôi nấng", example: "" },
+            { word: "Clash", ipa: "/klæʃ/", type: "n", meaning: "Sự xung đột", example: "" },
+            { word: "Come to a decision", ipa: "", type: "phr", meaning: "Đi đến quyết định", example: "" },
+            { word: "Come to an agreement", ipa: "", type: "phr", meaning: "Đạt được thỏa thuận", example: "" },
+            { word: "Controversial", ipa: "/ˌkɑːn.trəˈvɝː.ʃəl/", type: "adj", meaning: "Gây tranh cãi", example: "" },
+            { word: "Develop into", ipa: "", type: "phr", meaning: "Phát triển thành", example: "" },
+            { word: "Get the point", ipa: "", type: "phr", meaning: "Hiểu ý", example: "" },
+            { word: "In conclusion", ipa: "", type: "phr", meaning: "Tóm lại", example: "" },
+            { word: "In support of", ipa: "", type: "phr", meaning: "Ủng hộ", example: "" },
+            { word: "In the middle of", ipa: "", type: "phr", meaning: "Ở giữa", example: "" },
+            { word: "Insist", ipa: "/ɪnˈsɪst/", type: "v", meaning: "Khăng khăng", example: "" },
+            { word: "Insult", ipa: "/ˈɪn.sʌlt/", type: "v", meaning: "Xúc phạm", example: "" },
+            { word: "Inviting", ipa: "/ɪnˈvaɪ.tɪŋ/", type: "adj", meaning: "Lôi cuốn", example: "" },
+            { word: "Luncheon", ipa: "/ˈlʌn.tʃən/", type: "n", meaning: "Tiệc trưa", example: "" },
+            { word: "Make a conclusion", ipa: "", type: "phr", meaning: "Đưa ra kết luận", example: "" },
+            { word: "Make a decision", ipa: "", type: "phr", meaning: "Quyết định", example: "" },
+            { word: "Offer an apology", ipa: "", type: "phr", meaning: "Xin lỗi", example: "" },
+            { word: "Official arrangement", ipa: "", type: "phr", meaning: "Thỏa thuận chính thức", example: "" },
+            { word: "OJT", ipa: "", type: "n", meaning: "Đào tạo tại chỗ", example: "" },
+            { word: "Opponent", ipa: "/əˈpoʊ.nənt/", type: "n", meaning: "Đối thủ", example: "" },
+            { word: "Postpone until", ipa: "", type: "phr", meaning: "Hoãn đến", example: "" },
+            { word: "Public speaking", ipa: "", type: "phr", meaning: "Nói trước công chúng", example: "" },
+            { word: "Reach a conclusion", ipa: "", type: "phr", meaning: "Đi đến kết luận", example: "" },
+            { word: "Reach agreement", ipa: "", type: "phr", meaning: "Đạt thỏa thuận", example: "" },
+            { word: "Reassure", ipa: "/ˌriː.əˈʃʊr/", type: "v", meaning: "Trấn an", example: "" },
+            { word: "Recess", ipa: "/ˈriː.ses/", type: "n", meaning: "Giờ giải lao", example: "" },
+            { word: "To the point", ipa: "", type: "phr", meaning: "Đúng trọng tâm", example: "" },
+            { word: "Turn out", ipa: "", type: "phr", meaning: "Hóa ra", example: "" },
+            { word: "Without consent", ipa: "", type: "phr", meaning: "Không có sự đồng ý", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Chair", ipa: "/tʃer/", type: "v", meaning: "Chủ trì", example: "" },
+            { word: "Conflict of interest", ipa: "", type: "phr", meaning: "Xung đột lợi ích", example: "" },
+            { word: "Excerpt", ipa: "/ˈek.sɝːpt/", type: "n", meaning: "Đoạn trích", example: "" },
+            { word: "Prop against", ipa: "", type: "phr", meaning: "Dựa vào", example: "" },
+            { word: "Run late", ipa: "", type: "phr", meaning: "Đến muộn", example: "" },
+            { word: "Sit through", ipa: "", type: "phr", meaning: "Ngồi đến hết", example: "" },
+            { word: "Stand on", ipa: "", type: "phr", meaning: "Đứng trên", example: "" },
+            { word: "Symposium", ipa: "/sɪmˈpoʊ.zi.əm/", type: "n", meaning: "Hội nghị chuyên đề", example: "" },
+            { word: "Consenting", ipa: "/kənˈsen.tɪŋ/", type: "adj", meaning: "Đồng ý", example: "" },
+            { word: "Conversationally", ipa: "/ˌkɑːn.vɚˈseɪ.ʃən.əl.i/", type: "adv", meaning: "Thân mật", example: "" },
+            { word: "Eloquent", ipa: "/ˈel.ə.kwənt/", type: "adj", meaning: "Hùng hồn", example: "" },
+            { word: "Faction", ipa: "/ˈfæk.ʃən/", type: "n", meaning: "Phe phái", example: "" },
+            { word: "Illegible", ipa: "/ɪˈledʒ.ə.bəl/", type: "adj", meaning: "Khó đọc", example: "" },
+            { word: "Presumably", ipa: "/prɪˈzuː.mə.bli/", type: "adv", meaning: "Có lẽ", example: "" },
+            { word: "Abbreviate", ipa: "/əˈbriː.vi.eɪt/", type: "v", meaning: "Viết tắt", example: "" },
+            { word: "Abridgment", ipa: "/əˈbrɪdʒ.mənt/", type: "n", meaning: "Sự rút gọn", example: "" },
+            { word: "Coherent", ipa: "/koʊˈhɪr.ənt/", type: "adj", meaning: "Mạch lạc", example: "" },
+            { word: "Confine", ipa: "/kənˈfaɪn/", type: "v", meaning: "Giam giữ / Hạn chế", example: "" },
+            { word: "Counteroffer", ipa: "/ˈkaʊn.t̬ɚˌɑː.fɚ/", type: "n", meaning: "Đề nghị ngược lại", example: "" },
+            { word: "Disperse", ipa: "/dɪˈspɝːs/", type: "v", meaning: "Giải tán", example: "" },
+            { word: "Distinguished", ipa: "/dɪˈstɪŋ.ɡwɪʃt/", type: "adj", meaning: "Xuất sắc", example: "" },
+            { word: "Elaborate", ipa: "/iˈlæb.ɚ.ət/", type: "adj", meaning: "Công phu / Tỉ mỉ", example: "" },
+            { word: "Enthuse", ipa: "/ɪnˈθuːz/", type: "v", meaning: "Tỏ ra nhiệt tình", example: "" },
+            { word: "Moderate a meeting", ipa: "", type: "phr", meaning: "Điều hành cuộc họp", example: "" },
+            { word: "Off chance", ipa: "", type: "phr", meaning: "Khả năng mong manh", example: "" },
+            { word: "Presiding", ipa: "/prɪˈzaɪd.ɪŋ/", type: "adj", meaning: "Chủ trì", example: "" },
+            { word: "Put off", ipa: "", type: "phr", meaning: "Hoãn lại", example: "" },
+            { word: "Stand up for", ipa: "", type: "phr", meaning: "Bảo vệ / Ủng hộ", example: "" },
+            { word: "Succinct", ipa: "/səkˈsɪŋkt/", type: "adj", meaning: "Cô đọng", example: "" },
+            { word: "Summit meeting", ipa: "", type: "phr", meaning: "Hội nghị thượng đỉnh", example: "" },
+            { word: "Summon", ipa: "/ˈsʌm.ən/", type: "v", meaning: "Triệu tập", example: "" },
+            { word: "Uphold", ipa: "/ʌpˈhoʊld/", type: "v", meaning: "Ủng hộ / Giữ gìn", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

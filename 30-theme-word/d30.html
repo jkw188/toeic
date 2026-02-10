@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 30: Health - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #EF4444; --secondary-bg: #FEE2E2; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #FEE2E2; color: #B91C1C; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 30: Sức khỏe</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Fatigue", ipa: "/fəˈtiːɡ/", type: "n", meaning: "Sự mệt mỏi", example: "Stress leads to fatigue." },
+            { word: "Checkup", ipa: "/ˈtʃek.ʌp/", type: "n", meaning: "Cuộc kiểm tra sức khỏe", example: "Yearly medical checkups." },
+            { word: "Symptom", ipa: "/ˈsɪmp.təm/", type: "n", meaning: "Triệu chứng", example: "Exhibited symptoms of stress." },
+            { word: "Physician", ipa: "/fɪˈzɪʃ.ən/", type: "n", meaning: "Bác sĩ (điều trị)", example: "Consulted a physician." },
+            { word: "Doctor", ipa: "/ˈdɑːk.tɚ/", type: "n (syn)", meaning: "Bác sĩ", example: "" },
+            { word: "Diagnosis", ipa: "/ˌdaɪ.əɡˈnoʊ.sɪs/", type: "n", meaning: "Sự chẩn đoán", example: "The doctor's diagnosis." },
+            { word: "Diagnose", ipa: "/ˌdaɪ.əɡˈnoʊs/", type: "v (der)", meaning: "Chẩn đoán", example: "" },
+            { word: "Prescribe", ipa: "/prɪˈskraɪb/", type: "v", meaning: "Kê đơn thuốc", example: "Prescribed a remedy." },
+            { word: "Prescription", ipa: "/prɪˈskrɪp.ʃən/", type: "n (der)", meaning: "Đơn thuốc", example: "" },
+            { word: "Recovery", ipa: "/rɪˈkʌv.ɚ.i/", type: "n", meaning: "Sự hồi phục", example: "Make a complete recovery." },
+            { word: "Recover", ipa: "/rɪˈkʌv.ɚ/", type: "v (der)", meaning: "Hồi phục", example: "" },
+            { word: "Get back", ipa: "", type: "phr (syn)", meaning: "Lấy lại / Hồi phục", example: "" },
+            { word: "Recognize", ipa: "/ˈrek.əɡ.naɪz/", type: "v", meaning: "Công nhận, nhận ra", example: "Not recognized as valid treatments." },
+            { word: "Recognizable", ipa: "/ˈrek.əɡ.naɪ.zə.bəl/", type: "adj (der)", meaning: "Có thể nhận ra", example: "" },
+            { word: "Honor", ipa: "/ˈɑː.nɚ/", type: "v (syn)", meaning: "Vinh danh", example: "" },
+            { word: "Realize", ipa: "/ˈriː.ə.laɪz/", type: "v (syn)", meaning: "Nhận ra", example: "" },
+            { word: "Join", ipa: "/dʒɔɪn/", type: "v", meaning: "Tham gia, gia nhập", example: "Join the health club." },
+            { word: "Joint", ipa: "/dʒɔɪnt/", type: "adj (der)", meaning: "Chung", example: "" },
+            { word: "Jointly", ipa: "/ˈdʒɔɪnt.li/", type: "adv (der)", meaning: "Cùng nhau", example: "" },
+            { word: "Comprehensive", ipa: "/ˌkɑːm.prəˈhen.sɪv/", type: "adj", meaning: "Toàn diện", example: "Comprehensive physical examination." },
+            { word: "Comprehend", ipa: "/ˌkɑːm.prəˈhend/", type: "v (der)", meaning: "Hiểu", example: "" },
+            { word: "Comprehension", ipa: "/ˌkɑːm.prəˈhen.ʃən/", type: "n (der)", meaning: "Sự hiểu biết", example: "" },
+            { word: "Comprehensible", ipa: "/ˌkɑːm.prəˈhen.sə.bəl/", type: "adj (der)", meaning: "Dễ hiểu", example: "" },
+            { word: "Participate", ipa: "/pɑːrˈtɪs.ə.peɪt/", type: "v", meaning: "Tham gia", example: "Participated in the study." },
+            { word: "Participation", ipa: "/pɑːrˌtɪs.əˈpeɪ.ʃən/", type: "n (der)", meaning: "Sự tham gia", example: "" },
+            { word: "Participant", ipa: "/pɑːrˈtɪs.ə.pənt/", type: "n (der)", meaning: "Người tham gia", example: "" },
+            { word: "Recommend", ipa: "/ˌrek.əˈmend/", type: "v", meaning: "Khuyên, đề nghị", example: "Recommended getting rest." },
+            { word: "Recommendation", ipa: "/ˌrek.ə.menˈdeɪ.ʃən/", type: "n (der)", meaning: "Sự giới thiệu / Lời khuyên", example: "" },
+            { word: "Necessary", ipa: "/ˈnes.ə.ser.i/", type: "adj", meaning: "Cần thiết", example: "Surgery may be necessary." },
+            { word: "Ability", ipa: "/əˈbɪl.ə.t̬i/", type: "n", meaning: "Khả năng", example: "Ability to defend itself." },
+            { word: "Operation", ipa: "/ˌɑː.pəˈreɪ.ʃən/", type: "n", meaning: "Ca phẫu thuật", example: "Underwent an operation." },
+            { word: "Cleanliness", ipa: "/ˈklen.li.nəs/", type: "n", meaning: "Sự sạch sẽ", example: "Maintaining cleanliness." },
+            { word: "Duration", ipa: "/duˈreɪ.ʃən/", type: "n", meaning: "Khoảng thời gian", example: "Duration of the illness." },
+            { word: "Examination", ipa: "/ɪɡˌzæm.əˈneɪ.ʃən/", type: "n", meaning: "Sự khám bệnh, kiểm tra", example: "Began the patient's examination." },
+            { word: "Eliminate", ipa: "/iˈlɪm.ə.neɪt/", type: "v", meaning: "Loại bỏ", example: "Eliminate wastes." },
+            { word: "Elimination", ipa: "/iˌlɪm.əˈneɪ.ʃən/", type: "n (der)", meaning: "Sự loại bỏ", example: "" },
+            { word: "Remove", ipa: "/rɪˈmuːv/", type: "v (syn)", meaning: "Loại bỏ", example: "" },
+            { word: "Get rid of", ipa: "", type: "phr (syn)", meaning: "Vứt bỏ", example: "" },
+            { word: "Easily", ipa: "/ˈiː.zəl.i/", type: "adv", meaning: "Dễ dàng", example: "Easily removed." },
+            { word: "Dental", ipa: "/ˈden.t̬əl/", type: "adj", meaning: "Thuộc nha khoa", example: "Dental checkups." },
+            { word: "Dietary", ipa: "/ˈdaɪ.ə.ter.i/", type: "adj", meaning: "Thuộc chế độ ăn uống", example: "Dietary guidelines." },
+            { word: "Related", ipa: "/rɪˈleɪ.t̬ɪd/", type: "adj", meaning: "Liên quan", example: "Related symptoms." },
+            { word: "Transmit", ipa: "/trænsˈmɪt/", type: "v", meaning: "Truyền, lây truyền", example: "Transmitted through the air." },
+            { word: "Transmission", ipa: "/trænsˈmɪʃ.ən/", type: "n (der)", meaning: "Sự truyền dẫn", example: "" },
+            { word: "Periodically", ipa: "/ˌpɪr.iˈɑː.dɪ.kəl.i/", type: "adv", meaning: "Định kỳ", example: "Offered periodically." },
+            { word: "Periodic", ipa: "/ˌpɪr.iˈɑː.dɪk/", type: "adj (der)", meaning: "Định kỳ", example: "" },
+            { word: "Reaction", ipa: "/riˈæk.ʃən/", type: "n", meaning: "Phản ứng", example: "Allergic reactions." },
+            { word: "React", ipa: "/riˈækt/", type: "v (der)", meaning: "Phản ứng", example: "" },
+            { word: "Simple", ipa: "/ˈsɪm.pəl/", type: "adj", meaning: "Đơn giản", example: "Simple remedies." },
+            { word: "Coverage", ipa: "/ˈkʌv.ɚ.ɪdʒ/", type: "n", meaning: "Phạm vi bảo hiểm / Việc đưa tin", example: "Insurance coverage." },
+            { word: "Cover", ipa: "/ˈkʌv.ɚ/", type: "v (der)", meaning: "Bao gồm / Che phủ", example: "" },
+            { word: "Exposure", ipa: "/ɪkˈspoʊ.ʒɚ/", type: "n", meaning: "Sự tiếp xúc / Phơi bày", example: "Exposure to sunlight." },
+            { word: "Expose", ipa: "/ɪkˈspoʊz/", type: "v (der)", meaning: "Phơi bày", example: "" },
+            { word: "Pharmaceutical", ipa: "/ˌfɑːr.məˈsuː.t̬ɪ.kəl/", type: "adj", meaning: "Thuộc dược phẩm", example: "Pharmaceutical company." },
+            { word: "Premium", ipa: "/ˈpriː.mi.əm/", type: "n", meaning: "Phí bảo hiểm", example: "Insurance premiums." },
+            { word: "Premium", ipa: "/ˈpriː.mi.əm/", type: "adj", meaning: "Cao cấp", example: "" },
+            { word: "Relieve", ipa: "/rɪˈliːv/", type: "v", meaning: "Làm dịu, giảm nhẹ", example: "Relieves symptoms." },
+            { word: "Relief", ipa: "/rɪˈliːf/", type: "n (der)", meaning: "Sự giảm nhẹ", example: "" },
+            { word: "Ease", ipa: "/iːz/", type: "v (syn)", meaning: "Làm dịu", example: "" },
+            { word: "Aggravate", ipa: "/ˈæɡ.rə.veɪt/", type: "v (ant)", meaning: "Làm trầm trọng", example: "" },
+            { word: "Combination", ipa: "/ˌkɑːm.bəˈneɪ.ʃən/", type: "n", meaning: "Sự kết hợp", example: "Used in combination with." },
+            { word: "Combine", ipa: "/kəmˈbaɪn/", type: "v (der)", meaning: "Kết hợp", example: "" },
+            { word: "Conscious", ipa: "/ˈkɑːn.ʃəs/", type: "adj", meaning: "Nhận thức, biết rõ", example: "Conscious of the risks." },
+            { word: "Consciousness", ipa: "/ˈkɑːn.ʃəs.nəs/", type: "n (der)", meaning: "Ý thức", example: "" },
+            { word: "Consciously", ipa: "/ˈkɑːn.ʃəs.li/", type: "adv (der)", meaning: "Có ý thức", example: "" },
+            { word: "Aware", ipa: "/əˈwer/", type: "adj (syn)", meaning: "Nhận thức", example: "" },
+            { word: "Deprivation", ipa: "/ˌdep.rəˈveɪ.ʃən/", type: "n", meaning: "Sự thiếu hụt, mất đi", example: "Sleep deprivation." },
+            { word: "Deprive", ipa: "/dɪˈpraɪv/", type: "v (der)", meaning: "Tước đoạt", example: "" },
+            { word: "Health", ipa: "/helθ/", type: "n", meaning: "Sức khỏe", example: "Maintain good health." },
+            { word: "Healthy", ipa: "/ˈhel.θi/", type: "adj (der)", meaning: "Khỏe mạnh", example: "" },
+            { word: "Healthful", ipa: "/ˈhelθ.fəl/", type: "adj (der)", meaning: "Lành mạnh", example: "" },
+            { word: "Induce", ipa: "/ɪnˈduːs/", type: "v", meaning: "Gây ra", example: "Induce drowsiness." },
+            { word: "Inducement", ipa: "/ɪnˈduːs.mənt/", type: "n (der)", meaning: "Sự xui khiến", example: "" },
+            { word: "Cause", ipa: "/kɑːz/", type: "v (syn)", meaning: "Gây ra", example: "" },
+            { word: "Insurance", ipa: "/ɪnˈʃʊr.əns/", type: "n", meaning: "Bảo hiểm", example: "Dental insurance." },
+            { word: "Nutrition", ipa: "/nuːˈtrɪʃ.ən/", type: "n", meaning: "Dinh dưỡng", example: "Balanced nutrition." },
+            { word: "Nutritious", ipa: "/nuːˈtrɪʃ.əs/", type: "adj (der)", meaning: "Bổ dưỡng", example: "" },
+            { word: "Nutritionist", ipa: "/nuːˈtrɪʃ.ən.ɪst/", type: "n (der)", meaning: "Chuyên gia dinh dưỡng", example: "" },
+            { word: "Prevention", ipa: "/prɪˈven.ʃən/", type: "n", meaning: "Sự phòng ngừa", example: "Prevention of illness." },
+            { word: "Prevent", ipa: "/prɪˈvent/", type: "v (der)", meaning: "Ngăn ngừa", example: "" },
+            { word: "Preventive", ipa: "/prɪˈven.tɪv/", type: "adj (der)", meaning: "Phòng ngừa", example: "" },
+            { word: "Preventable", ipa: "/prɪˈven.tə.bəl/", type: "adj (der)", meaning: "Có thể phòng ngừa", example: "" },
+            { word: "Susceptible", ipa: "/səˈsep.tə.bəl/", type: "adj", meaning: "Dễ bị ảnh hưởng, nhạy cảm", example: "Susceptible to colds." },
+            { word: "Susceptibility", ipa: "/səˌsep.təˈbɪl.ə.t̬i/", type: "n (der)", meaning: "Tính nhạy cảm", example: "" },
+
+            // --- BASIC & EXTRAS ---
+            { word: "Allergic", ipa: "/əˈlɝː.dʒɪk/", type: "adj", meaning: "Dị ứng", example: "" },
+            { word: "Blind", ipa: "/blaɪnd/", type: "adj", meaning: "Mù", example: "" },
+            { word: "Cavity", ipa: "/ˈkæv.ə.t̬i/", type: "n", meaning: "Lỗ sâu răng", example: "" },
+            { word: "Cold", ipa: "/koʊld/", type: "n/adj", meaning: "Cảm lạnh / Lạnh", example: "" },
+            { word: "Cosmetic", ipa: "/kɑːzˈmet̬.ɪk/", type: "adj", meaning: "Thẩm mỹ", example: "" },
+            { word: "Feel sick", ipa: "", type: "phr", meaning: "Cảm thấy ốm", example: "" },
+            { word: "Fitness", ipa: "/ˈfɪt.nəs/", type: "n", meaning: "Sự sung sức, thể hình", example: "" },
+            { word: "Gym", ipa: "/dʒɪm/", type: "n", meaning: "Phòng tập", example: "" },
+            { word: "Have an injection", ipa: "", type: "phr", meaning: "Tiêm", example: "" },
+            { word: "Medical facility", ipa: "", type: "phr", meaning: "Cơ sở y tế", example: "" },
+            { word: "Raincoat", ipa: "/ˈreɪn.koʊt/", type: "n", meaning: "Áo mưa", example: "" },
+            { word: "Surgery", ipa: "/ˈsɝː.dʒər.i/", type: "n", meaning: "Phẫu thuật", example: "" },
+            { word: "Toothache", ipa: "/ˈtuːθ.eɪk/", type: "n", meaning: "Đau răng", example: "" },
+            { word: "Treat", ipa: "/triːt/", type: "v", meaning: "Điều trị", example: "" },
+            { word: "Vision", ipa: "/ˈvɪʒ.ən/", type: "n", meaning: "Thị lực", example: "" },
+            { word: "Workout", ipa: "/ˈwɝːk.aʊt/", type: "n", meaning: "Buổi tập luyện", example: "" },
+            { word: "Beat", ipa: "/biːt/", type: "v", meaning: "Đập (tim)", example: "" },
+            { word: "Blink", ipa: "/blɪŋk/", type: "v", meaning: "Chớp mắt", example: "" },
+            { word: "Cure", ipa: "/kjʊr/", type: "n/v", meaning: "Phương thuốc / Chữa trị", example: "" },
+            { word: "Disease", ipa: "/dɪˈziːz/", type: "n", meaning: "Bệnh tật", example: "" },
+            { word: "Healing", ipa: "/ˈhiː.lɪŋ/", type: "adj", meaning: "Đang lành", example: "" },
+            { word: "Internal", ipa: "/ɪnˈtɝː.nəl/", type: "adj", meaning: "Bên trong", example: "" },
+            { word: "Lung", ipa: "/lʌŋ/", type: "n", meaning: "Phổi", example: "" },
+            { word: "Organ", ipa: "/ˈɔːr.ɡən/", type: "n", meaning: "Cơ quan", example: "" },
+            { word: "Remedy", ipa: "/ˈrem.ə.di/", type: "n", meaning: "Phương thuốc", example: "" },
+            { word: "Stomachache", ipa: "/ˈstʌm.ək.eɪk/", type: "n", meaning: "Đau dạ dày", example: "" },
+            { word: "Well-being", ipa: "/ˌwelˈbiː.ɪŋ/", type: "n", meaning: "Sự khỏe mạnh", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "Aging", ipa: "/ˈeɪ.dʒɪŋ/", type: "n/adj", meaning: "Sự lão hóa", example: "" },
+            { word: "Ankle sprain", ipa: "", type: "phr", meaning: "Bong gân mắt cá", example: "" },
+            { word: "Back injury", ipa: "", type: "phr", meaning: "Chấn thương lưng", example: "" },
+            { word: "Be on a special diet", ipa: "", type: "phr", meaning: "Ăn kiêng đặc biệt", example: "" },
+            { word: "Blood pressure", ipa: "", type: "phr", meaning: "Huyết áp", example: "" },
+            { word: "Blood supply", ipa: "", type: "phr", meaning: "Nguồn cung máu", example: "" },
+            { word: "Buzzing", ipa: "/ˈbʌz.ɪŋ/", type: "adj", meaning: "Ù ù (tai)", example: "" },
+            { word: "Doctor's appointment", ipa: "", type: "phr", meaning: "Cuộc hẹn bác sĩ", example: "" },
+            { word: "Emergency room", ipa: "", type: "phr", meaning: "Phòng cấp cứu", example: "" },
+            { word: "Get some exercise", ipa: "", type: "phr", meaning: "Tập thể dục", example: "" },
+            { word: "Heart ailment", ipa: "", type: "phr", meaning: "Bệnh tim", example: "" },
+            { word: "Heart attack", ipa: "", type: "phr", meaning: "Cơn đau tim", example: "" },
+            { word: "Heart disease", ipa: "", type: "phr", meaning: "Bệnh tim", example: "" },
+            { word: "Injection", ipa: "/ɪnˈdʒek.ʃən/", type: "n", meaning: "Mũi tiêm", example: "" },
+            { word: "Insomnia", ipa: "/ɪnˈsɑːm.ni.ə/", type: "n", meaning: "Chứng mất ngủ", example: "" },
+            { word: "Lean back", ipa: "", type: "phr", meaning: "Ngả người ra sau", example: "" },
+            { word: "Lose weight", ipa: "", type: "phr", meaning: "Giảm cân", example: "" },
+            { word: "Maternity ward", ipa: "", type: "phr", meaning: "Khoa sản", example: "" },
+            { word: "Patient's record", ipa: "", type: "phr", meaning: "Hồ sơ bệnh nhân", example: "" },
+            { word: "Physical examination", ipa: "", type: "phr", meaning: "Khám sức khỏe", example: "" },
+            { word: "Physical therapy", ipa: "", type: "phr", meaning: "Vật lý trị liệu", example: "" },
+            { word: "Resist", ipa: "/rɪˈzɪst/", type: "v", meaning: "Chống lại / Kháng cự", example: "" },
+            { word: "Sneeze", ipa: "/sniːz/", type: "v", meaning: "Hắt hơi", example: "" },
+            { word: "Surgical instrument", ipa: "", type: "phr", meaning: "Dụng cụ phẫu thuật", example: "" },
+            { word: "Tablet", ipa: "/ˈtæb.lət/", type: "n", meaning: "Viên thuốc", example: "" },
+            { word: "Take effect", ipa: "", type: "phr", meaning: "Có tác dụng", example: "" },
+            { word: "Take medication", ipa: "", type: "phr", meaning: "Uống thuốc", example: "" },
+            { word: "Take some medicine", ipa: "", type: "phr", meaning: "Uống thuốc", example: "" },
+            { word: "Terminal", ipa: "/ˈtɝː.mə.nəl/", type: "adj", meaning: "Giai đoạn cuối", example: "" },
+            { word: "Vaccination", ipa: "/ˌvæk.səˈneɪ.ʃən/", type: "n", meaning: "Tiêm chủng", example: "" },
+            { word: "Watch over", ipa: "", type: "phr", meaning: "Trông nom", example: "" },
+            { word: "Consequently", ipa: "/ˈkɑːn.sə.kwənt.li/", type: "adv", meaning: "Hậu quả là", example: "" },
+            { word: "Harmful", ipa: "/ˈhɑːrm.fəl/", type: "adj", meaning: "Có hại", example: "" },
+            { word: "Maximize", ipa: "/ˈmæk.sə.maɪz/", type: "v", meaning: "Tối đa hóa", example: "" },
+            { word: "Medicinal", ipa: "/məˈdɪs.ən.əl/", type: "adj", meaning: "Có đặc tính chữa bệnh", example: "" },
+            { word: "Patiently", ipa: "/ˈpeɪ.ʃənt.li/", type: "adv", meaning: "Kiên nhẫn", example: "" },
+            { word: "Recover", ipa: "/rɪˈkʌv.ɚ/", type: "v", meaning: "Hồi phục", example: "" },
+            { word: "Resemble", ipa: "/rɪˈzem.bəl/", type: "v", meaning: "Giống", example: "" },
+            { word: "Ultimately", ipa: "/ˈʌl.tə.mət.li/", type: "adv", meaning: "Cuối cùng", example: "" },
+            { word: "Urgently", ipa: "/ˈɝː.dʒənt.li/", type: "adv", meaning: "Khẩn cấp", example: "" },
+            { word: "Visualize", ipa: "/ˈvɪʒ.u.əl.aɪz/", type: "v", meaning: "Hình dung", example: "" },
+            { word: "Antibiotic", ipa: "/ˌæn.t̬i.baɪˈɑː.t̬ɪk/", type: "n", meaning: "Thuốc kháng sinh", example: "" },
+            { word: "Asthma", ipa: "/ˈæz.mə/", type: "n", meaning: "Hen suyễn", example: "" },
+            { word: "Athletic skill", ipa: "", type: "phr", meaning: "Kỹ năng thể thao", example: "" },
+            { word: "Chronic", ipa: "/ˈkrɑː.nɪk/", type: "adj", meaning: "Mãn tính", example: "" },
+            { word: "Contagious", ipa: "/kənˈteɪ.dʒəs/", type: "adj", meaning: "Lây nhiễm", example: "" },
+            { word: "Diabetes", ipa: "/ˌdaɪ.əˈbiː.t̬əs/", type: "n", meaning: "Tiểu đường", example: "" },
+            { word: "Donor", ipa: "/ˈdoʊ.nɚ/", type: "n", meaning: "Người hiến tặng", example: "" },
+            { word: "Dosage", ipa: "/ˈdoʊ.sɪdʒ/", type: "n", meaning: "Liều lượng", example: "" },
+            { word: "Dose", ipa: "/doʊs/", type: "n", meaning: "Liều thuốc", example: "" },
+            { word: "Eradicate", ipa: "/ɪˈræd.ɪ.keɪt/", type: "v", meaning: "Diệt trừ", example: "" },
+            { word: "Exhale", ipa: "/eksˈheɪl/", type: "v", meaning: "Thở ra", example: "" },
+            { word: "First aid", ipa: "", type: "phr", meaning: "Sơ cứu", example: "" },
+            { word: "Food poisoning", ipa: "", type: "phr", meaning: "Ngộ độc thực phẩm", example: "" },
+            { word: "Forbid", ipa: "/fɚˈbɪd/", type: "v", meaning: "Cấm", example: "" },
+            { word: "Genetic research", ipa: "", type: "phr", meaning: "Nghiên cứu di truyền", example: "" },
+            { word: "Germ", ipa: "/dʒɝːm/", type: "n", meaning: "Vi trùng", example: "" },
+            { word: "Hiccup", ipa: "/ˈhɪk.ʌp/", type: "n", meaning: "Nấc cụt", example: "" },
+            { word: "Hygiene", ipa: "/ˈhaɪ.dʒiːn/", type: "n", meaning: "Vệ sinh", example: "" },
+            { word: "Immune", ipa: "/ɪˈmjuːn/", type: "adj", meaning: "Miễn dịch", example: "" },
+            { word: "Infection", ipa: "/ɪnˈfek.ʃən/", type: "n", meaning: "Sự nhiễm trùng", example: "" },
+            { word: "Infectious disease", ipa: "", type: "phr", meaning: "Bệnh truyền nhiễm", example: "" },
+            { word: "Inhale", ipa: "/ɪnˈheɪl/", type: "v", meaning: "Hít vào", example: "" },
+            { word: "Overdose", ipa: "/ˈoʊ.vɚ.doʊs/", type: "n", meaning: "Quá liều", example: "" },
+            { word: "Painkiller", ipa: "/ˈpeɪnˌkɪl.ɚ/", type: "n", meaning: "Thuốc giảm đau", example: "" },
+            { word: "Paralysis", ipa: "/pəˈræl.ə.sɪs/", type: "n", meaning: "Sự tê liệt", example: "" },
+            { word: "Pulse", ipa: "/pʌls/", type: "n", meaning: "Mạch", example: "" },
+            { word: "Robust", ipa: "/roʊˈbʌst/", type: "adj", meaning: "Cường tráng", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Be on medication", ipa: "", type: "phr", meaning: "Đang dùng thuốc", example: "" },
+            { word: "Blurry", ipa: "/ˈblɝː.i/", type: "adj", meaning: "Mờ", example: "" },
+            { word: "Compressed", ipa: "/kəmˈprest/", type: "adj", meaning: "Bị nén", example: "" },
+            { word: "Get a prescription filled", ipa: "", type: "phr", meaning: "Mua thuốc theo đơn", example: "" },
+            { word: "Have vision tested", ipa: "", type: "phr", meaning: "Kiểm tra thị lực", example: "" },
+            { word: "Milestone", ipa: "/ˈmaɪl.stoʊn/", type: "n", meaning: "Cột mốc", example: "" },
+            { word: "On an empty stomach", ipa: "", type: "phr", meaning: "Khi đói", example: "" },
+            { word: "Outpatient clinic", ipa: "", type: "phr", meaning: "Phòng khám ngoại trú", example: "" },
+            { word: "Practitioner", ipa: "/prækˈtɪʃ.ən.ɚ/", type: "n", meaning: "Thầy thuốc đang hành nghề", example: "" },
+            { word: "Recurring", ipa: "/rɪˈkɝː.ɪŋ/", type: "adj", meaning: "Tái phát", example: "" },
+            { word: "Refill", ipa: "/ˌriːˈfɪl/", type: "v", meaning: "Lấy thêm thuốc", example: "" },
+            { word: "Wing", ipa: "/wɪŋ/", type: "n", meaning: "Chái nhà (bệnh viện)", example: "" },
+            { word: "Elderly", ipa: "/ˈel.dɚ.li/", type: "adj", meaning: "Cao tuổi", example: "" },
+            { word: "Insistent", ipa: "/ɪnˈsɪs.tənt/", type: "adj", meaning: "Khăng khăng", example: "" },
+            { word: "Intuitively", ipa: "/ɪnˈtuː.ɪ.t̬ɪv.li/", type: "adv", meaning: "Theo trực giác", example: "" },
+            { word: "Plausible", ipa: "/ˈplɑː.zə.bəl/", type: "adj", meaning: "Hợp lý", example: "" },
+            { word: "Prolonged", ipa: "/prəˈlɑːŋd/", type: "adj", meaning: "Kéo dài", example: "" },
+            { word: "Vocation", ipa: "/voʊˈkeɪ.ʃən/", type: "n", meaning: "Thiên hướng / Nghề nghiệp", example: "" },
+            { word: "Acute", ipa: "/əˈkjuːt/", type: "adj", meaning: "Cấp tính", example: "" },
+            { word: "Dehydration", ipa: "/ˌdiː.haɪˈdreɪ.ʃən/", type: "n", meaning: "Sự mất nước", example: "" },
+            { word: "Deter", ipa: "/dɪˈtɝː/", type: "v", meaning: "Ngăn cản", example: "" },
+            { word: "Epidemic", ipa: "/ˌep.əˈdem.ɪk/", type: "n", meaning: "Dịch bệnh", example: "" },
+            { word: "Life expectancy", ipa: "", type: "phr", meaning: "Tuổi thọ trung bình", example: "" },
+            { word: "Life span", ipa: "", type: "phr", meaning: "Tuổi thọ", example: "" },
+            { word: "Over-the-counter medicine", ipa: "", type: "phr", meaning: "Thuốc không kê đơn", example: "" },
+            { word: "Palpitations", ipa: "/ˌpæl.pəˈteɪ.ʃənz/", type: "n", meaning: "Tim đập nhanh", example: "" },
+            { word: "Perspire", ipa: "/pɚˈspaɪr/", type: "v", meaning: "Đổ mồ hôi", example: "" },
+            { word: "Quarantine", ipa: "/ˈkwɔːr.ən.tiːn/", type: "n/v", meaning: "Cách ly", example: "" },
+            { word: "Recuperate", ipa: "/rɪˈkuː.pɚ.eɪt/", type: "v", meaning: "Hồi phục", example: "" },
+            { word: "Respiratory system", ipa: "", type: "phr", meaning: "Hệ hô hấp", example: "" },
+            { word: "Respire", ipa: "/rɪˈspaɪr/", type: "v", meaning: "Hô hấp", example: "" },
+            { word: "Sterilize", ipa: "/ˈster.ə.laɪz/", type: "v", meaning: "Khử trùng", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

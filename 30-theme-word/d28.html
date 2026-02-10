@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 28: Building & Home - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #A16207; --secondary-bg: #FEFCE8; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #FEFCE8; color: #A16207; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 28: Tòa nhà - Nhà</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Furnished", ipa: "/ˈfɝː.nɪʃt/", type: "adj", meaning: "Có sẵn đồ đạc", example: "Furnished apartments cost more." },
+            { word: "Furnish", ipa: "/ˈfɝː.nɪʃ/", type: "v (der)", meaning: "Trang bị đồ đạc", example: "" },
+            { word: "Furniture", ipa: "/ˈfɝː.nɪ.tʃɚ/", type: "n (der)", meaning: "Đồ nội thất", example: "" },
+            { word: "Unfurnished", ipa: "/ʌnˈfɝː.nɪʃt/", type: "adj (ant)", meaning: "Không có đồ đạc", example: "" },
+            { word: "Residence", ipa: "/ˈrez.ə.duns/", type: "n", meaning: "Nơi cư trú, nhà ở", example: "Closest to their residence." },
+            { word: "Reside", ipa: "/rɪˈzaɪd/", type: "v (der)", meaning: "Cư trú", example: "" },
+            { word: "Resident", ipa: "/ˈrez.ə.dənt/", type: "n (der)", meaning: "Cư dân", example: "" },
+            { word: "Residential", ipa: "/ˌrez.əˈden.ʃəl/", type: "adj (der)", meaning: "Thuộc nhà ở", example: "" },
+            { word: "Spacious", ipa: "/ˈspeɪ.ʃəs/", type: "adj", meaning: "Rộng rãi", example: "A spacious kitchen area." },
+            { word: "Spaciously", ipa: "/ˈspeɪ.ʃəs.li/", type: "adv (der)", meaning: "Rộng rãi", example: "" },
+            { word: "Roomy", ipa: "/ˈruː.mi/", type: "adj (syn)", meaning: "Rộng rãi", example: "" },
+            { word: "Drape", ipa: "/dreɪp/", type: "v", meaning: "Treo màn, che rèm", example: "Draped the windows." },
+            { word: "Drape", ipa: "/dreɪp/", type: "n", meaning: "Rèm, màn", example: "" },
+            { word: "Unoccupied", ipa: "/ʌnˈɑː.kjə.paɪd/", type: "adj", meaning: "Bỏ trống, không có người ở", example: "Been unoccupied for four months." },
+            { word: "Occupy", ipa: "/ˈɑː.kjə.paɪ/", type: "v (der)", meaning: "Chiếm giữ / Ở", example: "" },
+            { word: "Occupant", ipa: "/ˈɑː.kjə.pənt/", type: "n (der)", meaning: "Người cư ngụ", example: "" },
+            { word: "Vacant", ipa: "/ˈveɪ.kənt/", type: "adj (syn)", meaning: "Trống", example: "" },
+            { word: "Occupied", ipa: "/ˈɑː.kjə.paɪd/", type: "adj (ant)", meaning: "Đang sử dụng", example: "" },
+            { word: "Renovation", ipa: "/ˌren.əˈveɪ.ʃən/", type: "n", meaning: "Sự cải tạo, sửa sang", example: "Closed for renovation." },
+            { word: "Renovate", ipa: "/ˈren.ə.veɪt/", type: "v (der)", meaning: "Cải tạo", example: "" },
+            { word: "Refurbish", ipa: "/ˌriːˈfɝː.bɪʃ/", type: "v (syn)", meaning: "Tân trang", example: "" },
+            { word: "Remodel", ipa: "/ˌriːˈmɑː.dəl/", type: "v (syn)", meaning: "Sửa đổi", example: "" },
+            { word: "Appropriate", ipa: "/əˈproʊ.pri.ət/", type: "adj", meaning: "Thích hợp", example: "Appropriate for a family." },
+            { word: "Delay", ipa: "/dɪˈleɪ/", type: "v", meaning: "Trì hoãn", example: "Delayed repairing the roof." },
+            { word: "Delay", ipa: "/dɪˈleɪ/", type: "n", meaning: "Sự trì hoãn", example: "Without delay." },
+            { word: "Community", ipa: "/kəˈmjuː.nə.t̬i/", type: "n", meaning: "Cộng đồng", example: "Community opposition." },
+            { word: "Construction", ipa: "/kənˈstrʌk.ʃən/", type: "n", meaning: "Sự xây dựng", example: "Construction of the bridge." },
+            { word: "Construct", ipa: "/kənˈstrʌkt/", type: "v (der)", meaning: "Xây dựng", example: "" },
+            { word: "Constructive", ipa: "/kənˈstrʌk.tɪv/", type: "adj (der)", meaning: "Có tính xây dựng", example: "" },
+            { word: "Demolition", ipa: "/ˌdem.əˈlɪʃ.ən/", type: "n (ant)", meaning: "Sự phá hủy", example: "" },
+            { word: "Repair", ipa: "/rɪˈper/", type: "v", meaning: "Sửa chữa", example: "Repaired the leaking pipe." },
+            { word: "Repairable", ipa: "/rɪˈper.ə.bəl/", type: "adj (der)", meaning: "Có thể sửa", example: "" },
+            { word: "Repairman", ipa: "/rɪˈper.mæn/", type: "n (der)", meaning: "Thợ sửa chữa", example: "" },
+            { word: "Currently", ipa: "/ˈkɝː.ənt.li/", type: "adv", meaning: "Hiện tại", example: "Currently closed." },
+            { word: "Current", ipa: "/ˈkɝː.ənt/", type: "adj (der)", meaning: "Hiện hành", example: "" },
+            { word: "Regularly", ipa: "/ˈreɡ.jə.lɚ.li/", type: "adv", meaning: "Thường xuyên", example: "Regularly does yard work." },
+            { word: "Arrange", ipa: "/əˈreɪndʒ/", type: "v", meaning: "Sắp xếp", example: "Arranged the furniture." },
+            { word: "Arrangement", ipa: "/əˈreɪndʒ.mənt/", type: "n (der)", meaning: "Sự sắp xếp", example: "" },
+            { word: "Location", ipa: "/loʊˈkeɪ.ʃən/", type: "n", meaning: "Địa điểm, vị trí", example: "Ideal location for a house." },
+            { word: "Locate", ipa: "/loʊˈkeɪt/", type: "v (der)", meaning: "Định vị", example: "" },
+            { word: "Restore", ipa: "/rɪˈstɔːr/", type: "v", meaning: "Phục hồi, khôi phục", example: "Restored to original appearance." },
+            { word: "Restoration", ipa: "/ˌres.təˈreɪ.ʃən/", type: "n (der)", meaning: "Sự phục hồi", example: "" },
+            { word: "Presently", ipa: "/ˈprez.ənt.li/", type: "adv", meaning: "Hiện nay", example: "Presently under construction." },
+            { word: "Present", ipa: "/ˈprez.ənt/", type: "adj/n (der)", meaning: "Hiện tại", example: "" },
+            { word: "Numerous", ipa: "/ˈnuː.mə.rəs/", type: "adj", meaning: "Nhiều, đông đảo", example: "Rented to numerous families." },
+            { word: "Number", ipa: "/ˈnʌm.bɚ/", type: "n (der)", meaning: "Số lượng", example: "" },
+            { word: "Multiple", ipa: "/ˈmʌl.tə.pəl/", type: "adj (syn)", meaning: "Nhiều", example: "" },
+            { word: "Countless", ipa: "/ˈkaʊnt.ləs/", type: "adj (syn)", meaning: "Vô số", example: "" },
+            { word: "Abandon", ipa: "/əˈbæn.dən/", type: "v", meaning: "Bỏ, từ bỏ", example: "Project was abandoned." },
+            { word: "Contractor", ipa: "/ˈkɑːn.træk.tɚ/", type: "n", meaning: "Nhà thầu", example: "The contractor expects to finish." },
+            { word: "Develop", ipa: "/dɪˈvel.əp/", type: "v", meaning: "Phát triển, xây dựng", example: "Developing the property." },
+            { word: "Maintain", ipa: "/meɪnˈteɪn/", type: "v", meaning: "Duy trì, bảo quản", example: "Maintain the building." },
+            { word: "Maintenance", ipa: "/ˈmeɪn.tən.əns/", type: "n (der)", meaning: "Sự bảo trì", example: "" },
+            { word: "Keep", ipa: "/kiːp/", type: "v (syn)", meaning: "Giữ", example: "" },
+            { word: "Densely", ipa: "/ˈdens.li/", type: "adv", meaning: "Dày đặc, đông đúc", example: "Densely packed." },
+            { word: "Dense", ipa: "/dens/", type: "adj (der)", meaning: "Dày đặc", example: "" },
+            { word: "Density", ipa: "/ˈden.sə.t̬i/", type: "n (der)", meaning: "Mật độ", example: "" },
+            { word: "Prepare", ipa: "/prɪˈper/", type: "v", meaning: "Chuẩn bị", example: "Preparing the apartment." },
+            { word: "Finally", ipa: "/ˈfaɪ.nəl.i/", type: "adv", meaning: "Cuối cùng", example: "Finally sold." },
+            { word: "Final", ipa: "/ˈfaɪ.nəl/", type: "adj (der)", meaning: "Cuối cùng", example: "" },
+            { word: "Finalize", ipa: "/ˈfaɪ.nəl.aɪz/", type: "v (der)", meaning: "Hoàn tất", example: "" },
+            { word: "District", ipa: "/ˈdɪs.trɪkt/", type: "n", meaning: "Quận, khu vực", example: "The business district." },
+            { word: "Area", ipa: "/ˈer.i.ə/", type: "n (syn)", meaning: "Khu vực", example: "" },
+            { word: "Renewal", ipa: "/rɪˈnuː.əl/", type: "n", meaning: "Sự đổi mới, gia hạn", example: "Urban renewal project." },
+            { word: "Renew", ipa: "/rɪˈnuː/", type: "v (der)", meaning: "Làm mới", example: "" },
+            { word: "Compulsory", ipa: "/kəmˈpʌl.sɚ.i/", type: "adj", meaning: "Bắt buộc", example: "Renovations is compulsory." },
+            { word: "Compel", ipa: "/kəmˈpel/", type: "v (der)", meaning: "Bắt buộc", example: "" },
+            { word: "Compulsion", ipa: "/kəmˈpʌl.ʃən/", type: "n (der)", meaning: "Sự ép buộc", example: "" },
+            { word: "Obligatory", ipa: "/əˈblɪɡ.ə.tɔːr.i/", type: "adj (syn)", meaning: "Bắt buộc", example: "" },
+            { word: "Interfere", ipa: "/ˌɪn.t̬ɚˈfɪr/", type: "v", meaning: "Can thiệp, gây trở ngại", example: "Interfered with progress." },
+            { word: "Interference", ipa: "/ˌɪn.t̬ɚˈfɪr.əns/", type: "n (der)", meaning: "Sự can thiệp", example: "" },
+            { word: "Relocation", ipa: "/ˌriː.loʊˈkeɪ.ʃən/", type: "n", meaning: "Sự chuyển địa điểm", example: "Relocation of offices." },
+            { word: "Totally", ipa: "/ˈtoʊ.t̬əl.i/", type: "adv", meaning: "Hoàn toàn", example: "Totally renovated." },
+            { word: "Actually", ipa: "/ˈæk.tʃu.ə.li/", type: "adv", meaning: "Thực ra", example: "It is actually taller." },
+            { word: "Architect", ipa: "/ˈɑːr.kə.tekt/", type: "n", meaning: "Kiến trúc sư", example: "Architects are working on a design." },
+            { word: "Architecture", ipa: "/ˈɑːr.kə.tek.tʃɚ/", type: "n (confusing)", meaning: "Kiến trúc", example: "" },
+            { word: "Enlarge", ipa: "/ɪnˈlɑːrdʒ/", type: "v", meaning: "Mở rộng, phóng to", example: "Need to be enlarged." },
+            { word: "Install", ipa: "/ɪnˈstɑːl/", type: "v", meaning: "Lắp đặt", example: "Installed on Monday." },
+            { word: "Installation", ipa: "/ˌɪn.stəˈleɪ.ʃən/", type: "n (der)", meaning: "Sự lắp đặt", example: "" },
+            { word: "Set up", ipa: "", type: "phr (syn)", meaning: "Thiết lập", example: "" },
+            { word: "Permanent", ipa: "/ˈpɝː.mə.nənt/", type: "adj", meaning: "Vĩnh viễn, lâu dài", example: "Permanent address." },
+            { word: "Permanently", ipa: "/ˈpɝː.mə.nənt.li/", type: "adv (der)", meaning: "Vĩnh viễn", example: "" },
+            { word: "Temporary", ipa: "/ˈtem.pə.rer.i/", type: "adj (ant)", meaning: "Tạm thời", example: "" },
+            { word: "Suppose", ipa: "/səˈpoʊz/", type: "v", meaning: "Giả sử, cho rằng", example: "Than anyone supposes." },
+            { word: "Adjacent", ipa: "/əˈdʒeɪ.sənt/", type: "adj", meaning: "Liền kề", example: "Adjacent to the office." },
+            { word: "Consist", ipa: "/kənˈsɪst/", type: "v", meaning: "Bao gồm (đi với of)", example: "Consists of two rooms." },
+            { word: "Utility", ipa: "/juːˈtɪl.ə.t̬i/", type: "n", meaning: "Tiện ích (điện, nước)", example: "Utility company." },
+            { word: "Utilize", ipa: "/ˈjuː.t̬əl.aɪz/", type: "v (der)", meaning: "Sử dụng", example: "" },
+
+            // --- BASIC & EXTRAS ---
+            { word: "Armchair", ipa: "/ˈɑːrm.tʃer/", type: "n", meaning: "Ghế bành", example: "" },
+            { word: "Ceiling", ipa: "/ˈsiː.lɪŋ/", type: "n", meaning: "Trần nhà", example: "" },
+            { word: "Cleanup", ipa: "/ˈkliːn.ʌp/", type: "n", meaning: "Việc dọn dẹp", example: "" },
+            { word: "Decoration", ipa: "/ˌdek.ərˈeɪ.ʃən/", type: "n", meaning: "Sự trang trí", example: "" },
+            { word: "Fence", ipa: "/fens/", type: "n", meaning: "Hàng rào", example: "" },
+            { word: "Floor", ipa: "/flɔːr/", type: "n", meaning: "Sàn nhà / Tầng", example: "" },
+            { word: "Frame", ipa: "/freɪm/", type: "n", meaning: "Khung", example: "" },
+            { word: "Furniture", ipa: "/ˈfɝː.nɪ.tʃɚ/", type: "n", meaning: "Đồ nội thất", example: "" },
+            { word: "Garage", ipa: "/ɡəˈrɑːʒ/", type: "n", meaning: "Nhà xe", example: "" },
+            { word: "Heating system", ipa: "", type: "phr", meaning: "Hệ thống sưởi", example: "" },
+            { word: "Lobby", ipa: "/ˈlɑː.bi/", type: "n", meaning: "Tiền sảnh", example: "" },
+            { word: "Remodeling", ipa: "/ˌriːˈmɑː.dəl.ɪŋ/", type: "n", meaning: "Sự tu sửa", example: "" },
+            { word: "Rooftop", ipa: "/ˈruːf.tɑːp/", type: "n", meaning: "Sân thượng", example: "" },
+            { word: "Rope", ipa: "/roʊp/", type: "n", meaning: "Dây thừng", example: "" },
+            { word: "Stick", ipa: "/stɪk/", type: "n", meaning: "Cái que, gậy", example: "" },
+            { word: "Tank", ipa: "/tæŋk/", type: "n", meaning: "Thùng chứa", example: "" },
+            { word: "Veranda", ipa: "/vəˈræn.də/", type: "n", meaning: "Hiên nhà", example: "" },
+            { word: "Desktop", ipa: "/ˈdesk.tɑːp/", type: "n", meaning: "Máy tính để bàn", example: "" },
+            { word: "Dwell", ipa: "/dwel/", type: "v", meaning: "Cư trú", example: "" },
+            { word: "Fireplace", ipa: "/ˈfaɪr.pleɪs/", type: "n", meaning: "Lò sưởi", example: "" },
+            { word: "Heat", ipa: "/hiːt/", type: "n/v", meaning: "Nhiệt / Làm nóng", example: "" },
+            { word: "Homemade", ipa: "/ˌhoʊmˈmeɪd/", type: "adj", meaning: "Làm tại nhà", example: "" },
+            { word: "Homeowner", ipa: "/ˈhoʊmˌoʊ.nɚ/", type: "n", meaning: "Chủ nhà", example: "" },
+            { word: "Inhabit", ipa: "/ɪnˈhæb.ɪt/", type: "v", meaning: "Cư trú", example: "" },
+            { word: "Lighten", ipa: "/ˈlaɪ.tən/", type: "v", meaning: "Làm sáng / Làm nhẹ", example: "" },
+            { word: "Neighbor", ipa: "/ˈneɪ.bɚ/", type: "n", meaning: "Hàng xóm", example: "" },
+            { word: "Urban", ipa: "/ˈɝː.bən/", type: "adj", meaning: "Thuộc thành thị", example: "" },
+            { word: "Washing machine", ipa: "", type: "phr", meaning: "Máy giặt", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "Architecture", ipa: "/ˈɑːr.kə.tek.tʃɚ/", type: "n", meaning: "Kiến trúc", example: "" },
+            { word: "Canopy", ipa: "/ˈkæn.ə.pi/", type: "n", meaning: "Mái che", example: "" },
+            { word: "Cast a shadow", ipa: "", type: "phr", meaning: "Phủ bóng", example: "" },
+            { word: "Column", ipa: "/ˈkɑː.ləm/", type: "n", meaning: "Cột", example: "" },
+            { word: "Courtyard", ipa: "/ˈkɔːrt.jɑːrd/", type: "n", meaning: "Sân trong", example: "" },
+            { word: "Cupboard", ipa: "/ˈkʌb.ɚd/", type: "n", meaning: "Tủ chạn", example: "" },
+            { word: "Cut the grass", ipa: "", type: "phr", meaning: "Cắt cỏ", example: "" },
+            { word: "Dedication ceremony", ipa: "", type: "phr", meaning: "Lễ khánh thành/dâng hiến", example: "" },
+            { word: "Doorway", ipa: "/ˈdɔːr.weɪ/", type: "n", meaning: "Ngưỡng cửa", example: "" },
+            { word: "Dresser", ipa: "/ˈdres.ɚ/", type: "n", meaning: "Tủ quần áo (có ngăn kéo)", example: "" },
+            { word: "Emergency exit", ipa: "", type: "phr", meaning: "Lối thoát hiểm", example: "" },
+            { word: "Erect", ipa: "/ɪˈrekt/", type: "v", meaning: "Dựng lên", example: "" },
+            { word: "Every hour on the hour", ipa: "", type: "phr", meaning: "Mỗi giờ một lần (đúng giờ)", example: "" },
+            { word: "Faucet", ipa: "/ˈfɑː.sət/", type: "n", meaning: "Vòi nước", example: "" },
+            { word: "Floor plan", ipa: "", type: "phr", meaning: "Sơ đồ mặt bằng", example: "" },
+            { word: "Flooring", ipa: "/ˈflɔːr.ɪŋ/", type: "n", meaning: "Vật liệu lót sàn", example: "" },
+            { word: "Front door", ipa: "", type: "phr", meaning: "Cửa trước", example: "" },
+            { word: "Hallway", ipa: "/ˈhɑːl.weɪ/", type: "n", meaning: "Hành lang", example: "" },
+            { word: "Hammering", ipa: "/ˈhæm.ɚ.ɪŋ/", type: "n", meaning: "Tiếng búa đập", example: "" },
+            { word: "Handrail", ipa: "/ˈhænd.reɪl/", type: "n", meaning: "Tay vịn", example: "" },
+            { word: "Home-improvement", ipa: "", type: "n", meaning: "Cải tạo nhà cửa", example: "" },
+            { word: "Lamppost", ipa: "/ˈlæmp.poʊst/", type: "n", meaning: "Cột đèn", example: "" },
+            { word: "Lean against", ipa: "", type: "phr", meaning: "Dựa vào", example: "" },
+            { word: "Light bulb", ipa: "", type: "phr", meaning: "Bóng đèn", example: "" },
+            { word: "Make repairs", ipa: "", type: "phr", meaning: "Sửa chữa", example: "" },
+            { word: "Make the bed", ipa: "", type: "phr", meaning: "Dọn giường", example: "" },
+            { word: "Multistory", ipa: "/ˌmʌl.tiˈstɔːr.i/", type: "adj", meaning: "Nhiều tầng", example: "" },
+            { word: "Outdoor wall", ipa: "", type: "phr", meaning: "Tường ngoài", example: "" },
+            { word: "Plug in", ipa: "", type: "phr", meaning: "Cắm điện", example: "" },
+            { word: "Pole", ipa: "/poʊl/", type: "n", meaning: "Cột", example: "" },
+            { word: "Private residence", ipa: "", type: "phr", meaning: "Tư dinh", example: "" },
+            { word: "Put away", ipa: "", type: "phr", meaning: "Cất đi", example: "" },
+            { word: "Rebuild", ipa: "/ˌriːˈbɪld/", type: "v", meaning: "Xây lại", example: "" },
+            { word: "Repairperson", ipa: "", type: "n", meaning: "Thợ sửa chữa", example: "" },
+            { word: "Spread on", ipa: "", type: "phr", meaning: "Trải lên", example: "" },
+            { word: "Staircase", ipa: "/ˈster.keɪs/", type: "n", meaning: "Cầu thang bộ", example: "" },
+            { word: "Stairway", ipa: "/ˈster.weɪ/", type: "n", meaning: "Cầu thang", example: "" },
+            { word: "Storage cabinet", ipa: "", type: "phr", meaning: "Tủ lưu trữ", example: "" },
+            { word: "Switch on", ipa: "", type: "phr", meaning: "Bật lên", example: "" },
+            { word: "Turn on its side", ipa: "", type: "phr", meaning: "Lật nghiêng", example: "" },
+            { word: "Undergo renovation", ipa: "", type: "phr", meaning: "Trải qua cải tạo", example: "" },
+            { word: "Windowsill", ipa: "/ˈwɪn.doʊ.sɪl/", type: "n", meaning: "Bậu cửa sổ", example: "" },
+            { word: "Construct", ipa: "/kənˈstrʌkt/", type: "v", meaning: "Xây dựng", example: "" },
+            { word: "Describe", ipa: "/dɪˈskraɪb/", type: "v", meaning: "Mô tả", example: "" },
+            { word: "Desirable", ipa: "/dɪˈzaɪr.ə.bəl/", type: "adj", meaning: "Đáng khao khát", example: "" },
+            { word: "Structure", ipa: "/ˈstrʌk.tʃɚ/", type: "n", meaning: "Cấu trúc / Công trình", example: "" },
+            { word: "Access road", ipa: "", type: "phr", meaning: "Đường dẫn", example: "" },
+            { word: "Arrange furniture", ipa: "", type: "phr", meaning: "Sắp xếp nội thất", example: "" },
+            { word: "Built-in", ipa: "/ˌbɪltˈɪn/", type: "adj", meaning: "Âm tường / Tích hợp", example: "" },
+            { word: "Carpentry", ipa: "/ˈkɑːr.pən.tri/", type: "n", meaning: "Nghề mộc", example: "" },
+            { word: "Fire alarm", ipa: "", type: "phr", meaning: "Chuông báo cháy", example: "" },
+            { word: "Fire extinguisher", ipa: "", type: "phr", meaning: "Bình cứu hỏa", example: "" },
+            { word: "Fitting room", ipa: "", type: "phr", meaning: "Phòng thử đồ", example: "" },
+            { word: "Fixture", ipa: "/ˈfɪks.tʃɚ/", type: "n", meaning: "Đồ đạc cố định (đèn, bồn...)", example: "" },
+            { word: "Homebuilder", ipa: "/ˈhoʊmˌbɪl.dɚ/", type: "n", meaning: "Thợ xây nhà", example: "" },
+            { word: "Housekeeping", ipa: "/ˈhaʊsˌkiː.pɪŋ/", type: "n", meaning: "Công việc quản gia", example: "" },
+            { word: "Housewares", ipa: "/ˈhaʊs.werz/", type: "n", meaning: "Đồ gia dụng", example: "" },
+            { word: "Housing development", ipa: "", type: "phr", meaning: "Khu quy hoạch nhà ở", example: "" },
+            { word: "In error", ipa: "", type: "phr", meaning: "Do sai sót", example: "" },
+            { word: "Overprice", ipa: "/ˌoʊ.vɚˈpraɪs/", type: "v", meaning: "Định giá quá cao", example: "" },
+            { word: "Reinforce", ipa: "/ˌriː.ɪnˈfɔːrs/", type: "v", meaning: "Củng cố", example: "" },
+            { word: "Resident", ipa: "/ˈrez.ə.dənt/", type: "n", meaning: "Cư dân", example: "" },
+            { word: "Restoration", ipa: "/ˌres.təˈreɪ.ʃən/", type: "n", meaning: "Sự phục hồi", example: "" },
+            { word: "Scrubbing", ipa: "/ˈskrʌb.ɪŋ/", type: "n", meaning: "Sự chà rửa", example: "" },
+            { word: "Skyscraper", ipa: "/ˈskaɪˌskreɪ.pɚ/", type: "n", meaning: "Tòa nhà chọc trời", example: "" },
+            { word: "Space-saving", ipa: "", type: "adj", meaning: "Tiết kiệm không gian", example: "" },
+            { word: "Tenant", ipa: "/ˈten.ənt/", type: "n", meaning: "Người thuê nhà", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Archway", ipa: "/ˈɑːrtʃ.weɪ/", type: "n", meaning: "Lối đi có mái vòm", example: "" },
+            { word: "Be mounted on", ipa: "", type: "phr", meaning: "Được gắn lên", example: "" },
+            { word: "Dig with shovel", ipa: "", type: "phr", meaning: "Đào bằng xẻng", example: "" },
+            { word: "Drain", ipa: "/dreɪn/", type: "v", meaning: "Thoát nước", example: "" },
+            { word: "Hedge", ipa: "/hedʒ/", type: "n", meaning: "Hàng rào cây", example: "" },
+            { word: "Landlord", ipa: "/ˈlænd.lɔːrd/", type: "n", meaning: "Chủ nhà", example: "" },
+            { word: "Ledge", ipa: "/ledʒ/", type: "n", meaning: "Gờ, rìa", example: "" },
+            { word: "Lock oneself out", ipa: "", type: "phr", meaning: "Tự nhốt mình bên ngoài", example: "" },
+            { word: "Plumber", ipa: "/ˈplʌm.ɚ/", type: "n", meaning: "Thợ sửa ống nước", example: "" },
+            { word: "Porch", ipa: "/pɔːrtʃ/", type: "n", meaning: "Hiên nhà", example: "" },
+            { word: "Run the tap", ipa: "", type: "phr", meaning: "Mở vòi nước", example: "" },
+            { word: "Saw", ipa: "/sɑː/", type: "n/v", meaning: "Cái cưa / Cưa", example: "" },
+            { word: "Scaffolding", ipa: "/ˈskæf.əl.dɪŋ/", type: "n", meaning: "Giàn giáo", example: "" },
+            { word: "Screw", ipa: "/skruː/", type: "n", meaning: "Đinh vít", example: "" },
+            { word: "Symmetrically", ipa: "/sɪˈmet.rɪ.kəl.i/", type: "adv", meaning: "Đối xứng", example: "" },
+            { word: "Tear down", ipa: "", type: "phr", meaning: "Phá bỏ", example: "" },
+            { word: "Uninhabited", ipa: "/ˌʌn.ɪnˈhæb.ɪ.t̬ɪd/", type: "adj", meaning: "Không có người ở", example: "" },
+            { word: "Woodwork", ipa: "/ˈwʊd.wɝːk/", type: "n", meaning: "Đồ gỗ", example: "" },
+            { word: "Complex", ipa: "/ˈkɑːm.pleks/", type: "n", meaning: "Khu phức hợp", example: "" },
+            { word: "Constructively", ipa: "/kənˈstrʌk.tɪv.li/", type: "adv", meaning: "Có tính xây dựng", example: "" },
+            { word: "Locale", ipa: "/loʊˈkæl/", type: "n", meaning: "Nơi xảy ra sự việc", example: "" },
+            { word: "Maintenance", ipa: "/ˈmeɪn.tən.əns/", type: "n", meaning: "Bảo trì", example: "" },
+            { word: "Reconfiguration", ipa: "/ˌriː.kənˌfɪɡ.jəˈreɪ.ʃən/", type: "n", meaning: "Sự cấu hình lại", example: "" },
+            { word: "Startle", ipa: "/ˈstɑːr.t̬əl/", type: "v", meaning: "Làm giật mình", example: "" },
+            { word: "Annex", ipa: "/ˈæn.eks/", type: "n", meaning: "Nhà phụ", example: "" },
+            { word: "Demolish", ipa: "/dɪˈmɑː.lɪʃ/", type: "v", meaning: "Phá hủy", example: "" },
+            { word: "Demolition", ipa: "/ˌdem.əˈlɪʃ.ən/", type: "n", meaning: "Sự phá hủy", example: "" },
+            { word: "For lease", ipa: "", type: "phr", meaning: "Cho thuê", example: "" },
+            { word: "Insulation", ipa: "/ˌɪn.səˈleɪ.ʃən/", type: "n", meaning: "Vật liệu cách nhiệt", example: "" },
+            { word: "Premises", ipa: "/ˈprem.ɪ.sɪz/", type: "n", meaning: "Cơ ngơi, khuôn viên", example: "" },
+            { word: "Rack", ipa: "/ræk/", type: "n", meaning: "Giá để đồ", example: "" },
+            { word: "Shockproof", ipa: "/ˈʃɑːk.pruːf/", type: "adj", meaning: "Chống sốc", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html> 

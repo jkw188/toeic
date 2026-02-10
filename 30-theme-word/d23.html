@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 23: Employee Welfare - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #EC4899; --secondary-bg: #FCE7F3; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #FCE7F3; color: #BE185D; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 23: Phúc lợi của nhân viên</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Host", ipa: "/hoʊst/", type: "v", meaning: "Đăng cai, dẫn chương trình", example: "Host this year's convention." },
+            { word: "Host", ipa: "/hoʊst/", type: "n", meaning: "Chủ nhà", example: "" },
+            { word: "Annual", ipa: "/ˈæn.ju.əl/", type: "adj", meaning: "Hàng năm", example: "Annual conference." },
+            { word: "Annually", ipa: "/ˈæn.ju.ə.li/", type: "adv (der)", meaning: "Hàng năm", example: "" },
+            { word: "Biannual", ipa: "/baɪˈæn.ju.əl/", type: "adj (confusing)", meaning: "Hai lần một năm", example: "" },
+            { word: "Biennial", ipa: "/baɪˈen.i.əl/", type: "adj (confusing)", meaning: "Hai năm một lần", example: "" },
+            { word: "Purpose", ipa: "/ˈpɝː.pəs/", type: "n", meaning: "Mục đích", example: "Purpose of the training." },
+            { word: "Purposely", ipa: "/ˈpɝː.pəs.li/", type: "adv (der)", meaning: "Chủ đích", example: "" },
+            { word: "Aim", ipa: "/eɪm/", type: "n (syn)", meaning: "Mục tiêu", example: "" },
+            { word: "Enroll", ipa: "/ɪnˈroʊl/", type: "v", meaning: "Ghi danh, đăng ký", example: "Enroll in at least one program." },
+            { word: "Enrollment", ipa: "/ɪnˈroʊl.mənt/", type: "n (der)", meaning: "Sự ghi danh", example: "" },
+            { word: "Register", ipa: "/ˈredʒ.ə.stɚ/", type: "v (syn)", meaning: "Đăng ký", example: "" },
+            { word: "Lecture", ipa: "/ˈlek.tʃɚ/", type: "n", meaning: "Bài giảng", example: "Weekly guest lectures." },
+            { word: "Lecturer", ipa: "/ˈlek.tʃɚ.ɚ/", type: "n (der)", meaning: "Giảng viên", example: "" },
+            { word: "Participant", ipa: "/pɑːrˈtɪs.ə.pənt/", type: "n", meaning: "Người tham gia", example: "Many participants showed improvement." },
+            { word: "Participate", ipa: "/pɑːrˈtɪs.ə.peɪt/", type: "v (der)", meaning: "Tham gia", example: "" },
+            { word: "Participation", ipa: "/pɑːrˌtɪs.əˈpeɪ.ʃən/", type: "n (der)", meaning: "Sự tham gia", example: "" },
+            { word: "Attendee", ipa: "/əˌtenˈdiː/", type: "n (syn)", meaning: "Người tham dự", example: "" },
+            { word: "Attend", ipa: "/əˈtend/", type: "v", meaning: "Tham dự", example: "Attend weekend courses." },
+            { word: "Attendance", ipa: "/əˈten.dəns/", type: "n (der)", meaning: "Sự tham dự", example: "" },
+            { word: "Attendant", ipa: "/əˈten.dənt/", type: "n (der)", meaning: "Người phục vụ", example: "" },
+            { word: "Encourage", ipa: "/ɪnˈkɝː.ɪdʒ/", type: "v", meaning: "Khuyến khích", example: "Encouraged managers to allow flextime." },
+            { word: "Encouragement", ipa: "/ɪnˈkɝː.ɪdʒ.mənt/", type: "n (der)", meaning: "Sự động viên", example: "" },
+            { word: "Promote", ipa: "/prəˈmoʊt/", type: "v (syn)", meaning: "Thúc đẩy", example: "" },
+            { word: "Leave", ipa: "/liːv/", type: "n", meaning: "Nghỉ phép", example: "Emergency leave." },
+            { word: "Leave", ipa: "/liːv/", type: "v", meaning: "Rời đi", example: "Left for Singapore." },
+            { word: "Absence", ipa: "/ˈæb.səns/", type: "n (syn)", meaning: "Sự vắng mặt", example: "" },
+            { word: "Recommendation", ipa: "/ˌrek.ə.menˈdeɪ.ʃən/", type: "n", meaning: "Sự giới thiệu, đề xuất", example: "Recommendations on improving." },
+            { word: "Recommend", ipa: "/ˌrek.əˈmend/", type: "v (der)", meaning: "Khuyên, giới thiệu", example: "" },
+            { word: "Conference", ipa: "/ˈkɑːn.fɚ.əns/", type: "n", meaning: "Hội nghị", example: "This year's conference." },
+            { word: "Schedule", ipa: "/ˈsked.juːl/", type: "v", meaning: "Lên lịch", example: "Scheduled for the morning." },
+            { word: "Schedule", ipa: "/ˈsked.juːl/", type: "n", meaning: "Lịch trình", example: "Ahead of schedule." },
+            { word: "Include", ipa: "/ɪnˈkluːd/", type: "v", meaning: "Bao gồm", example: "Includes special classes." },
+            { word: "Inclusion", ipa: "/ɪnˈkluː.ʒən/", type: "n (der)", meaning: "Sự bao gồm", example: "" },
+            { word: "Inclusive", ipa: "/ɪnˈkluː.sɪv/", type: "adj (der)", meaning: "Bao gồm", example: "" },
+            { word: "Contain", ipa: "/kənˈteɪn/", type: "v (syn)", meaning: "Chứa đựng", example: "" },
+            { word: "Exclude", ipa: "/ɪkˈskluːd/", type: "v (ant)", meaning: "Loại trừ", example: "" },
+            { word: "Consist", ipa: "/kənˈsɪst/", type: "v (confusing)", meaning: "Gồm có (đi với of)", example: "" },
+            { word: "Result", ipa: "/rɪˈzʌlt/", type: "n", meaning: "Kết quả", example: "As a result of increased sales." },
+            { word: "Result", ipa: "/rɪˈzʌlt/", type: "v", meaning: "Dẫn đến", example: "Resulted in more funding." },
+            { word: "Register", ipa: "/ˈredʒ.ə.stɚ/", type: "v", meaning: "Đăng ký", example: "Register for unemployment insurance." },
+            { word: "Registration", ipa: "/ˌredʒ.əˈstreɪ.ʃən/", type: "n (der)", meaning: "Sự đăng ký", example: "" },
+            { word: "Require", ipa: "/rɪˈkwaɪr/", type: "v", meaning: "Yêu cầu", example: "Required to attend." },
+            { word: "Requirement", ipa: "/rɪˈkwaɪr.mənt/", type: "n (der)", meaning: "Sự yêu cầu", example: "" },
+            { word: "Required", ipa: "/rɪˈkwaɪrd/", type: "adj (der)", meaning: "Cần thiết", example: "Required documents." },
+            { word: "Call for", ipa: "", type: "phr (syn)", meaning: "Yêu cầu", example: "" },
+            { word: "Grateful", ipa: "/ˈɡreɪt.fəl/", type: "adj", meaning: "Biết ơn", example: "Grateful for the raise." },
+            { word: "Overtime", ipa: "/ˈoʊ.vɚ.taɪm/", type: "n", meaning: "Giờ làm thêm", example: "Paid for overtime." },
+            { word: "Responsibility", ipa: "/rɪˌspɑːn.səˈbɪl.ə.t̬i/", type: "n", meaning: "Trách nhiệm", example: "Participants' responsibility." },
+            { word: "Responsible", ipa: "/rɪˈspɑːn.sə.bəl/", type: "adj (der)", meaning: "Chịu trách nhiệm", example: "" },
+            { word: "Assent", ipa: "/əˈsent/", type: "v", meaning: "Tán thành", example: "Assented to giving a raise." },
+            { word: "Assent", ipa: "/əˈsent/", type: "n", meaning: "Sự tán thành", example: "Gave her assent." },
+            { word: "Regard", ipa: "/rɪˈɡɑːrd/", type: "v", meaning: "Coi như", example: "Regard payment as a right." },
+            { word: "Regard", ipa: "/rɪˈɡɑːrd/", type: "n", meaning: "Sự quan tâm", example: "Showed little regard." },
+            { word: "Regarding", ipa: "/rɪˈɡɑːr.dɪŋ/", type: "prep (der)", meaning: "Về việc", example: "" },
+            { word: "Tentative", ipa: "/ˈten.tə.t̬ɪv/", type: "adj", meaning: "Dự kiến, chưa chắc chắn", example: "Plan is still tentative." },
+            { word: "Tentatively", ipa: "/ˈten.tə.t̬ɪv.li/", type: "adv (der)", meaning: "Dự kiến", example: "" },
+            { word: "Temporary", ipa: "/ˈtem.pə.rer.i/", type: "adj (syn)", meaning: "Tạm thời", example: "" },
+            { word: "Welcome", ipa: "/ˈwel.kəm/", type: "adj", meaning: "Được hoan nghênh", example: "A welcome addition." },
+            { word: "Welcome", ipa: "/ˈwel.kəm/", type: "v", meaning: "Chào đón", example: "Welcomed warmly." },
+            { word: "Welcoming", ipa: "/ˈwel.kʌm.ɪŋ/", type: "adj (der)", meaning: "Nhiệt tình", example: "" },
+            { word: "Function", ipa: "/ˈfʌŋk.ʃən/", type: "n", meaning: "Chức năng / Buổi lễ", example: "Business functions." },
+            { word: "Function", ipa: "/ˈfʌŋk.ʃən/", type: "v", meaning: "Hoạt động", example: "" },
+            { word: "Functional", ipa: "/ˈfʌŋk.ʃən.əl/", type: "adj (der)", meaning: "Thiết thực", example: "" },
+            { word: "Commence", ipa: "/kəˈmens/", type: "v", meaning: "Bắt đầu", example: "Shifts will commence." },
+            { word: "Commencement", ipa: "/kəˈmens.mənt/", type: "n (der)", meaning: "Sự bắt đầu / Lễ tốt nghiệp", example: "" },
+            { word: "Begin", ipa: "/bɪˈɡɪn/", type: "v (syn)", meaning: "Bắt đầu", example: "" },
+            { word: "Objective", ipa: "/əbˈdʒek.tɪv/", type: "n", meaning: "Mục tiêu", example: "Learning objectives." },
+            { word: "Objective", ipa: "/əbˈdʒek.tɪv/", type: "adj", meaning: "Khách quan", example: "" },
+            { word: "Object", ipa: "/əbˈdʒekt/", type: "v (confusing)", meaning: "Phản đối", example: "" },
+            { word: "Excited", ipa: "/ɪkˈsaɪ.t̬ɪd/", type: "adj", meaning: "Hào hứng", example: "Excited about opportunities." },
+            { word: "Excite", ipa: "/ɪkˈsaɪt/", type: "v (der)", meaning: "Kích thích", example: "" },
+            { word: "Exciting", ipa: "/ɪkˈsaɪ.tɪŋ/", type: "adj (der)", meaning: "Thú vị", example: "" },
+            { word: "Reimbursement", ipa: "/ˌriː.ɪmˈbɝːs.mənt/", type: "n", meaning: "Sự hoàn tiền", example: "Receive reimbursement." },
+            { word: "Reimburse", ipa: "/ˌriː.ɪmˈbɝːs/", type: "v (der)", meaning: "Hoàn tiền", example: "" },
+            { word: "Treatment", ipa: "/ˈtriːt.mənt/", type: "n", meaning: "Sự đối xử", example: "Same level of treatment." },
+            { word: "Treat", ipa: "/triːt/", type: "v (der)", meaning: "Đối xử", example: "" },
+            { word: "Honor", ipa: "/ˈɑː.nɚ/", type: "n", meaning: "Danh dự", example: "In honor of retirement." },
+            { word: "Honor", ipa: "/ˈɑː.nɚ/", type: "v", meaning: "Tôn vinh", example: "" },
+            { word: "Emphasize", ipa: "/ˈem.fə.saɪz/", type: "v", meaning: "Nhấn mạnh", example: "Emphasizes importance." },
+            { word: "Emphasis", ipa: "/ˈem.fə.sɪs/", type: "n (der)", meaning: "Sự nhấn mạnh", example: "" },
+            { word: "Stress", ipa: "/stres/", type: "v (syn)", meaning: "Nhấn mạnh", example: "" },
+            { word: "Entry", ipa: "/ˈen.tri/", type: "n", meaning: "Sự đi vào / Bài dự thi", example: "Not accept late entries." },
+            { word: "Enter", ipa: "/ˈen.t̬ɚ/", type: "v (der)", meaning: "Vào", example: "" },
+            { word: "Entrance", ipa: "/ˈen.trəns/", type: "n (confusing)", meaning: "Lối vào", example: "" },
+            { word: "Bonus", ipa: "/ˈboʊ.nəs/", type: "n", meaning: "Tiền thưởng", example: "Receive a higher bonus." },
+            { word: "Salary", ipa: "/ˈsæl.ɚ.i/", type: "n", meaning: "Tiền lương", example: "Base salary." },
+            { word: "Earn", ipa: "/ɝːn/", type: "v", meaning: "Kiếm được", example: "Earns $3,000 a month." },
+            { word: "Earnings", ipa: "/ˈɝː.nɪŋz/", type: "n (der)", meaning: "Thu nhập", example: "" },
+            { word: "Gain", ipa: "/ɡeɪn/", type: "v (syn)", meaning: "Đạt được", example: "" },
+            { word: "Arise", ipa: "/əˈraɪz/", type: "v", meaning: "Nảy sinh", example: "Complaints have arisen." },
+            { word: "Labor", ipa: "/ˈleɪ.bɚ/", type: "n", meaning: "Lao động", example: "Labor dispute." },
+            { word: "Labor", ipa: "/ˈleɪ.bɚ/", type: "v", meaning: "Làm việc vất vả", example: "" },
+            { word: "Union", ipa: "/ˈjuː.njən/", type: "n", meaning: "Công đoàn", example: "Labor union." },
+            { word: "Existing", ipa: "/ɪɡˈzɪs.tɪŋ/", type: "adj", meaning: "Hiện có", example: "Existing benefits package." },
+            { word: "Exist", ipa: "/ɪɡˈzɪst/", type: "v (der)", meaning: "Tồn tại", example: "" },
+            { word: "Exploit", ipa: "/ɪkˈsplɔɪt/", type: "v", meaning: "Bóc lột, khai thác", example: "Employees from being exploited." },
+            { word: "Exploitation", ipa: "/ˌek.splɔɪˈteɪ.ʃən/", type: "n (der)", meaning: "Sự bóc lột", example: "" },
+
+            // --- BASIC & EXTRAS ---
+            { word: "Application", ipa: "/ˌæp.ləˈkeɪ.ʃən/", type: "n", meaning: "Đơn xin", example: "" },
+            { word: "Award ceremony", ipa: "", type: "phr", meaning: "Lễ trao giải", example: "" },
+            { word: "Chat", ipa: "/tʃæt/", type: "v", meaning: "Tán gẫu", example: "" },
+            { word: "Clap", ipa: "/klæp/", type: "v", meaning: "Vỗ tay", example: "" },
+            { word: "Fireplace", ipa: "/ˈfaɪr.pleɪs/", type: "n", meaning: "Lò sưởi", example: "" },
+            { word: "Get paid", ipa: "", type: "phr", meaning: "Được trả lương", example: "" },
+            { word: "Grab", ipa: "/ɡræb/", type: "v", meaning: "Vồ lấy", example: "" },
+            { word: "Group", ipa: "/ɡruːp/", type: "n/v", meaning: "Nhóm / Phân nhóm", example: "" },
+            { word: "Hook", ipa: "/hʊk/", type: "n", meaning: "Cái móc", example: "" },
+            { word: "Introduction", ipa: "/ˌɪn.trəˈdʌk.ʃən/", type: "n", meaning: "Sự giới thiệu", example: "" },
+            { word: "Learning center", ipa: "", type: "phr", meaning: "Trung tâm học tập", example: "" },
+            { word: "Loudspeaker", ipa: "/ˌlaʊdˈspiː.kɚ/", type: "n", meaning: "Loa phóng thanh", example: "" },
+            { word: "Lounge", ipa: "/laʊndʒ/", type: "n", meaning: "Phòng chờ", example: "" },
+            { word: "Management seminar", ipa: "", type: "phr", meaning: "Hội thảo quản lý", example: "" },
+            { word: "Smoking section", ipa: "", type: "phr", meaning: "Khu vực hút thuốc", example: "" },
+            { word: "Take a vacation", ipa: "", type: "phr", meaning: "Đi nghỉ", example: "" },
+            { word: "Bold", ipa: "/boʊld/", type: "adj", meaning: "Táo bạo", example: "" },
+            { word: "Finely", ipa: "/ˈfaɪn.li/", type: "adv", meaning: "Tinh xảo", example: "" },
+            { word: "Friendly", ipa: "/ˈfrend.li/", type: "adj", meaning: "Thân thiện", example: "" },
+            { word: "Gentle", ipa: "/ˈdʒen.t̬əl/", type: "adj", meaning: "Nhẹ nhàng", example: "" },
+            { word: "In charge of", ipa: "", type: "phr", meaning: "Chịu trách nhiệm", example: "" },
+            { word: "Lively", ipa: "/ˈlaɪv.li/", type: "adj", meaning: "Sôi nổi", example: "" },
+            { word: "Pharmacy", ipa: "/ˈfɑːr.mə.si/", type: "n", meaning: "Hiệu thuốc", example: "" },
+            { word: "Precise", ipa: "/prəˈsaɪs/", type: "adj", meaning: "Chính xác", example: "" },
+            { word: "Prize", ipa: "/praɪz/", type: "n", meaning: "Giải thưởng", example: "" },
+            { word: "Registration", ipa: "/ˌredʒ.əˈstreɪ.ʃən/", type: "n", meaning: "Sự đăng ký", example: "" },
+            { word: "Vacation", ipa: "/veɪˈkeɪ.ʃən/", type: "n", meaning: "Kỳ nghỉ", example: "" },
+            
+            // --- 800 WORDS ---
+            { word: "A letter of gratitude", ipa: "", type: "phr", meaning: "Thư cảm ơn", example: "" },
+            { word: "Check out", ipa: "", type: "phr", meaning: "Mượn sách", example: "" },
+            { word: "Childcare", ipa: "/ˈtʃaɪld.ker/", type: "n", meaning: "Chăm sóc trẻ em", example: "" },
+            { word: "Don't have the nerve", ipa: "", type: "phr", meaning: "Không dám làm", example: "" },
+            { word: "Give a raise", ipa: "", type: "phr", meaning: "Tăng lương", example: "" },
+            { word: "Going away party", ipa: "", type: "phr", meaning: "Tiệc chia tay", example: "" },
+            { word: "It's about time", ipa: "", type: "phr", meaning: "Đã đến lúc", example: "" },
+            { word: "It's no use", ipa: "", type: "phr", meaning: "Vô ích", example: "" },
+            { word: "Job satisfaction", ipa: "", type: "phr", meaning: "Sự hài lòng công việc", example: "" },
+            { word: "Just in case", ipa: "", type: "phr", meaning: "Phòng khi", example: "" },
+            { word: "Keep up to date", ipa: "", type: "phr", meaning: "Cập nhật", example: "" },
+            { word: "Know like back of hand", ipa: "", type: "phr", meaning: "Biết rõ như lòng bàn tay", example: "" },
+            { word: "Miserable", ipa: "/ˈmɪz.ɚ.ə.bəl/", type: "adj", meaning: "Khổ sở", example: "" },
+            { word: "Paid leave", ipa: "", type: "phr", meaning: "Nghỉ phép có lương", example: "" },
+            { word: "Pick up paycheck", ipa: "", type: "phr", meaning: "Nhận lương", example: "" },
+            { word: "Pity", ipa: "/ˈpɪt.i/", type: "n", meaning: "Điều đáng tiếc", example: "" },
+            { word: "Privately", ipa: "/ˈpraɪ.vət.li/", type: "adv", meaning: "Riêng tư", example: "" },
+            { word: "Psychological", ipa: "/ˌsaɪ.kəˈlɑː.dʒɪ.kəl/", type: "adj", meaning: "Thuộc tâm lý", example: "" },
+            { word: "Put in overtime", ipa: "", type: "phr", meaning: "Làm thêm giờ", example: "" },
+            { word: "Safety drill", ipa: "", type: "phr", meaning: "Diễn tập an toàn", example: "" },
+            { word: "Sensitivity", ipa: "/ˌsen.səˈtɪv.ə.t̬i/", type: "n", meaning: "Sự nhạy cảm", example: "" },
+            { word: "Show around", ipa: "", type: "phr", meaning: "Dẫn đi tham quan", example: "" },
+            { word: "Stacks of books", ipa: "", type: "phr", meaning: "Chồng sách", example: "" },
+            { word: "Surprisingly", ipa: "/sɚˈpraɪ.zɪŋ.li/", type: "adv", meaning: "Đáng ngạc nhiên", example: "" },
+            { word: "Take place", ipa: "", type: "phr", meaning: "Diễn ra", example: "" },
+            { word: "Take time off", ipa: "", type: "phr", meaning: "Nghỉ phép", example: "" },
+            { word: "Terribly", ipa: "/ˈter.ə.bli/", type: "adv", meaning: "Rất tệ", example: "" },
+            { word: "Terrific", ipa: "/təˈrɪf.ɪk/", type: "adj", meaning: "Tuyệt vời", example: "" },
+            { word: "The next best", ipa: "", type: "phr", meaning: "Tốt thứ nhì", example: "" },
+            { word: "Thrilling", ipa: "/ˈθrɪl.ɪŋ/", type: "adj", meaning: "Hồi hộp", example: "" },
+            { word: "Credit A with B", ipa: "", type: "phr", meaning: "Công nhận A có B", example: "" },
+            { word: "Intentionally", ipa: "/ɪnˈten.ʃən.əl.i/", type: "adv", meaning: "Cố ý", example: "" },
+            { word: "Meanwhile", ipa: "/ˈmiːn.waɪl/", type: "adv", meaning: "Trong khi đó", example: "" },
+            { word: "Respectfully", ipa: "/rɪˈspekt.fəl.i/", type: "adv", meaning: "Kính cẩn", example: "" },
+            { word: "Sign up", ipa: "", type: "phr", meaning: "Đăng ký", example: "" },
+            { word: "Unused", ipa: "/ʌnˈjuːzd/", type: "adj", meaning: "Chưa dùng", example: "" },
+            { word: "Be tired of", ipa: "", type: "phr", meaning: "Chán ngấy", example: "" },
+            { word: "Biannual", ipa: "/baɪˈæn.ju.əl/", type: "adj", meaning: "Hai lần một năm", example: "" },
+            { word: "Charitable", ipa: "/ˈtʃer.ə.t̬ə.bəl/", type: "adj", meaning: "Từ thiện", example: "" },
+            { word: "Course of study", ipa: "", type: "phr", meaning: "Khóa học", example: "" },
+            { word: "Depressed", ipa: "/dɪˈprest/", type: "adj", meaning: "Chán nản", example: "" },
+            { word: "Extra pay", ipa: "", type: "phr", meaning: "Tiền làm thêm", example: "" },
+            { word: "Featured speaker", ipa: "", type: "phr", meaning: "Diễn giả chính", example: "" },
+            { word: "Generous", ipa: "/ˈdʒen.ər.əs/", type: "adj", meaning: "Hào phóng", example: "" },
+            { word: "Laugh away", ipa: "", type: "phr", meaning: "Cười trừ", example: "" },
+            { word: "Merit", ipa: "/ˈmer.ɪt/", type: "n", meaning: "Công lao", example: "" },
+            { word: "Night shift", ipa: "", type: "phr", meaning: "Ca đêm", example: "" },
+            { word: "Occupational safety", ipa: "", type: "phr", meaning: "An toàn lao động", example: "" },
+            { word: "Overtime allowance", ipa: "", type: "phr", meaning: "Phụ cấp làm thêm", example: "" },
+            { word: "Overtime rate", ipa: "", type: "phr", meaning: "Mức lương làm thêm", example: "" },
+            { word: "Paid vacation", ipa: "", type: "phr", meaning: "Kỳ nghỉ có lương", example: "" },
+            { word: "Pay increase", ipa: "", type: "phr", meaning: "Tăng lương", example: "" },
+            { word: "Pension", ipa: "/ˈpen.ʃən/", type: "n", meaning: "Lương hưu", example: "" },
+            { word: "Poorly paid", ipa: "", type: "phr", meaning: "Lương thấp", example: "" },
+            { word: "Preservation area", ipa: "", type: "phr", meaning: "Khu bảo tồn", example: "" },
+            { word: "Reference number", ipa: "", type: "phr", meaning: "Số tham chiếu", example: "" },
+            { word: "Regional allowance", ipa: "", type: "phr", meaning: "Phụ cấp khu vực", example: "" },
+            { word: "Regular hours", ipa: "", type: "phr", meaning: "Giờ làm việc hành chính", example: "" },
+            { word: "Retirement party", ipa: "", type: "phr", meaning: "Tiệc nghỉ hưu", example: "" },
+            { word: "Retirement plan", ipa: "", type: "phr", meaning: "Kế hoạch hưu trí", example: "" },
+            { word: "Salary and benefits", ipa: "", type: "phr", meaning: "Lương và phúc lợi", example: "" },
+            { word: "Sheltered housing", ipa: "", type: "phr", meaning: "Nhà ở xã hội", example: "" },
+            { word: "Sick leave", ipa: "", type: "phr", meaning: "Nghỉ ốm", example: "" },
+            { word: "Strong-willed", ipa: "/ˌstrɑːŋˈwɪld/", type: "adj", meaning: "Kiên quyết", example: "" },
+            { word: "Time-off", ipa: "", type: "n", meaning: "Thời gian nghỉ", example: "" },
+            { word: "Welfare", ipa: "/ˈwel.fer/", type: "n", meaning: "Phúc lợi", example: "" },
+            { word: "Work environment", ipa: "", type: "phr", meaning: "Môi trường làm việc", example: "" },
+            { word: "Working condition", ipa: "", type: "phr", meaning: "Điều kiện làm việc", example: "" },
+            
+            // --- 900 WORDS ---
+            { word: "Get reimbursed", ipa: "", type: "phr", meaning: "Được hoàn tiền", example: "" },
+            { word: "Hearty", ipa: "/ˈhɑːr.t̬i/", type: "adj", meaning: "Nồng nhiệt", example: "" },
+            { word: "Kindhearted", ipa: "/ˌkaɪndˈhɑːr.t̬ɪd/", type: "adj", meaning: "Tốt bụng", example: "" },
+            { word: "Knock off", ipa: "", type: "phr", meaning: "Ngừng làm việc", example: "" },
+            { word: "Maternity leave", ipa: "", type: "phr", meaning: "Nghỉ thai sản", example: "" },
+            { word: "Misuse", ipa: "/ˌmɪsˈjuːz/", type: "n", meaning: "Sự lạm dụng", example: "" },
+            { word: "Nursery", ipa: "/ˈnɝː.sɚ.i/", type: "n", meaning: "Nhà trẻ", example: "" },
+            { word: "Nursing", ipa: "/ˈnɝː.sɪŋ/", type: "n", meaning: "Điều dưỡng", example: "" },
+            { word: "Chronological", ipa: "/ˌkrɑː.nəˈlɑː.dʒɪ.kəl/", type: "adj", meaning: "Theo trình tự thời gian", example: "" },
+            { word: "Exhibitor", ipa: "/ɪɡˈzɪb.ə.t̬ɚ/", type: "n", meaning: "Người trưng bày", example: "" },
+            { word: "Give in", ipa: "", type: "phr", meaning: "Nhượng bộ", example: "" },
+            { word: "Pending", ipa: "/ˈpen.dɪŋ/", type: "prep", meaning: "Trong khi chờ", example: "" },
+            { word: "Second", ipa: "/ˈsek.ənd/", type: "v", meaning: "Ủng hộ", example: "" },
+            { word: "Citation", ipa: "/saɪˈteɪ.ʃən/", type: "n", meaning: "Trích dẫn / Tuyên dương", example: "" },
+            { word: "Commemorate", ipa: "/kəˈmem.ə.reɪt/", type: "v", meaning: "Tưởng nhớ", example: "" },
+            { word: "Conjunction", ipa: "/kənˈdʒʌŋk.ʃən/", type: "n", meaning: "Sự liên kết", example: "" },
+            { word: "Cut benefits", ipa: "", type: "phr", meaning: "Cắt giảm phúc lợi", example: "" },
+            { word: "Discriminate", ipa: "/dɪˈskrɪm.ə.neɪt/", type: "v", meaning: "Phân biệt đối xử", example: "" },
+            { word: "Distort", ipa: "/dɪˈstɔːrt/", type: "v", meaning: "Bóp méo", example: "" },
+            { word: "Flextime", ipa: "/ˈfleks.taɪm/", type: "n", meaning: "Giờ làm việc linh hoạt", example: "" },
+            { word: "Fringe benefits", ipa: "", type: "phr", meaning: "Phúc lợi phụ", example: "" },
+            { word: "Goodwill", ipa: "/ˌɡʊdˈwɪl/", type: "n", meaning: "Thiện chí", example: "" },
+            { word: "Labor costs", ipa: "", type: "phr", meaning: "Chi phí nhân công", example: "" },
+            { word: "Labor dispute", ipa: "", type: "phr", meaning: "Tranh chấp lao động", example: "" },
+            { word: "Off-peak", ipa: "/ˌɑːfˈpiːk/", type: "adj", meaning: "Ngoài giờ cao điểm", example: "" },
+            { word: "Pique", ipa: "/piːk/", type: "n", meaning: "Sự giận dỗi", example: "" },
+            { word: "Sabotage", ipa: "/ˈsæb.ə.tɑːʒ/", type: "n", meaning: "Sự phá hoại", example: "" },
+            { word: "Salary review", ipa: "", type: "phr", meaning: "Đợt xét tăng lương", example: "" },
+            { word: "Severance pay", ipa: "", type: "phr", meaning: "Trợ cấp thôi việc", example: "" },
+            { word: "Spry", ipa: "/spraɪ/", type: "adj", meaning: "Nhanh nhẹn", example: "" },
+            { word: "Straightforward", ipa: "/ˌstreɪtˈfɔːr.wɚd/", type: "adj", meaning: "Thẳng thắn", example: "" },
+            { word: "Yearn", ipa: "/jɝːn/", type: "v", meaning: "Khao khát", example: "" }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>

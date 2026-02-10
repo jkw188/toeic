@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 21: Corporate Trends - English Vocabulary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #312E81; --secondary-bg: #E0E7FF; --border: #E5E7EB; --text-dark: #111827; --text-gray: #4B5563; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: var(--text-dark); margin: 0; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-bar { margin-bottom: 2rem; }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-weight: 500; display: inline-flex; align-items: center; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back span { margin-right: 5px; }
+        header h1 { color: var(--primary); margin-top: 0.5rem; }
+        .search-box { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .search-box:focus { border-color: var(--primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background-color: #F3F4F6; text-align: left; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-gray); border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .col-stt { width: 50px; text-align: center; color: #9CA3AF; font-weight: 500; }
+        .col-ipa { width: 140px; font-family: 'Fira Code', monospace; color: #6B7280; font-size: 0.85rem; }
+        .col-word { width: 200px; font-weight: 600; color: var(--primary); font-size: 1.05rem; }
+        .col-type { width: 120px; }
+        .col-mean { width: 250px; }
+        .col-ex { color: #4B5563; font-style: italic; }
+        .pos-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .pos-tag.main { background-color: #E0E7FF; color: #312E81; }
+        .pos-tag.syn { background-color: #ECFDF5; color: #047857; }
+        .pos-tag.der { background-color: #FFFBEB; color: #B45309; }
+        .pos-tag.ant { background-color: #FEF2F2; color: #B91C1C; }
+        .pos-tag.phr { background-color: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar"><a href="index.html" class="btn-back"><span>&larr;</span> Back to Dashboard</a></div>
+        <header><h1>Day 21: Xu hướng của doanh nghiệp</h1><p style="color: #666;">Danh sách từ vựng đầy đủ từ Hackers TOEIC</p></header>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm từ vựng (Word, Meaning)...">
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th class="col-stt">STT</th><th class="col-word">Từ vựng</th><th class="col-ipa">Phiên âm</th><th class="col-type">Từ loại</th><th class="col-mean">Nghĩa</th><th class="col-ex">Ví dụ</th></tr></thead>
+                <tbody id="vocabBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const vocabularyList = [
+            // --- MAIN WORDS ---
+            { word: "Announce", ipa: "/əˈnaʊns/", type: "v", meaning: "Thông báo, tuyên bố", example: "Announced plans to increase production." },
+            { word: "Announcement", ipa: "/əˈnaʊns.mənt/", type: "n (der)", meaning: "Lời tuyên bố", example: "" },
+            { word: "Inform", ipa: "/ɪnˈfɔːrm/", type: "v (syn)", meaning: "Thông báo cho ai", example: "" },
+            { word: "Display", ipa: "/dɪˈspleɪ/", type: "v (syn)", meaning: "Hiển thị", example: "" },
+            { word: "Interested", ipa: "/ˈɪn.trə.stɪd/", type: "adj", meaning: "Quan tâm, hứng thú", example: "Interested in the offer." },
+            { word: "Interest", ipa: "/ˈɪn.trəst/", type: "n (der)", meaning: "Sự quan tâm", example: "" },
+            { word: "Interesting", ipa: "/ˈɪn.trə.stɪŋ/", type: "adj (der)", meaning: "Thú vị", example: "" },
+            { word: "Active", ipa: "/ˈæk.tɪv/", type: "adj", meaning: "Tích cực, chủ động", example: "Take a more active role." },
+            { word: "Activation", ipa: "/ˌæk.təˈveɪ.ʃən/", type: "n (der)", meaning: "Sự kích hoạt", example: "" },
+            { word: "Actively", ipa: "/ˈæk.tɪv.li/", type: "adv (der)", meaning: "Một cách tích cực", example: "" },
+            { word: "Accept", ipa: "/əkˈsept/", type: "v", meaning: "Chấp nhận", example: "Voted to accept the proposal." },
+            { word: "Acceptable", ipa: "/əkˈsep.tə.bəl/", type: "adj (der)", meaning: "Chấp nhận được", example: "" },
+            { word: "Acceptance", ipa: "/əkˈsep.təns/", type: "n (der)", meaning: "Sự chấp nhận", example: "" },
+            { word: "Reject", ipa: "/rɪˈdʒekt/", type: "v (ant)", meaning: "Từ chối", example: "" },
+            { word: "Admit", ipa: "/ədˈmɪt/", type: "v (syn)", meaning: "Thừa nhận", example: "" },
+            { word: "Foresee", ipa: "/fɔːrˈsiː/", type: "v", meaning: "Đoán trước", example: "Foresee future trends." },
+            { word: "Foreseeable", ipa: "/fɔːrˈsiː.ə.bəl/", type: "adj (der)", meaning: "Thấy trước được", example: "" },
+            { word: "Unforeseen", ipa: "/ˌʌn.fɔːrˈsiːn/", type: "adj (der)", meaning: "Không lường trước", example: "" },
+            { word: "Predict", ipa: "/prɪˈdɪkt/", type: "v (syn)", meaning: "Tiên đoán", example: "" },
+            { word: "Expansion", ipa: "/ɪkˈspæn.ʃən/", type: "n", meaning: "Sự mở rộng", example: "Seeking opportunities for expansion." },
+            { word: "Expand", ipa: "/ɪkˈspænd/", type: "v (der)", meaning: "Mở rộng", example: "" },
+            { word: "Expansive", ipa: "/ɪkˈspæn.sɪv/", type: "adj (der)", meaning: "Rộng rãi", example: "" },
+            { word: "Relocate", ipa: "/ˌriːˈloʊ.keɪt/", type: "v", meaning: "Chuyển địa điểm", example: "Relocate the plant's main base." },
+            { word: "Relocation", ipa: "/ˌriː.loʊˈkeɪ.ʃən/", type: "n (der)", meaning: "Sự chuyển chỗ", example: "" },
+            { word: "Competitor", ipa: "/kəmˈpet.t̬ɚ/", type: "n", meaning: "Đối thủ cạnh tranh", example: "Closest competitor is catching up." },
+            { word: "Competitiveness", ipa: "/kəmˈpet.t̬ɪv.nəs/", type: "n (der)", meaning: "Tính cạnh tranh", example: "" },
+            { word: "Asset", ipa: "/ˈæs.et/", type: "n", meaning: "Tài sản, của cải", example: "Employees are valuable assets." },
+            { word: "Estate", ipa: "/ɪˈsteɪt/", type: "n (syn)", meaning: "Điền trang", example: "" },
+            { word: "Property", ipa: "/ˈprɑː.pɚ.t̬i/", type: "n (syn)", meaning: "Tài sản", example: "" },
+            { word: "Contribute", ipa: "/kənˈtrɪb.juːt/", type: "v", meaning: "Đóng góp", example: "Contributed to success." },
+            { word: "Contribution", ipa: "/ˌkɑːn.trɪˈbjuː.ʃən/", type: "n (der)", meaning: "Sự đóng góp", example: "" },
+            { word: "Contributor", ipa: "/kənˈtrɪb.ju.t̬ɚ/", type: "n (der)", meaning: "Người đóng góp", example: "" },
+            { word: "Dedicated", ipa: "/ˈded.ə.keɪ.t̬ɪd/", type: "adj", meaning: "Tận tâm, cống hiến", example: "Dedicated to improving image." },
+            { word: "Dedicate", ipa: "/ˈded.ə.keɪt/", type: "v (der)", meaning: "Cống hiến", example: "" },
+            { word: "Dedication", ipa: "/ˌded.əˈkeɪ.ʃən/", type: "n (der)", meaning: "Sự cống hiến", example: "" },
+            { word: "Devoted", ipa: "/dɪˈvoʊ.t̬ɪd/", type: "adj (syn)", meaning: "Tận tụy", example: "" },
+            { word: "Committed", ipa: "/kəˈmɪt.t̬ɪd/", type: "adj (syn)", meaning: "Cam kết", example: "" },
+            { word: "Misplace", ipa: "/ˌmɪsˈpleɪs/", type: "v", meaning: "Đặt nhầm chỗ", example: "Misplaced company documents." },
+            { word: "Considerable", ipa: "/kənˈsɪd.ɚ.ə.bəl/", type: "adj", meaning: "Đáng kể", example: "Raised capital after considerable effort." },
+            { word: "Consider", ipa: "/kənˈsɪd.ɚ/", type: "v (der)", meaning: "Cân nhắc", example: "" },
+            { word: "Consideration", ipa: "/kənˌsɪd.əˈreɪ.ʃən/", type: "n (der)", meaning: "Sự cân nhắc", example: "" },
+            { word: "Considerate", ipa: "/kənˈsɪd.ɚ.ət/", type: "adj (confusing)", meaning: "Chu đáo", example: "" },
+            { word: "Substantial", ipa: "/səbˈstæn.ʃəl/", type: "adj (syn)", meaning: "Đáng kể", example: "" },
+            { word: "Insignificant", ipa: "/ˌɪn.sɪɡˈnɪf.ə.kənt/", type: "adj (ant)", meaning: "Không đáng kể", example: "" },
+            { word: "Last", ipa: "/læst/", type: "v", meaning: "Kéo dài", example: "Recession lasted longer than expected." },
+            { word: "Emerge", ipa: "/ɪˈmɝːdʒ/", type: "v", meaning: "Nổi lên, xuất hiện", example: "Emerged as the leader." },
+            { word: "Emergence", ipa: "/ɪˈmɝː.dʒəns/", type: "n (der)", meaning: "Sự nổi lên", example: "" },
+            { word: "Emergent", ipa: "/ɪˈmɝː.dʒənt/", type: "adj (der)", meaning: "Mới nổi", example: "" },
+            { word: "Grow", ipa: "/ɡroʊ/", type: "v", meaning: "Phát triển, tăng trưởng", example: "Market is growing steadily." },
+            { word: "Growth", ipa: "/ɡroʊθ/", type: "n (der)", meaning: "Sự phát triển", example: "" },
+            { word: "Develop", ipa: "/dɪˈvel.əp/", type: "v (syn)", meaning: "Phát triển", example: "" },
+            { word: "Select", ipa: "/səˈlekt/", type: "v", meaning: "Lựa chọn", example: "Selected a new chairperson." },
+            { word: "Selection", ipa: "/səˈlek.ʃən/", type: "n (der)", meaning: "Sự lựa chọn", example: "" },
+            { word: "Selective", ipa: "/səˈlek.tɪv/", type: "adj (der)", meaning: "Có chọn lọc", example: "" },
+            { word: "Decide", ipa: "/dɪˈsaɪd/", type: "v (syn)", meaning: "Quyết định", example: "" },
+            { word: "Nominate", ipa: "/ˈnɑː.mə.neɪt/", type: "v (syn)", meaning: "Đề cử", example: "" },
+            { word: "Merge", ipa: "/mɝːdʒ/", type: "v", meaning: "Sáp nhập", example: "Merged with a corporate giant." },
+            { word: "Merger", ipa: "/ˈmɝː.dʒɚ/", type: "n (der)", meaning: "Sự sáp nhập", example: "" },
+            { word: "Amalgamate", ipa: "/əˈmæl.ɡə.meɪt/", type: "v (syn)", meaning: "Hợp nhất", example: "" },
+            { word: "Imply", ipa: "/ɪmˈplaɪ/", type: "v", meaning: "Ngụ ý, ám chỉ", example: "Implies investor confidence." },
+            { word: "Suggest", ipa: "/səˈdʒest/", type: "v (syn)", meaning: "Gợi ý", example: "" },
+            { word: "Vital", ipa: "/ˈvaɪ.t̬əl/", type: "adj", meaning: "Sống còn, quan trọng", example: "Vital to growing a business." },
+            { word: "Vitally", ipa: "/ˈvaɪ.t̬əl.i/", type: "adv (der)", meaning: "Cực kỳ", example: "" },
+            { word: "Persist", ipa: "/pɚˈsɪst/", type: "v", meaning: "Kiên trì, dai dẳng", example: "Persist in its attempts." },
+            { word: "Persistent", ipa: "/pɚˈsɪs.tənt/", type: "adj (der)", meaning: "Kiên trì", example: "" },
+            { word: "Persistence", ipa: "/pɚˈsɪs.təns/", type: "n (der)", meaning: "Sự kiên trì", example: "" },
+            { word: "Independent", ipa: "/ˌɪn.dɪˈpen.dənt/", type: "adj", meaning: "Độc lập", example: "An independent review board." },
+            { word: "Dependent", ipa: "/dɪˈpen.dənt/", type: "adj (ant)", meaning: "Phụ thuộc", example: "" },
+            { word: "Force", ipa: "/fɔːrs/", type: "n", meaning: "Thế lực, sức mạnh", example: "A major force in real estate." },
+            { word: "Establish", ipa: "/ɪˈstæb.lɪʃ/", type: "v", meaning: "Thành lập", example: "Establish an offshore company." },
+            { word: "Establishment", ipa: "/ɪˈstæb.lɪʃ.mənt/", type: "n (der)", meaning: "Sự thành lập", example: "" },
+            { word: "Established", ipa: "/ɪˈstæb.lɪʃt/", type: "adj (der)", meaning: "Có uy tín", example: "" },
+            { word: "Initiate", ipa: "/ɪˈnɪʃ.i.eɪt/", type: "v", meaning: "Khởi xướng, bắt đầu", example: "Initiated plans for growth." },
+            { word: "Initial", ipa: "/ɪˈnɪʃ.əl/", type: "adj (der)", meaning: "Ban đầu", example: "" },
+            { word: "Initially", ipa: "/ɪˈnɪʃ.əl.i/", type: "adv (der)", meaning: "Lúc đầu", example: "" },
+            { word: "Start", ipa: "/stɑːrt/", type: "v (syn)", meaning: "Bắt đầu", example: "" },
+            { word: "Launch", ipa: "/lɑːntʃ/", type: "v (syn)", meaning: "Ra mắt", example: "" },
+            { word: "Commence", ipa: "/kəˈmens/", type: "v (syn)", meaning: "Bắt đầu", example: "" },
+            { word: "Enhance", ipa: "/ɪnˈhæns/", type: "v", meaning: "Nâng cao, tăng cường", example: "Enhance a company's image." },
+            { word: "Enhancement", ipa: "/ɪnˈhæns.mənt/", type: "n (der)", meaning: "Sự nâng cao", example: "" },
+            { word: "Improve", ipa: "/ɪmˈpruːv/", type: "v (syn)", meaning: "Cải thiện", example: "" },
+            { word: "Reinforce", ipa: "/ˌriː.ɪnˈfɔːrs/", type: "v (syn)", meaning: "Củng cố", example: "" },
+            { word: "Renowned", ipa: "/rɪˈnaʊnd/", type: "adj", meaning: "Nổi tiếng", example: "Renowned economists." },
+            { word: "Informed", ipa: "/ɪnˈfɔːrmd/", type: "adj", meaning: "Có hiểu biết, sáng suốt", example: "Make an informed decision." },
+            { word: "Inform", ipa: "/ɪnˈfɔːrm/", type: "v (der)", meaning: "Thông báo", example: "" },
+            { word: "Informative", ipa: "/ɪnˈfɔːr.mə.t̬ɪv/", type: "adj (der)", meaning: "Nhiều thông tin", example: "" },
+            { word: "Information", ipa: "/ˌɪn.fɚˈmeɪ.ʃən/", type: "n (der)", meaning: "Thông tin", example: "" },
+            { word: "Minutes", ipa: "/ˈmɪn.ɪts/", type: "n", meaning: "Biên bản cuộc họp", example: "Took minutes from the meeting." },
+            { word: "Waive", ipa: "/weɪv/", type: "v", meaning: "Miễn, từ bỏ", example: "Waives tax requirements." },
+            { word: "Reach", ipa: "/riːtʃ/", type: "v", meaning: "Đạt tới, đi đến", example: "Reached 15 million units." },
+            { word: "Reachable", ipa: "/ˈriː.tʃə.bəl/", type: "adj (der)", meaning: "Có thể với tới", example: "" },
+            { word: "Achieve", ipa: "/əˈtʃiːv/", type: "v (syn)", meaning: "Đạt được", example: "" },
+            { word: "Authority", ipa: "/əˈθɔːr.ə.t̬i/", type: "n", meaning: "Quyền lực, nhà chức trách", example: "Has the authority to revoke." },
+            { word: "Authorize", ipa: "/ˈɑː.θɚ.aɪz/", type: "v (der)", meaning: "Cấp quyền", example: "" },
+            { word: "Authorization", ipa: "/ˌɑː.θɚ.əˈzeɪ.ʃən/", type: "n (confusing)", meaning: "Sự cấp phép", example: "" },
+            { word: "Authorship", ipa: "/ˈɑː.θɚ.ʃɪp/", type: "n (confusing)", meaning: "Quyền tác giả", example: "" },
+            { word: "Acquire", ipa: "/əˈkwaɪ.ɚ/", type: "v", meaning: "Mua lại, giành được", example: "Acquire property." },
+            { word: "Acquired", ipa: "/əˈkwaɪ.ɚd/", type: "adj (der)", meaning: "Mắc phải / Có được", example: "" },
+            { word: "Acquisition", ipa: "/ˌæk.wəˈzɪʃ.ən/", type: "n (der)", meaning: "Sự giành được", example: "" },
+            { word: "Surpass", ipa: "/sɚˈpæs/", type: "v", meaning: "Vượt qua", example: "Surpassed $300 million." },
+            { word: "Surpassingly", ipa: "/sɚˈpæs.ɪŋ.li/", type: "adv (der)", meaning: "Vượt trội", example: "" },
+            { word: "Run", ipa: "/rʌn/", type: "v", meaning: "Điều hành, quản lý", example: "Run by retired executives." },
+            { word: "Operate", ipa: "/ˈɑː.pə.reɪt/", type: "v (syn)", meaning: "Vận hành", example: "" },
+            { word: "Manage", ipa: "/ˈmæn.ədʒ/", type: "v (syn)", meaning: "Quản lý", example: "" },
+            { word: "Improbable", ipa: "/ɪmˈprɑː.bə.bəl/", type: "adj", meaning: "Không chắc, khó xảy ra", example: "An improbable candidate." },
+            { word: "Edge", ipa: "/edʒ/", type: "n", meaning: "Lợi thế / Rìa", example: "Gives him an edge." },
+            { word: "Advantage", ipa: "/ədˈvæn.t̬ɪdʒ/", type: "n (syn)", meaning: "Lợi thế", example: "" },
+            { word: "Border", ipa: "/ˈbɔːr.dɚ/", type: "n (syn)", meaning: "Biên giới", example: "" },
+            { word: "Simultaneously", ipa: "/ˌsaɪ.məlˈteɪ.ni.əs.li/", type: "adv", meaning: "Đồng thời", example: "Enter both markets simultaneously." },
+            { word: "Simultaneous", ipa: "/ˌsaɪ.məlˈteɪ.ni.əs/", type: "adj (der)", meaning: "Đồng thời", example: "" },
+            { word: "Reveal", ipa: "/rɪˈviːl/", type: "v", meaning: "Tiết lộ", example: "Revealed their plan." },
+            { word: "Revelation", ipa: "/ˌrev.əˈleɪ.ʃən/", type: "n (der)", meaning: "Sự tiết lộ", example: "" },
+            { word: "Conceal", ipa: "/kənˈsiːl/", type: "v (ant)", meaning: "Che giấu", example: "" },
+            { word: "Productivity", ipa: "/ˌproʊ.dəkˈtɪv.ə.t̬i/", type: "n", meaning: "Năng suất", example: "Raised productivity." },
+            { word: "Productive", ipa: "/prəˈdʌk.tɪv/", type: "adj (der)", meaning: "Có năng suất", example: "" },
+            { word: "Uncertain", ipa: "/ʌnˈsɝː.tən/", type: "adj", meaning: "Không chắc chắn", example: "Uncertain about the cost." },
+            { word: "Uncertainly", ipa: "/ʌnˈsɝː.tən.li/", type: "adv (der)", meaning: "Thiếu tự tin", example: "" },
+            { word: "Certain", ipa: "/ˈsɝː.tən/", type: "adj (ant)", meaning: "Chắc chắn", example: "" },
+            { word: "Premier", ipa: "/prɪˈmɪr/", type: "adj", meaning: "Hàng đầu, nhất", example: "Premier game manufacturer." }
+        ];
+
+        const tbody = document.getElementById('vocabBody');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Không tìm thấy từ vựng nào.</td></tr>';
+                return;
+            }
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let posClass = 'phr';
+                if (item.type.includes('syn')) posClass = 'syn';
+                else if (item.type.includes('der')) posClass = 'der';
+                else if (item.type.includes('ant')) posClass = 'ant';
+                else if (!item.type.includes('phr')) posClass = 'main';
+
+                tr.innerHTML = `
+                    <td class="col-stt">${index + 1}</td>
+                    <td class="col-word">${item.word}</td>
+                    <td class="col-ipa">${item.ipa}</td>
+                    <td class="col-type"><span class="pos-tag ${posClass}">${item.type}</span></td>
+                    <td class="col-mean">${item.meaning}</td>
+                    <td class="col-ex">${item.example ? `"${item.example}"` : ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredData = vocabularyList.filter(item => 
+                item.word.toLowerCase().includes(keyword) || 
+                item.meaning.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredData);
+        });
+
+        renderTable(vocabularyList);
+    </script>
+</body>
+</html>
