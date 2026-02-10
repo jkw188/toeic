@@ -1,29 +1,38 @@
-export interface Question {
+export interface VocabularyWord {
+  // id: string;
+  word: string;
+  ipa: string; // e.g., /əˈdʒendə/
+  type: string; // e.g., "n", "v", "adj"
+  meaning: string;
+  example: string;
+}
+
+export interface QuizOption {
   id: string;
-  questionText: string;
-  options: string[];
-  correctAnswerIndex: number;
+  text: string;
+}
+
+export interface QuizQuestion {
+  id: string;
+  question: string;
+  options: QuizOption[];
+  correctOptionId: string;
   explanation: string;
 }
 
 export interface Lecture {
   id: string;
   title: string;
-  duration: string; // e.g. "15 min"
-  content: string; // Markdown content
-  questions?: Question[]; // Interactive questions
-  isCompleted?: boolean;
+  part: string; // e.g., "Part 7 - Reading Comprehension"
+  tags: string[];
+  readingContent: string; // Markdown string
+  vietnameseMeaningPassage: string; // Markdown string for translation
+  keyTakeaways: string[]; // List of key points
+  vocabulary: VocabularyWord[];
+  exercises: QuizQuestion[];
 }
 
-export interface Module {
-  id: string;
-  title: string;
-  description: string;
-  lectures: Lecture[];
-}
-
-export interface CourseData {
-  title: string;
-  description: string;
-  modules: Module[];
+export interface ChatMessage {
+  role: 'user' | 'model';
+  text: string;
 }
