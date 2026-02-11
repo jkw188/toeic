@@ -7,6 +7,32 @@ interface VocabularySectionProps {
 }
 
 export const VocabularySection: React.FC<VocabularySectionProps> = ({ words }) => {
+  const playSound = async (word: string) => {
+    // console.log('Hi');
+  if (!word) return;
+
+  try {
+    // Gọi API để lấy thông tin từ vựng
+    const response = await fetch(
+      `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`,
+    );
+    const data = await response.json();
+
+    // Tìm file audio trong danh sách phonetics
+    const audioSource = data[0]?.phonetics.find(
+      (p: any) => p.audio !== "",
+    )?.audio;
+
+    if (audioSource) {
+      const audio = new Audio(audioSource);
+      await audio.play();
+    } else {
+      console.warn("Không tìm thấy file âm thanh cho từ này.");
+    }
+  } catch (error) {
+    console.error("Lỗi khi tải âm thanh:", error);
+  }
+};
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       <div className="overflow-x-auto">
@@ -33,6 +59,7 @@ export const VocabularySection: React.FC<VocabularySectionProps> = ({ words }) =
                       <button 
                         className="ml-2 text-slate-300 hover:text-indigo-500 transition-colors" 
                         title="Play Pronunciation"
+                        onClick={()=>playSound(item.word)}
                       >
                         <Volume2 className="w-4 h-4" />
                       </button>
