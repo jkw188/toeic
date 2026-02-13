@@ -36,7 +36,7 @@ const App: React.FC = () => {
               <span className="font-bold text-xl tracking-tight">JIKANG TOEIC</span>
             </div>
             
-            {/* Show tutor button only if inside a lecture */}
+            {/* Show tutor button only if inside a lecture
             {activeLecture && (
               <div className="flex items-center space-x-4">
                  <button 
@@ -47,7 +47,7 @@ const App: React.FC = () => {
                    <span>Ask AI Tutor</span>
                  </button>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </nav>

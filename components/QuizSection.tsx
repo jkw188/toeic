@@ -18,6 +18,15 @@ const renderMarkdown = (text: string) => {
   return { __html: html };
 };
 
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const newArray = [...array]; // Create a copy to avoid mutating original data
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  };
+
 // Extracted Component for performance and cleanliness
 const QuestionCard: React.FC<{
   question: QuizQuestion;
@@ -27,6 +36,12 @@ const QuestionCard: React.FC<{
 }> = ({ question, index, selectedOptionId, onSelect }) => {
   const isAnswered = !!selectedOptionId;
   const isCorrect = selectedOptionId === question.correctOptionId;
+
+  // ✅ ADDED: Memoize the shuffled options
+  // This ensures they are randomized ONCE per question, not on every re-render.
+  const shuffledOptions = useMemo(() => {
+    return shuffleArray(question.options);
+  }, [question.id, question.options]); // Dependencies ensure we only reshuffle if data changes
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
@@ -39,12 +54,15 @@ const QuestionCard: React.FC<{
         </h3>
 
         <div className="space-y-3">
-          {question.options.map((opt) => {
+          {/* ✅ CHANGED: Map over shuffledOptions instead of question.options */}
+          {shuffledOptions.map((opt) => {
             let buttonStyle =
               "border-slate-200 hover:bg-slate-50 hover:border-indigo-200";
             let icon = (
               <div className="w-5 h-5 rounded-full border-2 border-slate-300 mr-3 flex-shrink-0" />
             );
+
+            // ... (The rest of your logic remains exactly the same) ...
 
             if (isAnswered) {
               if (opt.id === question.correctOptionId) {
@@ -75,7 +93,11 @@ const QuestionCard: React.FC<{
               >
                 {icon}
                 <span
-                  className={`flex-grow font-medium ${isAnswered && opt.id === question.correctOptionId ? "text-green-800" : "text-slate-700"}`}
+                  className={`flex-grow font-medium ${
+                    isAnswered && opt.id === question.correctOptionId
+                      ? "text-green-800"
+                      : "text-slate-700"
+                  }`}
                 >
                   {opt.text}
                 </span>
@@ -85,10 +107,12 @@ const QuestionCard: React.FC<{
         </div>
       </div>
 
-      {/* Explanation Section */}
+      {/* Explanation Section (unchanged) */}
       {isAnswered && (
         <div
-          className={`px-6 py-4 bg-slate-50 border-t ${isCorrect ? "border-green-100" : "border-slate-100"} mt-auto`}
+          className={`px-6 py-4 bg-slate-50 border-t ${
+            isCorrect ? "border-green-100" : "border-slate-100"
+          } mt-auto`}
         >
           <div className="flex items-start space-x-3">
             <div className="mt-0.5">
